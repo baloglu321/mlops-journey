@@ -14,7 +14,7 @@ This repository was created to learn and practice MLOps concepts. It includes:
 - **CI/CD** pipeline experiments
 - And more...
 
-## 📁 Klasör Yapısı
+## 📁 File Tree
 
 ```
 .
