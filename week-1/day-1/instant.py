@@ -9,7 +9,7 @@ app = FastAPI()
 @app.get("/", response_class=HTMLResponse)
 def instant():
     # Uzak Ollama sunucusu URL'i (ortam değişkeninden veya varsayılan olarak)
-    ollama_base_url = os.getenv("OLLAMA_BASE_URL", ".../")
+    ollama_base_url = os.getenv("OLLAMA_BASE_URL", "...")
 
     # Uzak Ollama sunucusuna bağlan
     llm = ChatOllama(
