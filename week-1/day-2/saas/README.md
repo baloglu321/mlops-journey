@@ -1,40 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Business Idea Generator (SaaS)
 
-## Getting Started
+This is a full-stack AI application that generates unique business ideas using a remote Ollama server. It features a Next.js frontend with streaming responses (Server-Sent Events) and a FastAPI backend.
 
-First, run the development server:
+## 🚀 Technologies
+
+- **Frontend**: Next.js 16 (React 19), Tailwind CSS 4, TypeScript
+- **Backend**: FastAPI (Python), LangChain
+- **AI**: Ollama (gemma3:27b) via remote connection
+
+## 🛠️ Prerequisites
+
+Before you begin, ensure you have:
+
+- **Node.js** 18+ installed
+- **Python** 3.8+ installed
+- Access to a remote **Ollama** server (or a local one exposed via tunnel)
+
+## 📦 Installation
+
+1. **Install Frontend Dependencies:**
+
+   ```bash
+   npm install
+   # or yarn install
+   # or pnpm install
+   ```
+
+2. **Setup Python Environment:**
+
+   It is recommended to use a virtual environment.
+
+   ```bash
+   # Create virtual environment
+   python -m venv .venv
+
+   # Activate it
+   # Windows:
+   .\.venv\Scripts\Activate.ps1
+   # Mac/Linux:
+   source .venv/bin/activate
+
+   # Install dependencies
+   pip install -r requirements.txt
+   ```
+
+## ⚙️ Configuration
+
+Create a `.env.local` file in this directory (or set system environment variables):
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# URL to your remote Ollama server
+OLLAMA_BASE_URL="https://your-remote-server-url.com"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> **Note**: If testing locally with Cloudflare Tunnel, run `cloudflared tunnel --url http://localhost:11434` and use the resulting URL.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 🏃‍♂️ Running Locally
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+This project uses a hybrid Next.js + FastAPI approach meant for Vercel deployment. To run it locally, you have two options:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### Option 1: Using Vercel CLI (Recommended)
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This mimics the production environment perfectly.
 
-## Learn More
+1. Install Vercel CLI: `npm i -g vercel`
+2. Run development server:
+   ```bash
+   vercel dev
+   ```
+3. Open `http://localhost:3000`
 
-To learn more about Next.js, take a look at the following resources:
+### Option 2: Split Terminal
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+You can run the backend and frontend separately (requires manual port configuration usually, but for simple inspection):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Terminal 1 (Frontend):**
+```bash
+npm run dev
+```
 
-## Deploy on Vercel
+**Terminal 2 (Backend):**
+```bash
+# Note: Next.js won't proxy to this automatically without configuration
+# This is mostly for testing the API processing in isolation
+uvicorn api.index:app --reload --port 8000
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+*For a fully integrated local experience without Vercel CLI, you would need to add rewrites to `next.config.ts` pointing `/api/:path*` to `http://127.0.0.1:8000/api/:path*`.*
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## 🚀 Deployment to Vercel
+
+1. Push this code to GitHub.
+2. Import the project in Vercel.
+3. Add the `OLLAMA_BASE_URL` environment variable.
+4. Deploy! Vercel automatically detects the Python API and Next.js frontend.

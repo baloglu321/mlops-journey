@@ -130,16 +130,19 @@ Use the generated URL as your `OLLAMA_BASE_URL`.
 ## 📡 API Endpoints
 
 ### GET `/api`
-
-Generates a new business idea using the AI model.
-
-**Response**: Plain text with the generated business idea
-
-**Example Response**:
-```
-Business Idea: "Symbiotic Storytellers" - AI Agent-Powered Personalized Children's Story Creation & Interaction
-...
-```
+ 
+ Generates a new business idea using the AI model via Server-Sent Events (SSE).
+ 
+ **Response**: text/event-stream
+ 
+ **Example Stream**:
+ ```
+ data: Business Idea: "Symbiotic
+ 
+ data:  Storytellers"
+ 
+ data: [DONE]
+ ```
 
 ## 🚀 Deployment
 
@@ -206,16 +209,22 @@ curl https://your-vercel-app.vercel.app/api
 ### Backend (`api/index.py`)
 
 ```python
-@app.get("/api", response_class=PlainTextResponse)
-def idea():
-    # Connects to remote Ollama server
-    llm = ChatOllama(
-        model="gemma3:27b",
-        base_url=ollama_base_url,
+@app.get("/api")
+async def idea():
+    # ... setup code ...
+    
+    async def event_stream():
+        async for chunk in llm.astream(prompt):
+            content = chunk.content
+            if content:
+                safe_content = content.replace("\n", "\\n")
+                yield f"data: {safe_content}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return StreamingResponse(
+        event_stream(), 
+        media_type="text/event-stream"
     )
-    # Generates business idea
-    response = llm.invoke("Come up with a new business idea for AI Agents")
-    return response.content
 ```
 
 ### Frontend (`pages/index.tsx`)
