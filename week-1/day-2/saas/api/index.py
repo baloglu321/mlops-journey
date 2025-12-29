@@ -11,7 +11,9 @@ app = FastAPI()
 @app.get("/api")
 async def idea():
     # 1. Ortam Değişkeni Kontrolü
-    ollama_base_url = os.getenv("OLLAMA_BASE_URL", "...")
+    ollama_base_url = os.getenv(
+        "OLLAMA_BASE_URL", "https://evaluated-jerusalem-upcoming-fair.trycloudflare.com"
+    )
 
     # 2. LLM Ayarları
     llm = ChatOllama(

@@ -49,37 +49,39 @@ export default function Home() {
     }, []);
 
     return (
-        <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-4">
-            <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+        <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+            <div className="container mx-auto px-4 py-12">
                 
-                {/* Başlık Alanı */}
-                <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900/50">
-                    <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
-                        🤖 AI Business Generator
-                        {/* Yanıp sönen imleç efekti (opsiyonel) */}
-                        {idea === '…loading' && <span className="animate-pulse">...</span>}
+                 {/* Header */}
+                 <header className="text-center mb-12">
+                    <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+                        Business Idea Generator
                     </h1>
-                </div>
+                    <p className="text-gray-600 dark:text-gray-400 text-lg">
+                        AI-powered innovation at your fingertips
+                    </p>
+                </header>
 
-                {/* İÇERİK ALANI - BURASI ÖNEMLİ */}
-                <div className="p-8">
-                    {/* 'prose' sınıfı: Markdown'ı otomatik stillendirir.
-                        'prose-lg': Yazıyı biraz büyütür.
-                        'dark:prose-invert': Koyu modda yazıların rengini otomatik açar.
-                    */}
-                    <article className="prose prose-lg prose-slate dark:prose-invert max-w-none leading-relaxed">
-                        <ReactMarkdown 
-                            remarkPlugins={[remarkGfm, remarkBreaks]}
-                            components={{
-                                // Linklerin yeni sekmede açılmasını istersen:
-                                a: ({node, ...props}) => <a {...props} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline" />
-                            }}
-                        >
-                            {idea}
-                        </ReactMarkdown>
-                    </article>
+                 {/* Content Card */}
+                 <div className="max-w-3xl mx-auto">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 backdrop-blur-lg bg-opacity-95">
+                        {idea === '…loading' ? (
+                            <div className="flex items-center justify-center py-12">
+                                <div className="animate-pulse text-gray-400">
+                                    Generating your business idea...
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="markdown-content text-gray-700 dark:text-gray-300">
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkGfm, remarkBreaks]}
+                                >
+                                    {idea}
+                                </ReactMarkdown>
+                            </div>
+                        )}
+                    </div>
                 </div>
-                
             </div>
         </main>
     );
