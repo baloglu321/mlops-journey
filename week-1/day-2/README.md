@@ -1,6 +1,6 @@
 # Business Idea Generator - Week 1 Day 2
 
-AI-powered business idea generator that uses LangChain to connect to a remote Ollama server and generate creative business ideas using the `gemma3:27b` model.
+AI-powered business idea generator that uses LangChain to connect to a remote Ollama server and generate creative business ideas using the `gemma3:27b` model. Added streaming.
 
 ## 🚀 Features
 
