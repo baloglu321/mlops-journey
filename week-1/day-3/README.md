@@ -112,6 +112,9 @@ def idea(creds: HTTPAuthorizationCredentials = Depends(clerk_guard)):
 
 ## 📦 Deployment
 
+> [!WARNING]
+> **Vercel Timeout Limit**: Vercel's Hobby (Free) plan has a hard execution timeout of **60 seconds** for Serverless Functions. Since LLM generation can sometimes exceed this limit, your request might be interrupted. To avoid this, consider upgrading to **Vercel Pro** or running the project **locally**.
+
 This project is optimized for **Vercel**.
 
 1. Push your code to GitHub.
