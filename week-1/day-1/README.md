@@ -14,8 +14,13 @@ This project demonstrates how to create a FastAPI web application that connects 
 
 ## 🏗️ Architecture
 
-```
-User Request → FastAPI → LangChain Ollama → Remote Ollama Server → LLM Response → HTML
+```mermaid
+graph LR
+    User([User]) --> Vercel[Vercel Serverless Function]
+    Vercel --> LangChain[LangChain Client]
+    LangChain -- "HTTPS" --> RemoteOllama[Remote Ollama Server]
+    RemoteOllama -- "LLM Response" --> LangChain
+    LangChain --> User
 ```
 
 ## 📁 Files
@@ -39,18 +44,6 @@ Set the `OLLAMA_BASE_URL` environment variable to point to your remote Ollama se
 
 ```bash
 export OLLAMA_BASE_URL="https://your-ollama-server.com"
-```
-
-Or in Vercel:
-- Go to Project Settings → Environment Variables
-- Add `OLLAMA_BASE_URL` with your server URL
-
-### Model Configuration
-
-The default model is `gemma3:27b`. To change it, modify line 16 in `instant.py`:
-
-```python
-model="your-model-name"
 ```
 
 ## 🚀 Local Development
@@ -86,112 +79,65 @@ Access at: `http://localhost:8000`
 
 ## 🌐 Vercel Deployment
 
+This project is configured for easy deployment on Vercel.
+
 ### Prerequisites
 
-1. Vercel account
-2. GitHub repository (optional, but recommended)
-3. Remote Ollama server accessible via HTTPS
+1.  **Vercel Account**: Sign up at [vercel.com](https://vercel.com).
+2.  **Remote Ollama Server**: You need an Ollama server running and accessible via HTTPS (e.g., using Cloudflare Tunnel).
 
 ### Deployment Steps
 
-1. **Push to GitHub** (if using Git integration)
-   ```bash
-   git add .
-   git commit -m "Add FastAPI + Ollama integration"
-   git push
-   ```
+1.  **Install Vercel CLI** (Optional but recommended)
+    ```bash
+    npm install -g vercel
+    ```
 
-2. **Connect to Vercel**
-   - Go to [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Or use Vercel CLI: `vercel`
+2.  **Deploy via Terminal**
+    Run the following command in the project directory:
+    ```bash
+    vercel
+    ```
+    - Follow the prompts (Keep default settings).
+    - **Important**: When asked for environment variables, add:
+        - Key: `OLLAMA_BASE_URL`
+        - Value: `https://your-remote-ollama-url.com`
 
-3. **Set Environment Variable**
-   - In Vercel Dashboard → Project Settings → Environment Variables
-   - Add `OLLAMA_BASE_URL` with your remote Ollama server URL
+3.  **Deploy via Dashboard (Alternative)**
+    - Push this code to a GitHub repository.
+    - Import the repository in Vercel.
+    - In "Environment Variables" section, add `OLLAMA_BASE_URL`.
+    - Click "Deploy".
 
-4. **Deploy**
-   - Vercel will automatically detect Python and deploy
-   - Your app will be live at `your-project.vercel.app`
+### `vercel.json` Configuration
 
-## 📝 Code Explanation
+The project includes a `vercel.json` file to configure the Python runtime:
 
-### Main Function Flow
-
-```python
-@app.get("/", response_class=HTMLResponse)
-def instant():
-    # 1. Get Ollama server URL from environment or use default
-    ollama_base_url = os.getenv("OLLAMA_BASE_URL", ".../")
-    
-    # 2. Initialize LangChain Ollama client
-    llm = ChatOllama(
-        model="gemma3:27b",
-        base_url=ollama_base_url,
-    )
-    
-    # 3. Create prompt
-    message = "You are on a website that has just been deployed..."
-    
-    # 4. Invoke LLM
-    response = llm.invoke(message)
-    
-    # 5. Format and return HTML
-    reply = response.content.replace("\n", "<br/>")
-    return html
+```json
+{
+    "builds": [
+        {
+            "src": "instant.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "instant.py"
+        }
+    ]
+}
 ```
-
-## 🔍 Key Concepts Learned
-
-1. **Serverless Deployment**: Deploying Python applications to Vercel
-2. **Remote LLM Integration**: Connecting to external Ollama servers
-3. **LangChain**: Using LangChain for LLM interactions
-4. **FastAPI**: Creating simple web endpoints
-5. **Environment Variables**: Managing configuration in serverless environments
-
-## ⚠️ Important Notes
-
-- **Remote Ollama Server**: This project requires a remote Ollama server. Local Ollama won't work on Vercel.
-- **Timeout**: Vercel has timeout limits (60 seconds on free tier). LLM responses should be reasonably fast.
-- **Cold Starts**: First request may be slower due to serverless cold starts.
-- **Model Availability**: Ensure the specified model (`gemma3:27b`) is available on your remote Ollama server.
 
 ## 🐛 Troubleshooting
 
 ### Connection Errors
-
-- Verify `OLLAMA_BASE_URL` is correctly set
-- Ensure remote Ollama server is accessible
-- Check if the server requires authentication
-
-### Model Not Found
-
-- Verify the model name is correct
-- Ensure the model is pulled on the remote server: `ollama pull gemma3:27b`
-
-### Timeout Issues
-
-- LLM responses may take too long
-- Consider using a faster/smaller model
-- Optimize prompts for shorter responses
+- **Error: Connection refused**: Ensure your remote Ollama server is running and the `OLLAMA_BASE_URL` is correct.
+- **Error: 504 Gateway Timeout**: Vercel Serverless Functions have a default timeout (10s on Hobby). If the LLM takes longer, you might need to optimize the prompt or use a faster model.
 
 ## 📚 Resources
 
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [Vercel Python Runtime](https://vercel.com/docs/functions/serverless-functions/runtimes/python)
 - [LangChain Ollama](https://python.langchain.com/docs/integrations/llms/ollama)
-- [Vercel Python Documentation](https://vercel.com/docs/functions/serverless-functions/runtimes/python)
-- [Ollama Documentation](https://ollama.ai/docs)
-
-## 🎓 Learning Outcomes
-
-After completing this project, you should understand:
-- How to deploy FastAPI applications to Vercel
-- How to integrate remote LLM services
-- How to use LangChain for LLM interactions
-- How to configure environment variables in serverless platforms
-- Basic serverless architecture concepts
-
----
-
-**Next Steps**: Consider adding error handling, multiple endpoints, or integrating with a database for more complex applications.
-

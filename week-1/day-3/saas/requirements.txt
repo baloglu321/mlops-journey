@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+langchain-ollama
+fastapi-clerk-auth
