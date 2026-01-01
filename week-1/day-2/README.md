@@ -12,13 +12,24 @@ AI-powered business idea generator that uses LangChain to connect to a remote Ol
 ## 🏗️ Architecture
 
 ```mermaid
-graph TD
-    User([User]) --> Client[Next.js Client]
-    Client -- "GET /api" --> API[FastAPI Backend]
-    API -- "Prompt" --> Ollama[Remote Ollama Server]
-    Ollama -- "Stream" --> API
-    API -- "SSE" --> Client
-    Client --> User
+flowchart LR
+    %% Nodes
+    User([User])
+    Client[Next.js Client]
+    API[FastAPI Backend]
+    Ollama[("Remote Ollama Server")]
+
+    %% Flow
+    User -->|1. Generate Idea| Client
+    Client -->|2. GET /api| API
+    
+    subgraph "AI Processing"
+        API -->|3. Prompt| Ollama
+        Ollama -.->|4. Stream| API
+    end
+
+    API -.->|5. SSE Stream| Client
+    Client -.->|6. Update UI| User
 ```
 
 ## 🛠️ Setup & Installation

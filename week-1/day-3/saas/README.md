@@ -12,20 +12,28 @@ An advanced, secure version of the AI Business Idea Generator. This project buil
 ## 🏗️ Architecture
 
 ```mermaid
-graph TD
-    User([User]) <--> Client[Next.js Client]
-    Client -- "1. Login" --> Clerk[Clerk Auth]
-    Clerk -- "2. JWT Token" --> Client
-    Client -- "3. Request SSE (with Link Header)" --> API[FastAPI Backend]
+flowchart LR
+    %% Nodes
+    User([User])
+    Client[Next.js Client]
+    API[FastAPI Backend]
+    Clerk{Clerk Auth}
+    Ollama[("Remote Ollama Server")]
+
+    %% Interactions
+    User -->|1. Login| Client
+    Client <-->|2. Get Token| Clerk
     
-    subgraph Backend
-        API -- "4. Verify via JWKS" --> Clerk
-        API -- "5. Prompt" --> Ollama[Ollama Server]
-        Ollama -- "6. Stream Response" --> API
+    subgraph "Secured Context"
+        Client -->|3. Request + Token| API
+        API -.->|4. Verify Token| Clerk
+        
+        API -->|5. Prompt| Ollama
+        Ollama -.->|6. Stream| API
     end
-    
-    API -- "7. Secure Event Stream" --> Client
-    Client -- "8. Update UI" --> User
+
+    API -.->|7. SSE Stream| Client
+    Client -.->|8. Update UI| User
 ```
 
 ## 🛠️ Tech Stack

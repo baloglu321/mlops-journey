@@ -12,20 +12,34 @@ An AI-powered application that generates professional summaries, action items, a
 The application uses a hybrid architecture with a Next.js frontend and a Python FastAPI backend to handle streaming AI responses.
 
 ```mermaid
-graph TD
-    User[Doctor / User] -->|1. Enters Notes| UI[Next.js Frontend]
-    UI -->|2. Authentication| Clerk[Clerk Auth]
+flowchart LR
+    %% Core Nodes
+    User([User / Doctor])
+    UI[Next.js Frontend]
+    API[FastAPI Backend]
+    Clerk{Clerk Auth}
+    Ollama[("Ollama (Gemma)")]
+    LC[LangChain]
+
+    %% Flow
+    User -->|1. Submit Notes| UI
     
-    subgraph Local_or_Cloud [Backend Environment]
-        UI -->|3. POST /api request| API[FastAPI Backend]
-        API -->|4. Validates Token| Clerk
-        API -->|5. Processing| LangChain[LangChain]
-        LangChain -->|6. Inference| Ollama[Ollama LLM (Gemma:27b)]
+    subgraph Authentication
+        UI <-->|2. Auth & Token| Clerk
+        API -.->|4. Validate Token| Clerk
     end
-    
-    Ollama -.->|7. Stream Tokens| LangChain
-    LangChain -.->|8. SSE Stream| API
-    API -.->|9. Real-time Updates| UI
+
+    subgraph "Server Side"
+        UI -->|3. POST Request| API
+        API -->|5. Process| LC
+        LC -->|6. Query| Ollama
+        
+        %% Streaming Return
+        Ollama -.->|7. Tokens| LC
+        LC -.->|8. SSE Stream| API
+    end
+
+    API -.->|9. Live Response| UI
 ```
 
 ## Features

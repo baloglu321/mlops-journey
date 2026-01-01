@@ -15,12 +15,22 @@ This project demonstrates how to create a FastAPI web application that connects 
 ## 🏗️ Architecture
 
 ```mermaid
-graph LR
-    User([User]) --> Vercel[Vercel Serverless Function]
-    Vercel --> LangChain[LangChain Client]
-    LangChain -- "HTTPS" --> RemoteOllama[Remote Ollama Server]
-    RemoteOllama -- "LLM Response" --> LangChain
-    LangChain --> User
+flowchart LR
+    %% Nodes
+    User([User])
+    Vercel[Vercel Serverless Function]
+    LC[LangChain Client]
+    Ollama[("Remote Ollama Server")]
+
+    %% Flow
+    User -->|1. Request| Vercel
+    Vercel -->|2. Invoke| LC
+    
+    subgraph "Remote / Cloud"
+        LC <-->|3. HTTPS / LLM Response| Ollama
+    end
+
+    Vercel -.->|4. HTML Response| User
 ```
 
 ## 📁 Files
