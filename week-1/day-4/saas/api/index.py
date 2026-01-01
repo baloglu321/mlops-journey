@@ -39,7 +39,6 @@ system_prompt = """
                         ### Draft of email to patient in patient-friendly language
                     """
 
-
 def user_prompt_for(visit: Visit) -> str:
     return f"""Create the summary, next steps and draft email for:
 Patient Name: {visit.patient_name}
@@ -48,15 +47,13 @@ Notes:
 {visit.notes}"""
 
 
+
+
 @app.post("/api")
-def consultation_summary(
-    visit: Visit, creds: HTTPAuthorizationCredentials = Depends(clerk_guard)
-):
+def consultation_summary(visit: Visit,creds: HTTPAuthorizationCredentials = Depends(clerk_guard)):
     user_id = creds.decoded["sub"]  # User ID from JWT - available for future use
     # 1. Ortam Değişkeni Kontrolü
-    ollama_base_url = os.getenv(
-        "OLLAMA_BASE_URL", "https://promoting-efforts-cant-tip.trycloudflare.com"
-    )
+    ollama_base_url = os.getenv("OLLAMA_BASE_URL", "...")
 
     # 2. LLM Ayarları
     llm = ChatOllama(
@@ -65,15 +62,22 @@ def consultation_summary(
         temperature=0.7,
     )
 
+    
     user_prompt = user_prompt_for(visit)
 
-    messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_prompt)]
+    messages = [
+        SystemMessage(content=system_prompt),
+        HumanMessage(content=user_prompt)
+    ]
+
 
     async def event_stream():
         try:
+           
             async for chunk in llm.astream(messages):
                 content = chunk.content
                 if content:
+                   
                     safe_content = content.replace("\n", "\\n")
                     yield f"data: {safe_content}\n\n"
                     await asyncio.sleep(0)
