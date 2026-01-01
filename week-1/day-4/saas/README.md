@@ -20,7 +20,7 @@ graph TD
         UI -->|3. POST /api request| API[FastAPI Backend]
         API -->|4. Validates Token| Clerk
         API -->|5. Processing| LangChain[LangChain]
-        LangChain -->|6. Inference| Ollama[Ollama LLM (Gemma:27b)]
+        LangChain -->|6. Inference| Ollama["Ollama LLM (Gemma:27b)"]
     end
     
     Ollama -.->|7. Stream Tokens| LangChain
