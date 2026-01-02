@@ -11,15 +11,24 @@ This repository is organized by weeks and days, with each day containing a compl
 ## 🗺️ Roadmap & Progress
 
 ```mermaid
-mindmap
-  root((MLOps Journey))
-    Week 1: Foundations
-      Day 1: FastAPI + Local LLM
-      Day 2: Full Stack Idea Generator
-      Day 3: Secure Auth & Streaming
-      Day 4: Professional SaaS (Consultation Notes)
-    Week 2: Advanced Usage
-      (Coming Soon)
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#2563eb', 'primaryTextColor': '#fff', 'primaryBorderColor': '#3b82f6', 'lineColor': '#60a5fa', 'secondaryColor': '#1e40af', 'tertiaryColor': '#1e3a8a'}}}%%
+graph LR
+    A[🚀 MLOps Journey] --> B[Week 1: Foundations]
+    B --> C[Day 1<br/>FastAPI + Local LLM]
+    C --> D[Day 2<br/>Full Stack Idea Generator]
+    D --> E[Day 3<br/>Secure Auth & Streaming]
+    E --> F[Day 4<br/>Professional SaaS<br/>Consultation Notes]
+    F --> G[Day 5<br/>AWS App Runner]
+    G --> H[Week 2<br/>Advanced Usage<br/>Coming Soon...]
+    
+    style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
+    style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
+    style C fill:#334155,stroke:#60a5fa,color:#fff
+    style D fill:#334155,stroke:#60a5fa,color:#fff
+    style E fill:#334155,stroke:#60a5fa,color:#fff
+    style F fill:#334155,stroke:#60a5fa,color:#fff
+    style G fill:#334155,stroke:#60a5fa,color:#fff
+    style H fill:#0f172a,stroke:#60a5fa,stroke-dasharray: 5 5,color:#fff
 ```
 
 ## 📚 Projects
@@ -46,6 +55,23 @@ mindmap
 - **Tech**: Next.js 14, TailwindCSS, Mermaid Charts, Structured Output
 - **Outcome**: A polished tool for doctors to summarize patient notes.
 
+#### [Day 5: AWS Production Deployment](./week-1/day-5/saas/)
+**Goal**: Deploy the SaaS application to a production environment.
+- **Tech**: AWS App Runner, Docker, Amazon ECR
+- **Outcome**: A live, scalable containerized application.
+
+**Architecture**:
+```mermaid
+flowchart LR
+    User([User]) -->|HTTPS| AppRunner[AWS App Runner]
+    AppRunner -->|Executes| Container[Docker Container]
+    Container -- Serves --> Frontend[Next.js Static]
+    Container -- Runs --> Backend[FastAPI]
+```
+
+**Live Deployment**:
+![AWS Status](./week-1/day-5/saas/screenshot/72a6270a-4e5a-4573-bb0f-87d1419839fc.png)
+
 ---
 
 ## 🛠️ Technologies
@@ -64,6 +90,7 @@ mindmap
 
 ### Deployment
 - **Vercel** - Serverless Hosting
+- **AWS App Runner** - Docker Container Hosting
 - **Cloudflare Tunnel** - Exposing local LLMs to the web
 
 ## 🚀 Quick Start
