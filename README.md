@@ -19,7 +19,7 @@ graph LR
     D --> E[Day 3<br/>Secure Auth & Streaming]
     E --> F[Day 4<br/>Professional SaaS<br/>Consultation Notes]
     F --> G[Day 5<br/>AWS App Runner]
-    G --> H[Week 2: Advanced Usage]
+    A --> H[Week 2: Advanced Usage]
     H --> I[Day 1<br/>AI Digital Twin]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff

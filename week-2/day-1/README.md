@@ -10,18 +10,18 @@ The system architecture features a decoupled frontend and backend. The React-bas
 
 ```mermaid
 graph TD
-    subgraph Frontend [Frontend (Next.js)]
+    subgraph Frontend ["Frontend (Next.js)"]
         UI[User Interface]
         API_Client[API Client]
     end
 
-    subgraph Backend [Backend (FastAPI)]
+    subgraph Backend ["Backend (FastAPI)"]
         API[API Endpoints]
         Logic[Conversation Logic]
         Mem_Mgr[Memory Manager]
     end
 
-    subgraph External [External Services/Storage]
+    subgraph External ["External Services/Storage"]
         Ollama[Ollama (Local LLM)]
         FileSystem[(JSON Memory Files)]
     end
