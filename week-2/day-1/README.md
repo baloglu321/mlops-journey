@@ -22,8 +22,8 @@ graph TD
     end
 
     subgraph External ["External Services/Storage"]
-        Ollama[Ollama (Local LLM)]
-        FileSystem[(JSON Memory Files)]
+        Ollama["Ollama (Local LLM)"]
+        FileSystem[("JSON Memory Files")]
     end
 
     User[User] -->|Interacts| UI
