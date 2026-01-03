@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+langchain-ollama
+python-dotenv
+python-multipart

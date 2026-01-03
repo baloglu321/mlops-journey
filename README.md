@@ -19,7 +19,8 @@ graph LR
     D --> E[Day 3<br/>Secure Auth & Streaming]
     E --> F[Day 4<br/>Professional SaaS<br/>Consultation Notes]
     F --> G[Day 5<br/>AWS App Runner]
-    G --> H[Week 2<br/>Advanced Usage<br/>Coming Soon...]
+    G --> H[Week 2: Advanced Usage]
+    H --> I[Day 1<br/>AI Digital Twin]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -28,7 +29,8 @@ graph LR
     style E fill:#334155,stroke:#60a5fa,color:#fff
     style F fill:#334155,stroke:#60a5fa,color:#fff
     style G fill:#334155,stroke:#60a5fa,color:#fff
-    style H fill:#0f172a,stroke:#60a5fa,stroke-dasharray: 5 5,color:#fff
+    style H fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
+    style I fill:#334155,stroke:#60a5fa,color:#fff
 ```
 
 ## 📚 Projects
@@ -71,6 +73,13 @@ flowchart LR
 
 **Live Deployment**:
 ![AWS Status](./week-1/day-5/saas/screenshot/72a6270a-4e5a-4573-bb0f-87d1419839fc.png)
+
+### Week 2: Advanced Usage
+
+#### [Day 1: AI Digital Twin](./week-2/day-1/)
+**Goal**: Create a persistent personality clone.
+- **Tech**: FastAPI, Next.js, Ollama, JSON Memory
+- **Outcome**: A chatbot that remembers context and mimics a specific persona.
 
 ---
 

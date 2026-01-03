@@ -41,6 +41,7 @@ system_prompt = """
                         ### Draft of email to patient in patient-friendly language
                     """
 
+
 def user_prompt_for(visit: Visit) -> str:
     return f"""Create the summary, next steps and draft email for:
 Patient Name: {visit.patient_name}
@@ -49,10 +50,10 @@ Notes:
 {visit.notes}"""
 
 
-
-
 @app.post("/api/consultation")
-def consultation_summary(visit: Visit,creds: HTTPAuthorizationCredentials = Depends(clerk_guard)):
+def consultation_summary(
+    visit: Visit, creds: HTTPAuthorizationCredentials = Depends(clerk_guard)
+):
     user_id = creds.decoded["sub"]  # User ID from JWT - available for future use
     # 1. Ortam Değişkeni Kontrolü
     ollama_base_url = os.getenv("OLLAMA_BASE_URL")
@@ -64,22 +65,15 @@ def consultation_summary(visit: Visit,creds: HTTPAuthorizationCredentials = Depe
         temperature=0.7,
     )
 
-    
     user_prompt = user_prompt_for(visit)
 
-    messages = [
-        SystemMessage(content=system_prompt),
-        HumanMessage(content=user_prompt)
-    ]
-
+    messages = [SystemMessage(content=system_prompt), HumanMessage(content=user_prompt)]
 
     async def event_stream():
         try:
-           
             async for chunk in llm.astream(messages):
                 content = chunk.content
                 if content:
-                   
                     safe_content = content.replace("\n", "\\n")
                     yield f"data: {safe_content}\n\n"
                     await asyncio.sleep(0)
@@ -100,10 +94,12 @@ def consultation_summary(visit: Visit,creds: HTTPAuthorizationCredentials = Depe
         event_stream(), headers=headers, media_type="text/event-stream"
     )
 
+
 @app.get("/health")
 def health_check():
     """Health check endpoint for AWS App Runner"""
     return {"status": "healthy"}
+
 
 # Serve static files (our Next.js export) - MUST BE LAST!
 static_path = Path("static")
@@ -112,6 +108,6 @@ if static_path.exists():
     @app.get("/")
     async def serve_root():
         return FileResponse(static_path / "index.html")
-    
+
     # Mount static files for all other routes
     app.mount("/", StaticFiles(directory="static", html=True), name="static")
