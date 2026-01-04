@@ -1,0 +1,12 @@
+[
+  {
+    "role": "user",
+    "content": "selam",
+    "timestamp": "2026-01-04T19:36:13.544401"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! Nasılsın? Sana nasıl yardımcı olabilirim?",
+    "timestamp": "2026-01-04T19:36:13.544401"
+  }
+]

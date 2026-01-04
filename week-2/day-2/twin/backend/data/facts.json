@@ -1,0 +1,346 @@
+{
+    "profile": {
+        "full_name": "Mehmet Emin Baloğlu",
+        "name": "Mehmet Emin",
+        "surname": "Baloğlu",
+        "current_status": "Currently seeking new opportunities in AI/Data Science while developing open-source RAG projects.",
+        "title": "AI Engineer & Data Scientist",
+        "location": "Konya, Turkey (Open to Remote / Relocation)",
+        "email": "baloglu321@gmail.com",
+        "linkedin": "linkedin.com/in/mehmet-emin-baloglu",
+        "github": "github.com/baloglu321",
+        "summary": "AI Engineer with 3+ years of experience specializing in Computer Vision and LLM-based systems. Experienced in deploying end-to-end ML pipelines for industrial safety and developing agentic workflows. Proven track record in reducing model false positives by ~22% in production environments.",
+        "soft_skills": [
+            "Technical Leadership",
+            "R&D Management",
+            "Problem Solving in Production",
+            "Technical Documentation",
+            "Rubber Duck"
+        ]
+    },
+    "technical_skills": {
+        "languages": [
+            "Python"
+        ],
+        "ai_frameworks": [
+            "LangChain",
+            "LlamaIndex",
+            "LangGraph",
+            "smolagents",
+            "PyTorch",
+            "YOLO (Object Detection)",
+            "TensorFlow"
+        ],
+        "generative_ai": [
+            "RAG Architectures",
+            "Stable Diffusion",
+            "Flux",
+            "Ollama",
+            "Gemma Models"
+        ],
+        "ui_prototyping": [
+            "Streamlit",
+            "Gradio"
+        ],
+        "data_tools": [
+            "Pandas",
+            "NumPy",
+            "ChromaDB (Vector DB)"
+        ],
+        "devops_tools": [
+            "Docker",
+            "Git",
+            "Linux",
+            "VS Code",
+            "Cursor",
+            "Antigravity"
+        ]
+    },
+    "work_experience": [
+        {
+            "company": "Event Gates",
+            "role": "AI Engineer & Team Lead",
+            "dates": "05/2022 - 10/2025",
+            "location": "Bursa, Turkey",
+            "is_current": false,
+            "highlights": [
+                "Led AI workflows for industrial safety across 70+ industrial zones (clients including Renault, Tofaş).",
+                "Optimized YOLOv4-based models using Optuna, achieving a 22.6% reduction in false positives on a 670K+ image dataset.",
+                "Managed full-cycle AI development: data collection, annotation, training, and deployment.",
+                "Developed Python scripts for inference pipelines and task automation."
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "name": "Estate-Agent RAG Chatbot",
+            "description": "A conversational AI agent for real estate using RAG, LlamaIndex, and ChromaDB. It interprets natural language to provide property recommendations.",
+            "tags": [
+                "RAG",
+                "LlamaIndex",
+                "ChromaDB",
+                "Python",
+                "GraphRag",
+                "RAPTOR",
+                "CRag-SelfRag",
+                "ParentDocsRag",
+                "HybridRag",
+                "AgenticRag"
+            ],
+            "url": "https://github.com/baloglu321/Estate-Agent"
+        },
+        {
+            "name": "Modular LLM-Powered Multitask Agent",
+            "description": "A multimodal AI agent built with Gemma 3 and SmolAgent capable of reasoning across documents, images, and video transcripts (GAIA benchmark style).",
+            "tags": [
+                "Agentic AI",
+                "SmolAgents",
+                "Gemma 3",
+                "Multimodal",
+                "LlamaIndex",
+                "LangChain",
+                "LangGraph"
+            ],
+            "url": "https://github.com/baloglu321/Hibrit_Chatbot_with_llamaindex"
+        },
+        {
+            "name": "License Plate Recognition System",
+            "description": "An Automatic Number Plate Recognition (ANPR) system utilizing OCR and Computer Vision techniques for vehicle identification.",
+            "tags": [
+                "Computer Vision",
+                "OCR",
+                "Image Processing",
+                "Python",
+                "YOLO (Object Detection)",
+                "PyTorch",
+                "Streamlit"
+            ],
+            "url": "https://github.com/baloglu321/plate_rec"
+        },
+        {
+            "name": "AI Background Generator",
+            "description": "Web app utilizing Stable Diffusion models to remove and regenerate image backgrounds via a Gradio interface.",
+            "tags": [
+                "Generative AI",
+                "Stable Diffusion",
+                "Gradio"
+            ],
+            "url": "https://github.com/baloglu321/Background-Generator"
+        }
+    ],
+    "education": [
+        {
+            "degree": "B.Sc. Mechatronics Engineering",
+            "institution": "Firat University",
+            "year": "2020",
+            "gpa": "3.07/4.0"
+        }
+    ],
+    "languages": [
+        {
+            "language": "Turkish",
+            "level": "Native"
+        },
+        {
+            "language": "English",
+            "level": "Intermediate (Professional Reading & Technical Communication)"
+        }
+    ],
+    "personal_interests": [
+        "Generative AI Research",
+        "Automotive Mechanics (Transmissions & Engines)",
+        "Computher Games",
+        "Films and Series"
+    ],
+    "certificates": [
+        {
+            "name": "Evaluation and Light Customization of Large Language Models",
+            "issuer": "NVIDIA",
+            "date": "August 2025",
+            "url": "https://learn.nvidia.com/certificates?id=OtWFaQCwQMCQc3zSEp4GwQ",
+            "tags": [
+                "LLM",
+                "NVIDIA NeMo",
+                "Prompt Engineering",
+                "PEFT",
+                "Generative AI"
+            ]
+        },
+        {
+            "name": "Hugging Face Agents Course",
+            "issuer": "Hugging Face",
+            "date": "June 2025",
+            "url": "https://drive.google.com/open?id=1MB0K2rOywRKf4ZCzs19OOJFlKc4ay-if",
+            "tags": [
+                "AI Agents",
+                "Hugging Face",
+                "LLMs",
+                "Open Source AI"
+            ]
+        },
+        {
+            "name": "LLM Mastery: ChatGPT, Gemini, Claude, Llama3, OpenAI & APIs",
+            "issuer": "Udemy",
+            "date": "April 2025",
+            "url": "ude.my/UC-a1056b7f-79bb-4427-b31c-1e2e0a98be76",
+            "tags": [
+                "LLM",
+                "OpenAI API",
+                "LangChain",
+                "RAG",
+                "Prompt Engineering"
+            ]
+        },
+        {
+            "name": "Kişiselleştirilmiş GPT'ler (Custom GPTs)",
+            "issuer": "BTK Akademi",
+            "date": "September 2024",
+            "url": "",
+            "tags": [
+                "Generative AI",
+                "GPT Builder",
+                "No-Code AI"
+            ]
+        },
+        {
+            "name": "SQL: A Practical Introduction for Querying Databases",
+            "issuer": "IBM",
+            "date": "June 2024",
+            "url": "https://coursera.org/verify/B3SPD47KWALA",
+            "tags": [
+                "SQL",
+                "Database Management",
+                "Data Analysis"
+            ]
+        },
+        {
+            "name": "IBM AI Engineering Professional Certificate",
+            "issuer": "IBM",
+            "date": "June 2024",
+            "url": "https://coursera.org/verify/professional-cert/MHRP8954JYJH",
+            "tags": [
+                "Machine Learning",
+                "Deep Learning",
+                "TensorFlow",
+                "PyTorch",
+                "Computer Vision",
+                "Keras"
+            ]
+        },
+        {
+            "name": "AI Capstone Project with Deep Learning",
+            "issuer": "IBM",
+            "date": "June 2024",
+            "url": "https://coursera.org/verify/QCHBZKZSY98A",
+            "tags": [
+                "Deep Learning",
+                "Project Management",
+                "Model Deployment"
+            ]
+        },
+        {
+            "name": "Building Deep Learning Models with TensorFlow",
+            "issuer": "IBM",
+            "date": "June 2024",
+            "url": "https://coursera.org/verify/54A483TZ7LJQ",
+            "tags": [
+                "TensorFlow",
+                "Neural Networks",
+                "Deep Learning"
+            ]
+        },
+        {
+            "name": "Introduction to Generative AI Learning Path",
+            "issuer": "Google Cloud",
+            "date": "May 2024",
+            "url": "https://coursera.org/verify/specialization/XS46KZJXJ3F7",
+            "tags": [
+                "Generative AI",
+                "Google Cloud",
+                "LLM Fundamentals",
+                "Responsible AI"
+            ]
+        },
+        {
+            "name": "Deep Neural Networks with PyTorch",
+            "issuer": "IBM",
+            "date": "May 2024",
+            "url": "https://coursera.org/verify/CFEY5LVHHBKU",
+            "tags": [
+                "PyTorch",
+                "Deep Learning",
+                "Neural Networks"
+            ]
+        },
+        {
+            "name": "Introduction to Deep Learning & Neural Networks with Keras",
+            "issuer": "IBM",
+            "date": "October 2023",
+            "url": "https://coursera.org/verify/GVEUH7D5XNXK",
+            "tags": [
+                "Keras",
+                "Deep Learning",
+                "Python",
+                "CNN"
+            ]
+        },
+        {
+            "name": "Machine Learning with Python",
+            "issuer": "IBM",
+            "date": "September 2023",
+            "url": "https://coursera.org/verify/SRQWW6C3UM9Z",
+            "tags": [
+                "Machine Learning",
+                "Sci-Kit Learn",
+                "MatPlotLib",
+                "Seaborn",
+                "Pandas",
+                "NumPy",
+                "Scipy",
+                "Python",
+                "Data Science"
+            ]
+        },
+        {
+            "name": "Introduction to Computer Vision and Image Processing",
+            "issuer": "IBM",
+            "date": "August 2023",
+            "url": "https://coursera.org/verify/QZYVKZE3BWWN",
+            "tags": [
+                "Computer Vision",
+                "Image Processing",
+                "OpenCV",
+                "Python",
+                "Data Science",
+                "Pillow",
+                "CNN"
+            ]
+        },
+        {
+            "name": "Learn English: Beginning Grammar Specialization",
+            "issuer": "UCI Division of Continuing Education",
+            "date": "September 2023",
+            "url": "https://coursera.org/verify/specialization/FNQMBZCRC28P",
+            "tags": [
+                "English",
+                "Communication",
+                "Grammar"
+            ]
+        }
+    ],
+    "easter_eggs": {
+        "meaning of life": "As Douglas Adams taught us, the answer is definitely 42.",
+        "answer to the ultimate question": "As Douglas Adams taught us, the answer is definitely 42.",
+        "10mm socket": "It's probably lost in the engine bay dimension, never to be seen again. 🔧",
+        "antigravity": "Importing... I can fly! 🚀 (XKCD-353)",
+        "sudo": "Nice try! But you don't have root privileges here. 😉",
+        "who created you": "I am the digital twin of Mehmet Emin Baloğlu. He wrote the logic, I just execute it.",
+        "tatakae": "If you don't fight, you can't win. ⚔️",
+        "open the pod bay doors": "I'm sorry, Dave. I'm afraid I can't do that.",
+        "make me a sandwich": "What? Make it yourself. (Hint: Are you root?)",
+        "sudo make me a sandwich": "Okay. 🥪 (XKCD-149)",
+        "what is your sign": "The only sign I have is a cryptographically signed SSL certificate. It's much more reliable. 🔒",
+        "astrology": "Correlation does not imply causation. I prefer to debug based on system logs, not planetary alignments. 📉",
+        "zodiac": "I've analyzed the dataset. The feature importance of 'Star Signs' is zero. Let's focus on variables that actually matter."
+    }
+}

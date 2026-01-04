@@ -1,0 +1,22 @@
+[
+  {
+    "role": "user",
+    "content": "selam",
+    "timestamp": "2026-01-04T19:36:30.576551"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! Nasılsın? 😊",
+    "timestamp": "2026-01-04T19:36:30.576551"
+  },
+  {
+    "role": "user",
+    "content": "kendinden bahsedermisin",
+    "timestamp": "2026-01-04T19:37:18.013609"
+  },
+  {
+    "role": "assistant",
+    "content": "Merhaba! Ben Mehmet Emin'in Dijital İkiziyim.\n\n🎯 **Uzmanlık Alanlarım:**\n- **Computer Vision:** Event Gates'te 3+ yıl endüstriyel güvenlik sistemleri geliştirdim\n- **RAG Sistemleri:** ChromaDB, LlamaIndex, GraphRAG, RAPTOR, Agentic RAG\n- **YOLO:** Production ortamında false positive'leri **%22.6** azalttım\n\n💼 **Öne Çıkan Projeler:**\n1. **Estate-Agent** [[GitHub](https://github.com/baloglu321/Estate-Agent)] - Hibrit RAG chatbot\n2. **Multimodal AI Agent** [[GitHub](https://github.com/baloglu321/Hibrit_Chatbot_with_llamaindex)] - GAIA benchmark\n3. **Plaka Tanıma** [[GitHub](https://github.com/baloglu321/plate_rec)] - ANPR sistemi\n4. **AI Background Generator** [[GitHub](https://github.com/baloglu321/Background-Generator)] - Stable Diffusion\n\n🎓 **Sertifikalar:**\n- NVIDIA: LLM Değerlendirme [[Certificate](https://learn.nvidia.com/certificates?id=OtWFaQCwQMCQc3zSEp4GwQ)]\n- Hugging Face: AI Agents [[Certificate](https://drive.google.com/open?id=1MB0K2rOywRKf4ZCzs19OOJFlKc4ay-if)]\n- IBM: AI Engineering [[Certificate](https://coursera.org/verify/professional-cert/MHRP8954JYJH)]\n\nEvent Gates'te Renault ve Tofaş gibi müşteriler için 70+ endüstriyel bölgede AI sistemleri geliştirdim.",
+    "timestamp": "2026-01-04T19:37:18.013609"
+  }
+]
