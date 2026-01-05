@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
     id: string;
@@ -40,7 +42,7 @@ export default function Twin() {
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8000/chat', {
+            const response = await fetch('https://b0avi9ldql.execute-api.eu-central-1.amazonaws.com/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -95,9 +97,9 @@ export default function Twin() {
             <div className="bg-gradient-to-r from-slate-700 to-slate-800 text-white p-4 rounded-t-lg">
                 <h2 className="text-xl font-semibold flex items-center gap-2">
                     <Bot className="w-6 h-6" />
-                    AI Digital Twin
+                    Mehmet Emin&apos;s Digital Twin
                 </h2>
-                <p className="text-sm text-slate-300 mt-1">Your AI course companion</p>
+                <p className="text-sm text-slate-300 mt-1">AI Engineer & Data Scientist</p>
             </div>
 
             {/* Messages */}
@@ -105,8 +107,8 @@ export default function Twin() {
                 {messages.length === 0 && (
                     <div className="text-center text-gray-500 mt-8">
                         <Bot className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-                        <p>Hello! I&apos;m your Digital Twin.</p>
-                        <p className="text-sm mt-2">Ask me anything about AI deployment!</p>
+                        <p>Merhaba! Ben Mehmet Emin&apos;in Dijital İkiziyim.</p>
+                        <p className="text-sm mt-2">Size nasıl yardımcı olabilirim?</p>
                     </div>
                 )}
 
@@ -126,16 +128,64 @@ export default function Twin() {
 
                         <div
                             className={`max-w-[70%] rounded-lg p-3 ${message.role === 'user'
-                                    ? 'bg-slate-700 text-white'
-                                    : 'bg-white border border-gray-200 text-gray-800'
+                                ? 'bg-slate-700 text-white'
+                                : 'bg-white border border-gray-200 text-gray-800'
                                 }`}
                         >
-                            <p className="whitespace-pre-wrap">{message.content}</p>
+                            {/* User messages: plain text */}
+                            {message.role === 'user' ? (
+                                <p className="whitespace-pre-wrap">{message.content}</p>
+                            ) : (
+                                /* Assistant messages: render markdown with clickable links */
+                                <div className="prose prose-sm max-w-none">
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkGfm]}
+                                        components={{
+                                            // Customize links to be clickable and styled
+                                            a: ({ node, ...props }) => (
+                                                <a
+                                                    {...props}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 hover:text-blue-800 font-semibold underline decoration-2 hover:decoration-blue-800 transition-colors"
+                                                />
+                                            ),
+                                            // Style strong/bold text
+                                            strong: ({ node, ...props }) => (
+                                                <strong className="font-bold text-slate-700" {...props} />
+                                            ),
+                                            // Style paragraphs
+                                            p: ({ node, ...props }) => (
+                                                <p className="mb-2 last:mb-0" {...props} />
+                                            ),
+                                            // Style lists
+                                            ul: ({ node, ...props }) => (
+                                                <ul className="list-disc list-inside mb-2 space-y-1" {...props} />
+                                            ),
+                                            ol: ({ node, ...props }) => (
+                                                <ol className="list-decimal list-inside mb-2 space-y-1" {...props} />
+                                            ),
+                                            // Style code blocks
+                                            code: ({ node, inline, ...props }: any) =>
+                                                inline ? (
+                                                    <code className="bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono" {...props} />
+                                                ) : (
+                                                    <code className="block bg-gray-100 p-2 rounded text-sm font-mono overflow-x-auto" {...props} />
+                                                )
+                                        }}
+                                    >
+                                        {message.content}
+                                    </ReactMarkdown>
+                                </div>
+                            )}
                             <p
                                 className={`text-xs mt-1 ${message.role === 'user' ? 'text-slate-300' : 'text-gray-500'
                                     }`}
                             >
-                                {message.timestamp.toLocaleTimeString()}
+                                {message.timestamp.toLocaleTimeString('tr-TR', {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}
                             </p>
                         </div>
 
@@ -159,8 +209,8 @@ export default function Twin() {
                         <div className="bg-white border border-gray-200 rounded-lg p-3">
                             <div className="flex space-x-2">
                                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0.1s]" />
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]" />
                             </div>
                         </div>
                     </div>
@@ -177,7 +227,7 @@ export default function Twin() {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyPress}
-                        placeholder="Type your message..."
+                        placeholder="Mesajınızı yazın..."
                         className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-600 focus:border-transparent text-gray-800"
                         disabled={isLoading}
                     />

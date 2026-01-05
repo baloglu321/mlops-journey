@@ -90,7 +90,7 @@
             "url": "https://github.com/baloglu321/Estate-Agent"
         },
         {
-            "name": "Modular LLM-Powered Multitask Agent",
+            "name": "Hibrit_Chatbot_with_llamaindex",
             "description": "A multimodal AI agent built with Gemma 3 and SmolAgent capable of reasoning across documents, images, and video transcripts (GAIA benchmark style).",
             "tags": [
                 "Agentic AI",
@@ -104,7 +104,7 @@
             "url": "https://github.com/baloglu321/Hibrit_Chatbot_with_llamaindex"
         },
         {
-            "name": "License Plate Recognition System",
+            "name": "plate_rec",
             "description": "An Automatic Number Plate Recognition (ANPR) system utilizing OCR and Computer Vision techniques for vehicle identification.",
             "tags": [
                 "Computer Vision",
@@ -118,7 +118,7 @@
             "url": "https://github.com/baloglu321/plate_rec"
         },
         {
-            "name": "AI Background Generator",
+            "name": "Background-Generator",
             "description": "Web app utilizing Stable Diffusion models to remove and regenerate image backgrounds via a Gradio interface.",
             "tags": [
                 "Generative AI",
