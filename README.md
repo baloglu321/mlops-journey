@@ -21,6 +21,7 @@ graph LR
     F --> G[Day 5<br/>AWS App Runner]
     A --> H[Week 2: Advanced Usage]
     H --> I[Day 1<br/>AI Digital Twin]
+    I --> J[Day 2<br/>Digital Twin +<br/>Memory]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -31,6 +32,7 @@ graph LR
     style G fill:#334155,stroke:#60a5fa,color:#fff
     style H fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
     style I fill:#334155,stroke:#60a5fa,color:#fff
+    style J fill:#334155,stroke:#60a5fa,color:#fff
 ```
 
 ## 📚 Projects
@@ -80,6 +82,11 @@ flowchart LR
 **Goal**: Create a persistent personality clone.
 - **Tech**: FastAPI, Next.js, Ollama, JSON Memory
 - **Outcome**: A chatbot that remembers context and mimics a specific persona.
+
+#### [Day 2: Digital Twin with Memory & Style](./week-2/day-2/)
+**Goal**: Enhance the digital twin with specific stylistic and factual context.
+- **Tech**: Python, LangChain, Custom Context Injection, AWS S3
+- **Outcome**: A more accurate and stylistically aligned digital persona with persistent cloud memory.
 
 ---
 

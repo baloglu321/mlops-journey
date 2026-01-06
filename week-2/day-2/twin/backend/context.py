@@ -3,7 +3,8 @@ from datetime import datetime
 
 
 full_name = facts["profile"]["full_name"]  # Fixed syntax
-name = facts["profile"]["name"]            # Fixed syntax
+name = facts["profile"]["name"]  # Fixed syntax
+
 
 def prompt():
     return f"""
