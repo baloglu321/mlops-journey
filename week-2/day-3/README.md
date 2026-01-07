@@ -20,7 +20,7 @@ graph TB
     S3Web["🪣 S3 (Frontend)"]
     APIGW["🚪 API Gateway"]
     Lambda["λ Lambda Function"]
-    Bedrock["🧠 AWS Bedrock"]
+    Bedrock["🧠 AWS Bedrock<br/>(openai.gpt-oss-120b-1:0)"]
     S3Mem["💾 S3 (Memory)"]
 
     User -->|HTTPS| CloudFront

@@ -22,6 +22,7 @@ graph LR
     A --> H[Week 2: Advanced Usage]
     H --> I[Day 1<br/>AI Digital Twin]
     I --> J[Day 2<br/>Digital Twin +<br/>Memory]
+    J --> K[Day 3<br/>Serverless Digital Twin<br/>(AWS Bedrock + Lambda)]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -33,6 +34,7 @@ graph LR
     style H fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
     style I fill:#334155,stroke:#60a5fa,color:#fff
     style J fill:#334155,stroke:#60a5fa,color:#fff
+    style K fill:#334155,stroke:#60a5fa,color:#fff
 ```
 
 ## 📚 Projects
