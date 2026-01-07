@@ -88,6 +88,12 @@ flowchart LR
 - **Tech**: Python, LangChain, Custom Context Injection, AWS S3
 - **Outcome**: A more accurate and stylistically aligned digital persona with persistent cloud memory.
 
+#### [Day 3: Serverless Digital Twin (AWS Bedrock + Lambda)](./week-2/day-3/)
+**Goal**: Deploy the Digital Twin to a scalable, serverless architecture.
+- **Tech**: AWS Lambda, Amazon Bedrock, API Gateway, CloudFront, S3
+- **Outcome**: A fully serverless AI application with global low-latency access and pay-per-use compute.
+
+
 ---
 
 ## 🛠️ Technologies

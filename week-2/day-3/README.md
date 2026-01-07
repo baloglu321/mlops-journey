@@ -17,11 +17,11 @@ The system transitions from a local setup to a fully serverless architecture on 
 graph TB
     User[👤 User]
     CloudFront[⚡ CloudFront CDN]
-    S3Web[🪣 S3 (Frontend)]
-    APIGW[🚪 API Gateway]
-    Lambda[λ Lambda Function]
-    Bedrock[🧠 AWS Bedrock]
-    S3Mem[💾 S3 (Memory)]
+    S3Web["🪣 S3 (Frontend)"]
+    APIGW["🚪 API Gateway"]
+    Lambda["λ Lambda Function"]
+    Bedrock["🧠 AWS Bedrock"]
+    S3Mem["💾 S3 (Memory)"]
 
     User -->|HTTPS| CloudFront
     CloudFront --> S3Web
