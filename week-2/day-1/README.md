@@ -74,3 +74,22 @@ Here is a glimpse of the project running:
 ## 🔗 References
 
 - Based on the guide: [Week 2 Day 1 - Production Engineering](https://github.com/ed-donner/production/blob/main/week2/day1.md)
+
+## 📂 Data Architecture (facts.json)
+
+The application relies on a `facts.json` file to populate the Digital Twin's knowledge base. Since the original file contains personal data and may be removed, here is the expected structure for recreating it:
+
+**File Path**: `twin/backend/data/facts.json`
+
+| Top-Level Key | Type | Description |
+| :--- | :--- | :--- |
+| `profile` | Object | Contains personal details: `full_name`, `current_status`, `title`, `location`, `email`, `linkedin`, `github`, `summary`, `soft_skills` (List). |
+| `technical_skills` | Object | Categorized skills: `languages`, `core_ds_libraries`, `computer_vision`, `llm_and_genai`, `mlops_and_infrastructure`, `ui_prototyping`. |
+| `work_experience` | List[Object] | List of roles with: `company`, `role`, `dates`, `location`, `is_current` (Bool), `description`, `highlights` (List), `tech_stack` (List). |
+| `projects` | List[Object] | Portfolio projects: `name`, `description`, `tags`, `url`, `info`. |
+| `education` | List[Object] | Academic history: `degree`, `institution`, `year`, `gpa`. |
+| `languages` | List[Object] | Spoken languages: `language`, `level`. |
+| `personal_interests` | List[String] | Hobbies and interests. |
+| `certificates` | List[Object] | Certifications: `name`, `issuer`, `date`, `url`, `tags`. |
+| `easter_eggs` | Object | Key-value pairs for special trigger phrases and their corresponding custom responses. |
+

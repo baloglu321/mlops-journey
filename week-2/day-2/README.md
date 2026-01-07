@@ -7,27 +7,32 @@ A "Digital Twin" AI application that simulates a professional persona based on p
 The system consists of a modern web frontend communicating with a Python-based REST API. The backend manages conversation state, builds context from static files, and interacts with a local LLM to generate responses.
 
 ```mermaid
-graph TD
-    Client[User / Client] -->|HTTP Request| Frontend[Next.js Frontend]
-    Frontend -->|API Call /chat| Backend[FastAPI Backend]
+graph TB
+    Client[👤 User/Client]
+    Frontend[Next.js Frontend]
+    Backend[FastAPI Backend]
     
-    subgraph "Backend Processing"
-        Backend -->|Check| EasterEgg[Easter Egg Interceptor]
-        EasterEgg -- Match --> Response[Immediate Response]
-        EasterEgg -- No Match --> Context[Context Construction]
-        
-        Context -->|Load Data| Resources[(Resources: Facts, CV, Style)]
-        Context -->|Load History| Storage[Conversation Memory]
-        
-        Storage -.->|Read/Write| S3[AWS S3 Bucket]
-        Storage -.->|Read/Write| Local[Local Filesystem]
-        
-        Context -->|Prompt + History| LLM[Ollama LLM (Gemma 3)]
-        LLM -->|Generation| Backend
-    end
+    Resources[(📚 Resources<br/>Facts, CV, Style)]
+    Memory[(💾 Memory<br/>S3 / Local)]
+    LLM[🤖 Ollama LLM<br/>Gemma 3]
     
-    Response --> Frontend
-    Backend -->|Final Response| Frontend
+    Client -->|HTTP Request| Frontend
+    Frontend -->|API /chat| Backend
+    
+    Backend --> Resources
+    Backend --> Memory
+    Backend --> LLM
+    
+    LLM -->|Response| Backend
+    Backend -->|JSON Response| Frontend
+    Frontend -->|Display| Client
+    
+    style Client fill:#e1f5ff,stroke:#333,stroke-width:2px,color:#000
+    style Frontend fill:#fff4e1,stroke:#333,stroke-width:2px,color:#000
+    style Backend fill:#ffe1f5,stroke:#333,stroke-width:2px,color:#000
+    style LLM fill:#e1ffe1,stroke:#333,stroke-width:2px,color:#000
+    style Resources fill:#f0f0f0,stroke:#333,stroke-width:2px,color:#000
+    style Memory fill:#f0f0f0,stroke:#333,stroke-width:2px,color:#000
 ```
 
 ## 🚀 Features
@@ -92,3 +97,22 @@ This project was developed by following the comprehensive guide from the "Produc
     npm run dev
     ```
     The application will be accessible at `http://localhost:3000`.
+
+## 📂 Data Architecture (facts.json)
+
+The application relies on a `facts.json` file to populate the Digital Twin's knowledge base. Since the original file contains personal data and may be removed, here is the expected structure for recreating it:
+
+**File Path**: `twin/backend/data/facts.json`
+
+| Top-Level Key | Type | Description |
+| :--- | :--- | :--- |
+| `profile` | Object | Contains personal details: `full_name`, `current_status`, `title`, `location`, `email`, `linkedin`, `github`, `summary`, `soft_skills` (List). |
+| `technical_skills` | Object | Categorized skills: `languages`, `core_ds_libraries`, `computer_vision`, `llm_and_genai`, `mlops_and_infrastructure`, `ui_prototyping`. |
+| `work_experience` | List[Object] | List of roles with: `company`, `role`, `dates`, `location`, `is_current` (Bool), `description`, `highlights` (List), `tech_stack` (List). |
+| `projects` | List[Object] | Portfolio projects: `name`, `description`, `tags`, `url`, `info`. |
+| `education` | List[Object] | Academic history: `degree`, `institution`, `year`, `gpa`. |
+| `languages` | List[Object] | Spoken languages: `language`, `level`. |
+| `personal_interests` | List[String] | Hobbies and interests. |
+| `certificates` | List[Object] | Certifications: `name`, `issuer`, `date`, `url`, `tags`. |
+| `easter_eggs` | Object | Key-value pairs for special trigger phrases and their corresponding custom responses. |
+

@@ -1,0 +1,62 @@
+[
+  {
+    "role": "user",
+    "content": "selam",
+    "timestamp": "2026-01-05T15:52:35.643213"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! Nasılsın? Sana nasıl yardımcı olabilirim?",
+    "timestamp": "2026-01-05T15:52:35.643213"
+  },
+  {
+    "role": "user",
+    "content": "Kısaca kendini tanıtırmısın ?",
+    "timestamp": "2026-01-05T15:53:08.581471"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! Ben Mehmet Emin Baloğlu. Makine öğrenmesi ve bilgisayar görüşü alanlarında uzmanlaşmış bir mühendis olarak çalışıyorum. Firat Üniversitesi'nden mekatronik mühendisliği derecesiyle mezun oldum ve sonrasında yapay zeka alanında derinleşerek IBM ve diğer platformlardan sertifikalar aldım. Şu anda ağırlıklı olarak görüntü işleme, derin öğrenme ve üretken yapay zeka konularına odaklanıyorum.\n\nSon projemde, özellikle Bursa pazarı için konum bazlı öneriler sunan bir emlak danışmanı olan RAG tabanlı bir sohbet edici AI ajanı geliştirdim. Ayrıca, Hugging Face kursu kapsamında çok modlu bir yapay zeka ajanı üzerinde de çalıştım. Deneyimlerim arasında YOLOv4 tabanlı üretim modellerini Optuna ile optimize ederek güvenlik sistemlerinde yanlış pozitif oranlarını **%22**'ye kadar düşürmek yer alıyor.\n\nİlgilendiğiniz konulara göre daha detaylı bilgi verebilirim.",
+    "timestamp": "2026-01-05T15:53:08.581471"
+  },
+  {
+    "role": "user",
+    "content": "Hangi teknolojileri biliyorsun ?",
+    "timestamp": "2026-01-05T15:54:22.376325"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! Ben Mehmet Emin. Benim için önemli olan, bir teknolojiyi bilmekten ziyade onu projelerde nasıl kullandığım. \n\n**Python** benim temel araçlarımdan biri. Özellikle makine öğrenmesi ve derin öğrenme projelerinde çok yoğun kullandım. **TensorFlow** ve **Keras** ile derin öğrenme modelleri geliştirdim, **PyTorch** ile de çeşitli projelerde deneyim kazandım. \n\nGörüntü işleme konusunda **OpenCV** ile çalıştım ve **YOLOv4** bazlı üretim modellerini **Optuna** ile optimize ederek endüstriyel güvenlik sistemlerinde yanlış pozitif oranlarını **%22**'ye kadar düşürdüm. \n\nVeri işleme ve depolama için **MongoDB** kullandım, web uygulamaları geliştirmek için de **Django** ile çalıştım. Son zamanlarda ise **LLM**'ler ve **RAG** mimarisi üzerine yoğunlaştım. **Estate-Agent** projemde, **ChromaDB** kullanarak konum bazlı mülk önerileri sunan bir sohbet botu geliştirdim. \n\nSertifikalarım arasında **IBM AI Engineering Professional Certificate** ve **Hugging Face**'in **Agents** kursu da bulunuyor.  \n\nElbette bunlar sadece kullandığım teknolojilerin bir kısmı. Projelerim ve ihtiyaçlarım doğrultusunda sürekli yeni teknolojiler öğrenmeye ve uygulamaya çalışıyorum.",
+    "timestamp": "2026-01-05T15:54:22.376325"
+  },
+  {
+    "role": "user",
+    "content": "React biliyormusun ?",
+    "timestamp": "2026-01-05T15:55:28.443921"
+  },
+  {
+    "role": "assistant",
+    "content": "Benim asıl uzmanlık alanım yapay zeka mühendisliği ve derin öğrenme olsa da, **React** ile ilgili temel bilgilere sahibim. Özellikle kullanıcı arayüzleri oluşturmak için kullanılan popüler bir JavaScript kütüphanesi olduğunu biliyorum. \n\nProjelerimde ağırlıklı olarak Python ve çeşitli derin öğrenme framework'leri (TensorFlow, PyTorch, Keras) kullanıyorum. Web uygulamaları geliştirmede ise genellikle Django gibi backend framework'lerini tercih ediyorum. \n\nAncak, modern web geliştirme trendlerini takip ediyorum ve React'in yetenekleri hakkında bilgi sahibiyim. İhtiyaç halinde React ile ilgili bilgilere erişebilir veya basit görevler için kullanabilirim. Benim önceliğim, özellikle bilgisayarla görme ve yapay zeka alanlarında derinlemesine uzmanlık gerektiren projelerde değer yaratmak.",
+    "timestamp": "2026-01-05T15:55:28.443921"
+  },
+  {
+    "role": "user",
+    "content": "estate agent projen hakkında biraz daha bilgi verebilirmsin?",
+    "timestamp": "2026-01-05T15:56:52.645710"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! **Estate-Agent** projem, aslında gayrimenkul sektöründe doğal dil sorgularını anlayabilen bir sohbet botu oluşturma fikrimden doğdu. Bursa özelindeki gayrimenkul verilerini kullanarak, kullanıcıların \"denize yakın, 3+1 daireler\" gibi isteklerini anlayıp, onlara uygun mülkleri önerebilen bir sistem geliştirdim. \n\nTemel olarak **RAG (Retrieval-Augmented Generation)** mimarisi üzerine kurulu. Yani, kullanıcı sorgusunu alıp öncelikle bir vektör veritabanı olan **ChromaDB** üzerinden alakalı mülkleri buluyor, sonra da **LLaMA** tabanlı bir dil modeli kullanarak bu mülkleri doğal bir şekilde açıklayan bir yanıt oluşturuyor. \n\nHibrit bir arama mimarisi kullandım; hem vektör tabanlı semantik arama, hem de yapılandırılmış meta veri filtreleme (konum, oda sayısı vb.) bir arada çalışıyor. Bu sayede hem anlamlı sonuçlar elde ediyorum, hem de kullanıcıların isteklerine daha hassas bir şekilde cevap verebiliyorum.\n\nProjenin kaynak kodunu [Github'dan](https://github.com/YOUR_GITHUB_LINK_HERE) inceleyebilirsin. Umarım projem hakkında yeterli bilgi verebilmişimdir. Başka bir sorunuz olursa çekinmeyin!\n",
+    "timestamp": "2026-01-05T15:56:52.645710"
+  },
+  {
+    "role": "user",
+    "content": "Peki rag konusunda yetkinliklerin nelerdir ?",
+    "timestamp": "2026-01-05T15:58:10.864640"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! RAG (Retrieval-Augmented Generation) benim için oldukça önemli bir konu. Özellikle son zamanlarda projelerimde sıklıkla kullandım ve derinlemesine bilgi birikimi edindim. \n\n**Estate-Agent** projemde, Bursa emlak piyasası için doğal dil sorgularını yorumlayıp alakalı mülk önerileri sunmak amacıyla RAG mimarisini uyguladım. **ChromaDB** kullanarak vektör tabanlı arama yaptım ve bunu yapılandırılmış meta veri filtreleriyle birleştirdim. Böylece hem kesin hem de konum bazlı cevaplar verebildim. Proje kodunu [Github'dan](https://github.com/...) inceleyebilirsiniz.\n\nAyrıca, **Modular LLM-Powered Multitask AI Agent** projemde de RAG yaklaşımını kullandım. Bu projede, **Gemma 3** ve **SmolAgent** kullanarak çok modlu bir yapay zeka ajanı geliştirdim. Bu ajan, belgeler, resimler, sesler ve YouTube videoları gibi farklı veri türlerinden bilgi çıkararak karmaşık soruları yanıtlayabiliyor.\n\nRAG konusunda sadece teorik bilgiye sahip değilim, aynı zamanda pratik uygulamalarla da deneyim kazandım. Veri toplama, temizleme, vektörleştirme, arama stratejileri ve LLM entegrasyonu gibi tüm aşamaları başarıyla tamamladım. \n\nUmarım bu açıklamalar, RAG konusundaki yetkinliklerim hakkında size yeterli bilgi vermiştir. Başka sorularınız olursa çekinmeden sorun.",
+    "timestamp": "2026-01-05T15:58:10.864640"
+  }
+]

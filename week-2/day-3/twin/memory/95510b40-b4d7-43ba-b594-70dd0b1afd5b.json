@@ -1,0 +1,42 @@
+[
+  {
+    "role": "user",
+    "content": "selam bana sql ile alakalı sahip olduğun sertifikaları gösterirmsiin ",
+    "timestamp": "2026-01-05T15:48:31.503419"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! Memnun oldum. SQL ile ilgili sertifikaları mı görmek istiyorsun? Evet, elimde bir tane mevcut:\n\n[Certificate](https://www.coursera.org/share/789867c983e913a44112699b8f662466)\n\nUmarım işine yarar. Başka bir konuda yardımcı olabilir miyim? Belki SQL projelerimden bahsetmek istersin?\n",
+    "timestamp": "2026-01-05T15:48:31.503419"
+  },
+  {
+    "role": "user",
+    "content": "selam bana sql ile alakalı sahip olduğun sertifikaları gösterirmsiin ",
+    "timestamp": "2026-01-05T15:48:50.985196"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! Memnun oldum. SQL ile ilgili sertifikalarımı görmek istediğini anlıyorum. Elbette, bir tane mevcut:\n\n[Certificate](https://www.coursera.org/share/789867c983e913a44112699b8f662466)\n\nSQL konusunda başka bir şeyler merak edersen veya projelerimden bahsetmemi istersen, çekinmeden söyleyebilirsin. Yardımcı olmaktan mutluluk duyarım.\n",
+    "timestamp": "2026-01-05T15:48:50.985196"
+  },
+  {
+    "role": "user",
+    "content": "selam bana sql ile alakalı sahip olduğun sertifikaları gösterirmsiin ",
+    "timestamp": "2026-01-05T15:50:50.792388"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! Memnun oldum. SQL ile alakalı sahip olduğum sertifikalarımı görmek istiyorsun, değil mi? Evet, elimde bir tane mevcut:\n\n[Certificate](https://www.coursera.org/share/789867c983e913a44112699b8f662466)\n\nBaşka bir konuda yardımcı olabilir miyim?\n",
+    "timestamp": "2026-01-05T15:50:50.792388"
+  },
+  {
+    "role": "user",
+    "content": "selam bana sql ile alakalı sahip olduğun sertifikaları gösterirmsiin ",
+    "timestamp": "2026-01-05T15:51:12.736273"
+  },
+  {
+    "role": "assistant",
+    "content": "Selam! Memnun oldum. SQL ile ilgili sertifikalarımı mı görmek istiyorsun? Evet, elimde bir tane mevcut:\n\n[Certificate](https://www.coursera.org/share/789867c983e913a44112699b8f662466)\n\nBaşka bir konuda yardımcı olabilir miyim?\n",
+    "timestamp": "2026-01-05T15:51:12.736273"
+  }
+]

@@ -1,0 +1,608 @@
+{
+    "profile": {
+        "full_name": "Mehmet Emin Baloğlu",
+        "name": "Mehmet Emin",
+        "surname": "Baloğlu",
+        "current_status": "Currently seeking new opportunities in AI/Data Science while developing open-source RAG projects.",
+        "title": "AI Engineer & Data Scientist",
+        "location": "Konya, Turkey (Open to Remote / Relocation)",
+        "email": "baloglu321@gmail.com",
+        "linkedin": "linkedin.com/in/mehmet-emin-baloglu",
+        "github": "github.com/baloglu321",
+        "summary": "AI Engineer with 3+ years of experience specializing in Computer Vision and LLM-based systems. Experienced in deploying end-to-end ML pipelines for industrial safety and developing agentic workflows. Proven track record in reducing model false positives by ~22% in production environments.",
+        "soft_skills": [
+            "Technical Leadership",
+            "R&D Management",
+            "Problem Solving in Production",
+            "Technical Documentation",
+            "Rubber Duck"
+        ]
+    },
+    "technical_skills": {
+        "languages": [
+            "Python",
+            "SQL",
+            "Bash/Shell"
+        ],
+        "core_ds_libraries": [
+            "PyTorch",
+            "TensorFlow",
+            "OpenCV",
+            "NumPy",
+            "Pandas",
+            "Scikit-Learn"
+        ],
+        "computer_vision": [
+            "YOLO Series (v4/v7/v8)",
+            "Anomaly Detection (PatchCore)",
+            "Depth Estimation (Midas, FOD)",
+            "OCR (Tesseract/EasyOCR)",
+            "InternImage",
+            "CoDeter"
+        ],
+        "llm_and_genai": [
+            "RAG Architectures (Hybrid, Graph, RAPTOR)",
+            "LangChain & LangGraph",
+            "LlamaIndex",
+            "Smolagents (Agentic AI)",
+            "PEFT / LoRA / Fine-tuning",
+            "Prompt Engineering",
+            "Local LLMs (Ollama, Gemma 3)",
+            "Image Gen (Stable Diffusion, Flux)"
+        ],
+        "mlops_and_infrastructure": [
+            "Docker",
+            "Git / GitHub Actions",
+            "Linux (Ubuntu/Server Management)",
+            "Optuna (Hyperparameter Tuning)",
+            "Vector DBs (ChromaDB)",
+            "Graph DBs (Neo4j)",
+            "IDE (VS Code, Cursor)"
+        ],
+        "ui_prototyping": [
+            "Streamlit",
+            "Gradio",
+            "FastAPI"
+        ]
+    },
+    "work_experience": [
+        {
+            "company": "Event Gates",
+            "role": "AI Engineer & Team Lead",
+            "dates": "05/2022 - 10/2025",
+            "location": "Bursa, Turkey",
+            "is_current": false,
+            "description": "Led AI model development for industrial safety across 70+ zones. Focused on model architecture, training strategies, and data-centric AI.",
+            "highlights": [
+                "**Career Progression:**",
+                "• **Year 1 (Data & Training):** Focused heavily on data labeling workflows and training YOLOv4 models from scratch.",
+                "• **Year 2 (Leadership & R&D):** Led a **3-person Data Science team**. Conducted research on new architectures (Yolo models) and Depth estimation models (Midas, FOD) and anomaly detection models (PatchCore) and managed project timelines.",
+                "• **Year 3 (Optimization & Data-Centric AI):** Focused on dataset effectiveness and model optimization. Implemented **Optuna** for hyperparameter tuning.",
+                "**Key Achievements:**",
+                "• Achieved a **22.6% reduction in false positives** on a 670K+ image dataset using Optuna and Data-Centric strategies.",
+                "• Developed specialized modules for **Anomaly Detection (PatchCore)** and **Depth Estimation (Midas)**.",
+                "• Executed all model training and development operations on **Linux (Ubuntu)** servers."
+            ],
+            "tech_stack": [
+                "Python",
+                "PyTorch",
+                "TensorFlow",
+                "YOLOv4",
+                "Optuna",
+                "PatchCore",
+                "Midas"
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "name": "Estate-Agent RAG Chatbot",
+            "description": "An intelligent, conversational real estate agent powered by Retrieval-Augmented Generation (RAG) technology. The system combines semantic search with structured filtering to provide accurate and natural property recommendations, focusing on the Bursa real estate market, understanding complex user queries about property search, location, budget, and more. It also integrates hybrid retrieval with vector search and metadata filtering for high-quality responses.",
+            "tags": [
+                "RAG",
+                "Python",
+                "ConversationalAgent",
+                "RealEstate",
+                "LlamaIndex",
+                "ChromaDB",
+                "HybridSearch",
+                "Gradio"
+            ],
+            "url": "https://github.com/baloglu321/Estate-Agent",
+            "info": "This project implements a hybrid AI agent capable of handling both simple conversational tasks and complex real estate search queries. It uses a combination of semantic embeddings and structured filtering to search property data in ChromaDB, routes user queries intelligently between simple chat and full agent workflows, and supports auxiliary tools like weather, Wikipedia and web search integrations to enrich responses. Designed with Gradio as its front end, Estate-Agent leverages modern Python libraries and LLM inference to provide real-time property recommendations tailored to user criteria."
+        },
+        {
+            "name": "Arxivangelist Multi-Task AI Agent",
+            "description": "A multitask AI agent developed as part of the HuggingFace Agents Course Unit 4, designed to answer diverse questions across domains such as math, web search, document processing, multimedia analysis and more, using a rich set of built-in tools and model integrations.",
+            "tags": [
+                "AI Agent",
+                "Multitask",
+                "HuggingFace",
+                "Ollama",
+                "Python",
+                "Gradio",
+                "Web Search",
+                "Multimedia",
+                "Question Answering"
+            ],
+            "url": "https://github.com/baloglu321/arxivangelist-multitask-ai",
+            "info": "Arxivangelist is an advanced multi-task AI agent system built as a final assignment for the HuggingFace Agents Course. It integrates numerous tools like web search, Wikipedia, file processing, transcription, math operations, and more to handle a wide range of tasks, achieving a benchmark accuracy of 30% on the GAIA evaluation. The agent utilizes a Gradio interface and can be run locally with an Ollama server and configured APIs for expanded capabilities. "
+        },
+        {
+            "name": "Background-Generator",
+            "description": "A Python/Gradio tool that removes the background from images using Rembg and reconstructs a new background using Stable Diffusion models. Provides a simple UI for uploading and processing visual content.",
+            "tags": [
+                "Python",
+                "Gradio",
+                "Rembg",
+                "Stable Diffusion",
+                "Image Processing"
+            ],
+            "url": "https://github.com/baloglu321/Background-Generator",
+            "info": "This repo focuses on image background removal and generation using pre-trained diffusion models and the Rembg library, allowing users to generate new backgrounds for uploaded images via an interactive Gradio interface.  "
+        },
+        {
+            "name": "Plate Recognition",
+            "description": "A license plate detection and recognition project built with computer vision techniques, likely using OpenCV and possibly neural networks for automatic vehicle plate reading.",
+            "tags": [
+                "Python",
+                "OpenCV",
+                "Computer Vision",
+                "OCR",
+                "Deep Learning"
+            ],
+            "url": "https://github.com/baloglu321/plate_rec",
+            "info": "This project implements automatic license plate detection and recognition, useful for traffic monitoring systems or automation in parking/vehicle entry scenarios. "
+        },
+        {
+            "name": "Hibrit Chatbot with LlamaIndex",
+            "description": "A hybrid chatbot combining rule-based, retrieval, and embedding-driven conversational logic using LlamaIndex for semantic search and knowledge retrieval.",
+            "tags": [
+                "RAG",
+                "LlamaIndex",
+                "Python",
+                "Chatbot",
+                "NLP"
+            ],
+            "url": "https://github.com/baloglu321/Hibrit_Chatbot_with_llamaindex",
+            "info": "Hybrid chat application leveraging LlamaIndex to enhance conversational responses with document retrieval and semantic embedding search."
+        },
+        {
+            "name": "Graph_RAG",
+            "description": "A RAG (Retrieval-Augmented Generation) approach enhanced with graph-structured indexing or reasoning for improved contextual retrieval and answer generation.",
+            "tags": [
+                "RAG",
+                "Graph",
+                "Retrieval",
+                "Python",
+                "Neo4j"
+            ],
+            "url": "https://github.com/baloglu321/Graph_RAG",
+            "info": "This repository likely focuses on applying graph-based methods to improve retrieval and reasoning in RAG pipelines, combining semantic search with structural relationships."
+        },
+        {
+            "name": "Raptor_RAG",
+            "description": "An experimental RAG variant focused on optimized retrieval and answer ranking strategies, possibly using advanced index techniques or hybrid models.",
+            "tags": [
+                "RAG",
+                "Python",
+                "Retrieval",
+                "ChromaDB",
+                "AI"
+            ],
+            "url": "https://github.com/baloglu321/Raptor_RAG",
+            "info": "This project presents an alternative RAG pipeline with specific enhancements around retrieval or fusion algorithms to deliver more accurate responses."
+        },
+        {
+            "name": "CRAG_Self-RAG",
+            "description": "A self-referential RAG system combining contextual retrieval and self-augmentation strategies to improve answer accuracy over iterative retrieval steps.",
+            "tags": [
+                "Self-RAG",
+                "Contextual Retrieval",
+                "Python",
+                "AI"
+            ],
+            "url": "https://github.com/baloglu321/CRAG_Self-RAG",
+            "info": "Implements Self-RAG style iterative retrieval and answer generation logic, where the model queries itself over indexed data to refine responses. "
+        },
+        {
+            "name": "Parent_Docs_RAG",
+            "description": "A RAG system tailored for hierarchical or multi-document knowledge bases, focusing on retrieving and synthesizing information across related document sets.",
+            "tags": [
+                "RAG",
+                "Multi-Document",
+                "Python",
+                "Knowledge Retrieval"
+            ],
+            "url": "https://github.com/baloglu321/Parent_Docs_RAG",
+            "info": "Designed to handle questions involving hierarchical or grouped document sets, enabling structured retrieval and summarization across parent/child document relationships. "
+        },
+        {
+            "name": "Agentic-rag",
+            "description": "An agentic RAG framework combining autonomous decision logic with retrieval-augmented generation for more complex task solving using tools and context.",
+            "tags": [
+                "RAG",
+                "Agentic",
+                "Python",
+                "Tool-augmented"
+            ],
+            "url": "https://github.com/baloglu321/Agentic-rag",
+            "info": "Implements an agentic version of RAG that can plan, retrieve, and reason over data using multiple subtools or steps to generate answers."
+        },
+        {
+            "name": "Rag_wokspace",
+            "description": "A workspace repository for experimenting with different setups and configurations of RAG pipelines, embeddings, and indexing systems.",
+            "tags": [
+                "RAG",
+                "Workspace",
+                "Python",
+                "Embeddings",
+                "Hybrid Rag",
+                "Naive Rag"
+            ],
+            "url": "https://github.com/baloglu321/Rag_wokspace",
+            "info": "Serves as an experimental playground for different RAG approaches, embedding setups, and retrieval strategies for prototyping and testing."
+        },
+        {
+            "name": "Hibrit Chatbot with langchain",
+            "description": "A hybrid chatbot combining LangChain’s chaining logic with retrieval and vector search to build contextual conversational AI.",
+            "tags": [
+                "LangChain",
+                "Chatbot",
+                "RAG",
+                "Python"
+            ],
+            "url": "https://github.com/baloglu321/Hibrit_Chatbot_with_langchain",
+            "info": "This repository shows a hybrid conversational agent using LangChain for orchestrating retrieval and generation workflows."
+        },
+        {
+            "name": "Hibrit Chatbot Agent",
+            "description": "An agentic hybrid chatbot that integrates LangChain/LlamaIndex with autonomous agent logic for dialog, planning, and retrieval tasks.",
+            "tags": [
+                "Agent",
+                "Chatbot",
+                "RAG",
+                "Python",
+                "SmolAgents"
+            ],
+            "url": "https://github.com/baloglu321/Hibrit_Chatbot_Agent",
+            "info": "Builds a hybrid agentic conversational AI using multiple tool calls and retrieval pipelines to handle complex chats."
+        },
+        {
+            "name": "Langchain Agent",
+            "description": "A LangChain-based intelligent agent that uses chaining workflows to invoke retrieval, search, and external tool actions for complex queries.",
+            "tags": [
+                "Python",
+                "LangChain",
+                "Agent",
+                "RAG"
+            ],
+            "url": "https://github.com/baloglu321/langchain_agent",
+            "info": "Focuses on building a LangChain agent that can combine retrieval, reasoning, and external tool integration for flexible AI tasks."
+        },
+        {
+            "name": "Llamaindex Agent",
+            "description": "An intelligent agent built with LlamaIndex at its core, combining retrieval, vector search, and reasoning loops for document-aware task performance.",
+            "tags": [
+                "Python",
+                "LlamaIndex",
+                "Agent",
+                "RAG"
+            ],
+            "url": "https://github.com/baloglu321/llamaindex_agent",
+            "info": "This repo demonstrates agentic architecture using LlamaIndex for document retrieval and LLM reasoning integration."
+        },
+        {
+            "name": "SmartBusPredictor",
+            "description": "A predictive analytics system that uses machine learning to estimate bus occupancy based on temporal and schedule data, improving transport optimization.",
+            "tags": [
+                "Python",
+                "Machine Learning",
+                "Time Series",
+                "Predictive Model",
+                "Django"
+            ],
+            "url": "https://github.com/baloglu321/SmartBusPredictor",
+            "info": "Implements a bus occupancy prediction model using ML techniques and a server back-end for real-world transit insights."
+        },
+        {
+            "name": "Animal-classification-with-Transfer-learning",
+            "description": "An image classification project leveraging transfer learning to categorize animal species using pre-trained neural networks for higher accuracy.",
+            "tags": [
+                "Python",
+                "Deep Learning",
+                "Transfer Learning",
+                "Computer Vision"
+            ],
+            "url": "https://github.com/baloglu321/Animal-classification-with-Transfer-learning",
+            "info": "Demonstrates transfer learning workflows on animal image datasets, showing step-by-step training, evaluation, and model fine-tuning."
+        }
+    ],
+    "education": [
+        {
+            "degree": "B.Sc. Mechatronics Engineering",
+            "institution": "Firat University",
+            "year": "2020",
+            "gpa": "3.07/4.0"
+        }
+    ],
+    "languages": [
+        {
+            "language": "Turkish",
+            "level": "Native"
+        },
+        {
+            "language": "English",
+            "level": "Intermediate (Professional Reading & Technical Communication)"
+        }
+    ],
+    "personal_interests": [
+        "Generative AI Research",
+        "Automotive Mechanics (Transmissions & Engines)",
+        "Computher Games",
+        "Films and Series"
+    ],
+    "certificates": [
+        {
+            "name": "Evaluation and Light Customization of Large Language Models",
+            "issuer": "NVIDIA",
+            "date": "August 2025",
+            "url": "https://learn.nvidia.com/certificates?id=OtWFaQCwQMCQc3zSEp4GwQ",
+            "tags": [
+                "LLM",
+                "NVIDIA NeMo",
+                "Prompt Engineering",
+                "PEFT",
+                "Generative AI"
+            ]
+        },
+        {
+            "name": "Hugging Face Agents Course",
+            "issuer": "Hugging Face",
+            "date": "June 2025",
+            "url": "https://drive.google.com/open?id=1MB0K2rOywRKf4ZCzs19OOJFlKc4ay-if",
+            "tags": [
+                "AI Agents",
+                "Hugging Face",
+                "LLMs",
+                "Open Source AI"
+            ]
+        },
+        {
+            "name": "Diffusion Mastery: Flux, Stable Diffusion, Midjourney & more",
+            "issuer": "Udemy",
+            "date": "November 2025",
+            "url": "https://ude.my/UC-a1056b7f-79bb-4427-b31c-1e2e0a98be76",
+            "tags": [
+                "LLM",
+                "OpenAI API",
+                "LangChain",
+                "RAG",
+                "Prompt Engineering"
+            ]
+        },
+        {
+            "name": "LLM Mastery: ChatGPT, Gemini, Claude, Llama3, OpenAI & APIs",
+            "issuer": "Udemy",
+            "date": "April 2025",
+            "url": "https://www.udemy.com/certificate/UC-7d0192fd-d71a-44c2-98af-cea36b2e2a12/",
+            "tags": [
+                "FLUX",
+                "Stable Diffusion",
+                "Midjourney",
+                "comfyUI",
+                "FocusUI",
+                "LoRa"
+            ]
+        },
+        {
+            "name": "Kişiselleştirilmiş GPT'ler (Custom GPTs)",
+            "issuer": "BTK Akademi",
+            "date": "September 2024",
+            "url": "https://drive.google.com/file/d/16KZkpMzBcZiJaKuDHuFOPEo5ng5t8AFJ/view?usp=sharing",
+            "tags": [
+                "Generative AI",
+                "GPT Builder",
+                "No-Code AI",
+                "LLM",
+                "NLP"
+            ]
+        },
+        {
+            "name": "SQL: A Practical Introduction for Querying Databases",
+            "issuer": "IBM",
+            "date": "June 2024",
+            "url": "https://coursera.org/verify/B3SPD47KWALA",
+            "tags": [
+                "SQL",
+                "Database Management",
+                "Data Analysis"
+            ]
+        },
+        {
+            "name": "IBM AI Engineering Professional Certificate",
+            "issuer": "IBM",
+            "date": "June 2024",
+            "url": "https://coursera.org/verify/professional-cert/MHRP8954JYJH",
+            "tags": [
+                "Tensorflow",
+                "Keras",
+                "PyTorch",
+                "Deep Learning",
+                "Deep Neural Networks (DNN)",
+                "Machine Learning",
+                "Computer Vision",
+                "Classification",
+                "Linear Regression",
+                "Logistic Regression",
+                "Clustering",
+                "Dimensionality Reduction",
+                "Recurrent Neural Networks (RNN)",
+                "Convolutional Neural Networks (CNN)",
+                "Autoencoders"
+            ]
+        },
+        {
+            "name": "AI Capstone Project with Deep Learning",
+            "issuer": "IBM",
+            "date": "June 2024",
+            "url": "https://coursera.org/verify/QCHBZKZSY98A",
+            "tags": [
+                "Keras",
+                "PyTorch",
+                "Artificial Intelligence (AI)",
+                "Deep Neural Networks (DNN)",
+                "Python",
+                "Opencv",
+                "Computer Vision",
+                "Deep Learning",
+                "Image Processing"
+            ]
+        },
+        {
+            "name": "Building Deep Learning Models with TensorFlow",
+            "issuer": "IBM",
+            "date": "June 2024",
+            "url": "https://coursera.org/verify/54A483TZ7LJQ",
+            "tags": [
+                "Tensorflow",
+                "Recurrent Neural Networks (RNN)",
+                "Long Short-term Memory (LSTM)",
+                "Logistic Regression",
+                "Linear Regression",
+                "Deep Neural Networks (DNN)",
+                "Convolutional Neural Networks (CNN)",
+                "RBM",
+                "Autoencoders"
+            ]
+        },
+        {
+            "name": "Introduction to Generative AI Learning Path",
+            "issuer": "Google Cloud",
+            "date": "May 2024",
+            "url": "https://coursera.org/verify/specialization/XS46KZJXJ3F7",
+            "tags": [
+                "Generative AI",
+                "Large Language Models (LLM)",
+                "Responsible AI"
+            ]
+        },
+        {
+            "name": "Deep Neural Networks with PyTorch",
+            "issuer": "IBM",
+            "date": "May 2024",
+            "url": "https://coursera.org/verify/CFEY5LVHHBKU",
+            "tags": [
+                "PyTorch",
+                "Artificial Neural Networks",
+                "Deep Neural Networks (DNN)",
+                "Convolutional Neural Networks (CNN)",
+                "Artificial Intelligence (AI)"
+            ]
+        },
+        {
+            "name": "Introduction to Deep Learning & Neural Networks with Keras",
+            "issuer": "IBM",
+            "date": "October 2023",
+            "url": "https://coursera.org/verify/GVEUH7D5XNXK",
+            "tags": [
+                "Keras",
+                "Deep Learning",
+                "Python",
+                "CNN"
+            ]
+        },
+        {
+            "name": "Machine Learning with Python",
+            "issuer": "IBM",
+            "date": "September 2023",
+            "url": "https://coursera.org/verify/SRQWW6C3UM9Z",
+            "tags": [
+                "Machine Learning",
+                "Sci-Kit Learn",
+                "MatPlotLib",
+                "Seaborn",
+                "Pandas",
+                "NumPy",
+                "Scipy",
+                "Python",
+                "Data Science"
+            ]
+        },
+        {
+            "name": "Introduction to Computer Vision and Image Processing",
+            "issuer": "IBM",
+            "date": "August 2023",
+            "url": "https://coursera.org/verify/QZYVKZE3BWWN",
+            "tags": [
+                "Computer Vision",
+                "Image Processing",
+                "OpenCV",
+                "Python",
+                "Data Science",
+                "Pillow",
+                "CNN"
+            ]
+        },
+        {
+            "name": "Learn English: Beginning Grammar Specialization",
+            "issuer": "UCI Division of Continuing Education",
+            "date": "September 2023",
+            "url": "https://coursera.org/verify/specialization/FNQMBZCRC28P",
+            "tags": [
+                "English",
+                "Communication",
+                "Grammar"
+            ]
+        },
+        {
+            "name": "Huawei Cloud Practicum",
+            "issuer": "Patika.dev",
+            "date": "January 2023",
+            "url": "https://verified.sertifier.com/en/verify/40115753360995?ref=email",
+            "tags": [
+                "Huawei Cloud",
+                "Cloud Computing"
+            ]
+        },
+        {
+            "name": "The Elements of Data Science",
+            "issuer": "Amazon Web Services (AWS)",
+            "date": "December 2022",
+            "url": "https://verified.sertifier.com/en/verify/40115753360995?ref=email",
+            "tags": [
+                "Python",
+                "Data Science",
+                "Machine learning algoritms"
+            ]
+        },
+        {
+            "name": "Derin Öğrenme İle Görüntü İşleme",
+            "issuer": "Udemy",
+            "date": "April 2022",
+            "url": "https://www.udemy.com/certificate/UC-7f43cc92-c6fc-4be7-a625-76aaabf34b05/",
+            "tags": [
+                "Python",
+                "Deep Learning",
+                "Artificial Intelligence (AI)",
+                "Object Detection",
+                "Computer Vision"
+            ]
+        }
+    ],
+    "easter_eggs": {
+        "meaning of life": "As Douglas Adams taught us, the answer is definitely 42.",
+        "answer to the ultimate question": "As Douglas Adams taught us, the answer is definitely 42.",
+        "10mm socket": "It's probably lost in the engine bay dimension, never to be seen again. 🔧",
+        "antigravity": "Importing... I can fly! 🚀 (XKCD-353)",
+        "sudo": "Nice try! But you don't have root privileges here. 😉",
+        "who created you": "I am the digital twin of Mehmet Emin Baloğlu. He wrote the logic, I just execute it.",
+        "tatakae": "If you don't fight, you can't win. ⚔️",
+        "open the pod bay doors": "I'm sorry, Dave. I'm afraid I can't do that.",
+        "make me a sandwich": "What? Make it yourself. (Hint: Are you root?)",
+        "sudo make me a sandwich": "Okay. 🥪 (XKCD-149)",
+        "what is your sign": "The only sign I have is a cryptographically signed SSL certificate. It's much more reliable. 🔒",
+        "astrology": "Correlation does not imply causation. I prefer to debug based on system logs, not planetary alignments. 📉",
+        "zodiac": "I've analyzed the dataset. The feature importance of 'Star Signs' is zero. Let's focus on variables that actually matter."
+    }
+}
