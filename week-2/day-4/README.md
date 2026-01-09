@@ -16,42 +16,45 @@ The system uses a fully serverless architecture on AWS with automated infrastruc
 6. **Infrastructure**: **Terraform** manages all AWS resources with workspace isolation.
 
 ```mermaid
-graph TB
+graph LR
     User[👤 User]
-    CloudFront[⚡ CloudFront CDN]
-    S3Web["🪣 S3 (Frontend)"]
-    APIGW["🚪 API Gateway<br/>(HTTP API)"]
-    Lambda["λ Lambda Function<br/>(Python 3.12)"]
-    Bedrock["🧠 AWS Bedrock<br/>(openai.gpt-oss-120b-1:0)"]
-    S3Mem["💾 S3 (Memory)"]
-    Terraform["🏗️ Terraform<br/>(Infrastructure)"]
-    Scripts["📜 Deploy/Destroy<br/>Scripts"]
-
-    User -->|HTTPS| CloudFront
-    CloudFront --> S3Web
     
-    User -->|API Requests| APIGW
-    APIGW -->|Invoke| Lambda
+    subgraph Frontend
+        CF[☁️ CloudFront]
+        S3F[📦 S3 Static Site]
+    end
     
-    Lambda <-->|Bedrock Runtime API| Bedrock
-    Lambda <-->|Read/Write Sessions| S3Mem
+    subgraph Backend
+        APIGW[🚪 API Gateway]
+        Lambda[⚡ Lambda]
+        Bedrock[🧠 Bedrock LLM]
+        S3M[💾 S3 Memory]
+    end
     
-    Scripts -.->|Manages| Terraform
-    Terraform -.->|Provisions| CloudFront
-    Terraform -.->|Provisions| APIGW
-    Terraform -.->|Provisions| Lambda
-    Terraform -.->|Provisions| S3Web
-    Terraform -.->|Provisions| S3Mem
+    subgraph IaC["Infrastructure (Terraform)"]
+        Deploy[📜 deploy.sh/ps1]
+        Destroy[🗑️ destroy.sh/ps1]
+    end
+    
+    User -->|1. Access UI| CF
+    CF --> S3F
+    User -->|2. Send Message| APIGW
+    APIGW -->|3. Invoke| Lambda
+    Lambda -->|4. Query| Bedrock
+    Lambda <-->|5. Store/Retrieve| S3M
+    
+    Deploy -.->|Provisions| Frontend
+    Deploy -.->|Provisions| Backend
+    Destroy -.->|Cleans Up| Frontend
+    Destroy -.->|Cleans Up| Backend
 
     style User fill:#fff,stroke:#333,stroke-width:2px
-    style CloudFront fill:#FF9900,stroke:#333,stroke-width:2px,color:#fff
+    style CF fill:#FF9900,stroke:#333,stroke-width:2px,color:#fff
     style APIGW fill:#FF9900,stroke:#333,stroke-width:2px,color:#fff
     style Lambda fill:#FF9900,stroke:#333,stroke-width:2px,color:#fff
     style Bedrock fill:#FF9900,stroke:#333,stroke-width:2px,color:#fff
-    style S3Web fill:#3F8624,stroke:#333,stroke-width:2px,color:#fff
-    style S3Mem fill:#3F8624,stroke:#333,stroke-width:2px,color:#fff
-    style Terraform fill:#7B42BC,stroke:#333,stroke-width:2px,color:#fff
-    style Scripts fill:#4A90E2,stroke:#333,stroke-width:2px,color:#fff
+    style S3F fill:#3F8624,stroke:#333,stroke-width:2px,color:#fff
+    style S3M fill:#3F8624,stroke:#333,stroke-width:2px,color:#fff
 ```
 
 ## 🚀 Key Features
