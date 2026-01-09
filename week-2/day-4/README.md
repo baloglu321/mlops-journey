@@ -27,7 +27,7 @@ graph LR
     subgraph Backend
         APIGW[🚪 API Gateway]
         Lambda[⚡ Lambda]
-        Bedrock[🧠 Bedrock LLM]
+        Bedrock["🧠 Bedrock LLM<br/>(openai.gpt-oss-120b-1:0)"]
         S3M[💾 S3 Memory]
     end
     
