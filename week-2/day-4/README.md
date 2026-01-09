@@ -194,11 +194,6 @@ The Lambda function requires the following AWS permissions:
 - AmazonBedrockFullAccess (Bedrock model invocation)
 - AmazonS3FullAccess (Memory bucket read/write)
 
-## 📸 Usage
-
-The application provides a seamless chat interface where users can interact with the Digital Twin powered by AWS Bedrock.
-
-*(Screenshots will be added here)*
 
 ## 🔗 Development Steps
 

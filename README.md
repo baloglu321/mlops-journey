@@ -23,6 +23,7 @@ graph LR
     H --> I[Day 1<br/>AI Digital Twin]
     I --> J[Day 2<br/>Digital Twin +<br/>Memory]
     J --> K["Day 3<br/>Serverless Digital Twin<br/>(AWS Bedrock + Lambda)"]
+    K ---> L["Day 4<br/>IaC Deployment<br/>(Terraform)"]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -35,6 +36,7 @@ graph LR
     style I fill:#334155,stroke:#60a5fa,color:#fff
     style J fill:#334155,stroke:#60a5fa,color:#fff
     style K fill:#334155,stroke:#60a5fa,color:#fff
+    style L fill:#334155,stroke:#60a5fa,color:#fff
 ```
 
 ## 📚 Projects
@@ -94,6 +96,11 @@ flowchart LR
 **Goal**: Deploy the Digital Twin to a scalable, serverless architecture.
 - **Tech**: AWS Lambda, Amazon Bedrock, API Gateway, CloudFront, S3
 - **Outcome**: A fully serverless AI application with global low-latency access and pay-per-use compute.
+
+#### [Day 4: Infrastructure as Code Deployment (Terraform)](./week-2/day-4/)
+**Goal**: Automate infrastructure provisioning and deployment with Terraform.
+- **Tech**: Terraform, AWS (Lambda, Bedrock, S3, CloudFront, API Gateway), Bash/PowerShell Scripts
+- **Outcome**: One-command deployment and destruction of the entire serverless stack across multiple environments (dev/test/prod).
 
 
 ---
