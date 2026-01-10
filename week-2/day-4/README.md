@@ -1,4 +1,21 @@
-# Digital Twin Project (Week 2 - Day 4)
+# Infrastructure as Code with Terraform (Week 2 - Day 4)
+
+> **Learning Focus**: Automating infrastructure deployment with Terraform
+
+Master Infrastructure as Code! This project demonstrates how to automate the entire AWS deployment using **Terraform**, enabling one-command deployment and destruction of the complete serverless stack across multiple environments.
+
+**Course Guide**: 👉 [Week 2 - Day 4: Infrastructure as Code with Terraform](https://github.com/ed-donner/production/blob/main/week2/day4.md)
+
+## 🎯 What You'll Learn
+
+- Infrastructure as Code (IaC) principles and benefits
+- Automating AWS resource provisioning with Terraform
+- Managing multiple environments (dev/test/prod) with workspaces
+- Creating deployment and destruction automation scripts
+- Understanding infrastructure reproducibility and version control
+- Implementing production-grade deployment workflows
+
+## 📋 Overview
 
 A fully automated serverless "Digital Twin" AI application with **Infrastructure as Code (IaC)** deployment on AWS. This project builds upon Day 3 by introducing **Terraform** for automated infrastructure provisioning and **deployment scripts** that allow the entire stack to be deployed and destroyed with a single command.
 
@@ -70,34 +87,59 @@ graph LR
 
 ## 🛠 Tech Stack
 
-### Infrastructure & Deployment
-- **IaC**: Terraform (AWS Provider)
-- **Automation**: Bash & PowerShell scripts
-- **Packaging**: UV (Python package manager), Docker (Lambda layer building)
+### Infrastructure as Code
+- **Terraform (1.0+)** - Infrastructure provisioning and management
+- **Bash Scripts** - Linux/macOS deployment automation
+- **PowerShell Scripts** - Windows deployment automation
+- **Terraform Workspaces** - Environment isolation (dev/test/prod)
 
 ### Cloud Services (AWS)
-- **Compute**: AWS Lambda (Python 3.12 Runtime)
-- **AI/ML**: AWS Bedrock (openai.gpt-oss-120b-1:0)
-- **API**: Amazon API Gateway (HTTP API)
-- **Storage**: Amazon S3 (Frontend hosting & conversation memory)
-- **CDN**: Amazon CloudFront
-- **IAM**: AWS IAM (Roles & Policies)
+- **AWS Lambda** - Serverless compute (Python 3.12)
+- **AWS Bedrock** - Managed AI service (openai.gpt-oss-120b-1:0)
+- **Amazon API Gateway** - HTTP API management
+- **Amazon S3** - Frontend hosting & conversation memory
+- **Amazon CloudFront** - Global CDN
+- **AWS IAM** - Roles & policies for security
 
 ### Backend
-- **Framework**: FastAPI
-- **Lambda Adapter**: Mangum
-- **AWS SDK**: Boto3
-- **LLM Integration**: LangChain AWS
-- **Environment**: python-dotenv
-- **Document Processing**: PyPDF
+- **FastAPI** - Python async API framework
+- **Mangum** - ASGI adapter for AWS Lambda
+- **LangChain AWS** - Bedrock integration
+- **Boto3** - AWS SDK for Python
+- **python-dotenv** - Environment variable management
 
 ### Frontend
-- **Framework**: Next.js 16.1.1
-- **UI Library**: React 19.2.3
-- **Styling**: Tailwind CSS 4.1.18
-- **Icons**: Lucide React
-- **Markdown**: react-markdown, remark-gfm
-- **Language**: TypeScript
+- **Next.js 16.1.1** - React framework
+- **React 19.2.3** - UI library  
+- **Tailwind CSS 4.1.18** - Utility-first styling
+- **TypeScript** - Type safety
+
+### Packaging & Build
+- **UV** - Fast Python package manager
+- **Docker** - Lambda layer building
+- **npm** - Frontend dependencies
+
+### 🔄 What's New from Day 3?
+
+This project enhances the Day 3 implementation with:
+
+1. **Terraform Infrastructure**: All AWS resources defined as code
+2. **Automated Deployment**: Single-command deployment script
+3. **Automated Destruction**: Clean resource teardown script
+4. **Environment Management**: Terraform workspaces for dev/test/prod
+5. **Reproducible Builds**: Consistent infrastructure across deployments
+6. **State Management**: Terraform state tracking for infrastructure changes
+
+**Manual vs IaC Comparison:**
+
+| Aspect | Day 3 (Manual) | Day 4 (Terraform) |
+|--------|---------------|-------------------|
+| **Deployment** | Click through AWS console | `./scripts/deploy.sh dev` |
+| **Reproducibility** | Error-prone manual steps | Guaranteed identical infrastructure |
+| **Environments** | Duplicate manual work | Single command per environment |
+| **Destruction** | Manual cleanup (risky) | `./scripts/destroy.sh dev` |
+| **Version Control** | Not possible | Full Git history |
+| **Collaboration** | Documentation only | Executable code |
 
 ## 📁 Project Structure
 
@@ -219,17 +261,25 @@ The application relies on a `facts.json` file to populate the Digital Twin's kno
 | `certificates` | List[Object] | Certifications: `name`, `issuer`, `date`, `url`, `tags`. |
 | `easter_eggs` | Object | Key-value pairs for special trigger phrases and their corresponding custom responses. |
 
-## 🆚 What's New from Day 3?
+## 💡 Key Takeaways
 
-This project enhances the Day 3 implementation with:
+- **IaC Benefits**: Infrastructure as code ensures consistency, reproducibility, and version control
+- **Single Command Deployment**: Complex multi-service architectures deploy in one command
+- **Environment Isolation**: Terraform workspaces enable safe testing across dev/test/prod
+- **Automated Cleanup**: Destroy scripts prevent resource leaks and unexpected costs
+- **Collaboration**: Team members can deploy identical infrastructure from code
+- **Documentation**: Infrastructure code IS the documentation
+- **Disaster Recovery**: Rebuild entire infrastructure from Git repository
+- **Cost Control**: Easy to destroy complete stacks when not in use
 
-1. **Terraform Infrastructure**: All AWS resources defined as code
-2. **Automated Deployment**: Single-command deployment script
-3. **Automated Destruction**: Clean resource teardown script
-4. **Environment Management**: Terraform workspaces for dev/test/prod
-5. **Reproducible Builds**: Consistent infrastructure across deployments
-6. **State Management**: Terraform state tracking for infrastructure changes
+## 📚 Additional Resources
 
-## 📝 License
+- [Terraform Documentation](https://www.terraform.io/docs)
+- [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [Infrastructure as Code Principles](https://www.terraform.io/use-cases/infrastructure-as-code)
+- [Terraform Workspaces](https://www.terraform.io/docs/language/state/workspaces.html)
+- [Course Guide - Week 2 Day 4](https://github.com/ed-donner/production/blob/main/week2/day4.md)
 
-This project is part of the "Production" course curriculum.
+---
+
+*Part of the AI in Production course - Week 2, Day 4*

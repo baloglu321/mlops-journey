@@ -1,6 +1,22 @@
-# Digital Twin Project (Week 2 - Day 2)
+# Enhanced Digital Twin with Style & Memory (Week 2 - Day 2)
 
-A "Digital Twin" AI application that simulates a professional persona based on provided context (facts, resume, style). It features a Next.js frontend and a FastAPI backend powered by Ollama (Gemma 3) with persistent memory capabilities.
+> **Learning Focus**: Advanced context injection and cloud storage
+
+Enhance your Digital Twin with sophisticated context management! This project adds style guidance, detailed factual context, and cloud-based memory persistence using AWS S3, creating a more authentic and scalable AI personality.
+
+**Course Guide**: 👉 [Week 2 - Day 2: Deploy to AWS](https://github.com/ed-donner/production/blob/main/week2/day2.md)
+
+## 🎯 What You'll Learn
+
+- Implementing advanced context injection strategies
+- Managing multiple data sources (facts, CV, style guides)
+- Integrating AWS S3 for persistent cloud storage
+- Creating more nuanced AI personas
+- Scaling memory storage beyond local files
+
+## 📋 Overview
+
+A "Digital Twin" AI application that simulates a professional persona based on provided context (facts, resume, style). It features a Next.js frontend and a FastAPI backend powered by Ollama (Gemma 3 27B) with cloud-based memory capabilities.
 
 ## 🏗 Architecture
 
@@ -44,10 +60,30 @@ graph TB
 
 ## 🛠 Tech Stack
 
--   **Frontend**: Next.js 16, React 19, Tailwind CSS 4, Lucide React
--   **Backend**: Python, FastAPI, LangChain, Boto3
--   **AI Model**: Gemma 3:27b (running locally via Ollama)
--   **Infrastructure**: AWS S3 (optional for storage), AWS Lambda ready
+### Frontend
+- **Next.js 16** - React framework
+- **React 19** - UI library  
+- **Tailwind CSS 4** - Utility-first styling
+- **Lucide React** - Icon library
+
+### Backend
+- **FastAPI** - Python async API framework
+- **LangChain** - LLM orchestration and context management
+- **Ollama** - Local/Remote LLM runtime
+- **Gemma 3 27B** - Language model (via Ollama)
+- **Boto3** - AWS SDK for Python
+- **Python 3.11+** - Runtime environment
+
+### Cloud Storage
+- **AWS S3** - Persistent conversation memory (optional)
+- **Local Files** - Alternative storage backend
+
+### 🔄 Difference from Course
+
+**Course Version**: Uses OpenAI API  
+**This Implementation**: Uses **Ollama** with **Gemma 3 27B** model
+
+This showcases how to build sophisticated context systems with open-source models.
 
 ## 📸 Screenshots
 
@@ -115,4 +151,23 @@ The application relies on a `facts.json` file to populate the Digital Twin's kno
 | `personal_interests` | List[String] | Hobbies and interests. |
 | `certificates` | List[Object] | Certifications: `name`, `issuer`, `date`, `url`, `tags`. |
 | `easter_eggs` | Object | Key-value pairs for special trigger phrases and their corresponding custom responses. |
+
+## 💡 Key Takeaways
+
+- **Multi-Source Context**: Combining facts, CV, and style creates richer personas
+- **Cloud Storage**: S3 provides scalable, persistent memory
+- **Style Injection**: Separate style guidelines maintain consistent communication patterns
+- **Easter Eggs**: Pre-defined responses add personality and fun
+- **Flexible Storage**: Architecture supports both local and cloud backends
+
+## 📚 Additional Resources
+
+- [AWS S3 Documentation](https://docs.aws.amazon.com/s3/)
+- [Boto3 Documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html)
+- [LangChain Document Loaders](https://python.langchain.com/docs/modules/data_connection/document_loaders/)
+- [Course Guide - Week 2 Day 2](https://github.com/ed-donner/production/blob/main/week2/day2.md)
+
+---
+
+*Part of the AI in Production course - Week 2, Day 2*
 

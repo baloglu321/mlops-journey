@@ -1,6 +1,18 @@
-# Business Idea Generator - Week 1 Day 3
+# Secure Business Idea Generator (Week 1 - Day 3)
 
-An advanced, secure version of the AI Business Idea Generator. This project builds upon the Day 2 foundation by adding robust authentication using Clerk and secure Server-Sent Events (SSE) streaming.
+> **Learning Focus**: Authentication and security in AI applications
+
+Transform your AI application into a secure, multi-user SaaS! This project builds upon Day 2 by adding robust user authentication with Clerk and implementing secure Server-Sent Events (SSE) streaming with JWT verification.
+
+**Course Guide**: 👉 [Week 1 - Day 3: Add Authentication](https://github.com/ed-donner/production/blob/main/week1/day3.md)
+
+## 🎯 What You'll Learn
+
+- Implementing authentication with Clerk
+- Securing API endpoints with JWT verification
+- Creating authenticated SSE streams
+- Building multi-user AI applications
+- Production-ready security patterns
 
 ## 🌟 New Features in Day 3
 
@@ -38,9 +50,29 @@ flowchart LR
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 16, TypeScript, Tailwind CSS 4, Clerk (Auth), Microsoft Fetch Event Source.
-- **Backend**: FastAPI, LangChain, Ollama, FastAPI Clerk Auth.
-- **Infrastructure**: Vercel (Hosting), Remote Ollama Server (AI).
+### Frontend
+- **Next.js 16** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS 4** - Styling
+- **Clerk** - Authentication platform
+- **@microsoft/fetch-event-source** - SSE with auth headers
+
+### Backend
+- **FastAPI** - Python async API framework
+- **LangChain** - LLM orchestration
+- **Ollama** - LLM runtime
+- **Gemma 3 27B** - Language model (via Ollama)
+- **fastapi-clerk-auth** - JWT verification
+
+### Deployment
+- **Vercel** - Serverless hosting
+
+### 🔄 Difference from Course
+
+**Course Version**: Uses OpenAI API  
+**This Implementation**: Uses **Ollama** with **Gemma 3 27B** model on a remote server
+
+This provides cost-effective, secure AI inference with full data privacy.
 
 ## 🚀 Getting Started
 
@@ -130,6 +162,22 @@ This project is optimized for **Vercel**.
 3. Add the Environment Variables (`CLERK_JWKS_URL`, `OLLAMA_BASE_URL`, etc.) in the Vercel Dashboard.
 4. Deploy!
 
-## 📜 License
 
-MIT License - Created as part of the "Build Your SaaS" Challenge (Week 1, Day 3).
+## 💡 Key Takeaways
+
+- **Security First**: Authentication is critical for production AI apps
+- **JWT Verification**: Server-side token validation protects your API
+- **Custom SSE Client**: @microsoft/fetch-event-source enables authenticated streaming
+- **Multi-User Ready**: Each user has isolated, secure access
+- **Production Pattern**: This architecture scales to real SaaS products
+
+## 📚 Additional Resources
+
+- [Clerk Documentation](https://clerk.com/docs)
+- [FastAPI Security](https://fastapi.tiangolo.com/tutorial/security/)
+- [@microsoft/fetch-event-source](https://github.com/Azure/fetch-event-source)
+- [Course Guide - Week 1 Day 3](https://github.com/ed-donner/production/blob/main/week1/day3.md)
+
+---
+
+*Part of the AI in Production course - Week 1, Day 3*

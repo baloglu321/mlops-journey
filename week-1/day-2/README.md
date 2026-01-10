@@ -1,6 +1,18 @@
-# Business Idea Generator - Week 1 Day 2
+# Business Idea Generator (Week 1 - Day 2)
 
-AI-powered business idea generator that uses LangChain to connect to a remote Ollama server and generate creative business ideas using the `gemma3:27b` model.
+> **Learning Focus**: Full-stack AI application with real-time streaming
+
+Build your first complete full-stack AI application! This project combines a modern Next.js frontend with a FastAPI backend, featuring real-time idea generation using Server-Sent Events (SSE) streaming.
+
+**Course Guide**: 👉 [Week 1 - Day 2: Full Stack Application](https://github.com/ed-donner/production/blob/main/week1/day2.md)
+
+## 🎯 What You'll Learn
+
+- Building a complete full-stack architecture
+- Implementing Server-Sent Events (SSE) for real-time streaming
+- Connecting Next.js frontend to FastAPI backend
+- Managing asynchronous LLM responses
+- Deploying hybrid applications to Vercel
 
 ## 🚀 Features
 
@@ -32,9 +44,31 @@ flowchart LR
     Client -.->|6. Update UI| User
 ```
 
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Next.js** - React framework with App Router
+- **Tailwind CSS** - Utility-first styling
+- **TypeScript** - Type safety
+
+### Backend
+- **FastAPI** - High-performance Python API
+- **LangChain** - LLM orchestration
+- **Ollama** - LLM server runtime
+- **Gemma 3 27B** - Language model (via Ollama)
+
+### Deployment
+- **Vercel** - Serverless hosting for both frontend and API
+
+### 🔄 Difference from Course
+
+**Course Version**: Uses OpenAI API  
+**This Implementation**: Uses **Ollama** with **Gemma 3 27B** model on a remote server
+
 ## 🛠️ Setup & Installation
 
-### Prerequisites
+### ✅ Prerequisites
 
 - **Node.js** 18+
 - **Python** 3.8+
@@ -102,7 +136,18 @@ vercel
 - **504 Gateway Timeout**: The Generative AI model might be taking too long. The `vercel.json` configuration above sets the timeout to 60 seconds (Pro plan might be needed for >10s on some legacy functions, but Vercel Functions usually allow up to 60s).
 - **CORS Errors**: If testing locally with a separate backend, ensure you have CORS middleware enabled in `api/index.py`.
 
-## 📚 Resources
+
+## 💡 Key Takeaways
+
+- **Full-Stack Integration**: Seamless connection between Next.js and FastAPI
+- **Real-Time Streaming**: SSE provides better UX than traditional request-response
+- **Hybrid Deployment**: Vercel can host both frontend and Python serverless functions
+- **Asynchronous AI**: Streaming responses improve perceived performance
+- **Production Architecture**: Ready for real-world deployment
+
+## 📚 Additional Resources
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [FastAPI on Vercel](https://vercel.com/templates/python/fastapi-nextjs)
+- [Server-Sent Events (SSE)](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)
+- [Course Guide - Week 1 Day 2](https://github.com/ed-donner/production/blob/main/week1/day2.md)

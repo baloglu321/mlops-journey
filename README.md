@@ -1,12 +1,22 @@
-# MLOps Learning Journey 🚀
+# AI in Production - Learning Journey 🚀
 
-> **Status:** 🚧 Work in Progress (Week 1 Complete)
+> **Course**: Based on [AI in Production: Deploy Gen AI and Agentic AI at Scale](https://github.com/ed-donner/production) by Ed Donner
+> 
+> **Status**: 🚧 Work in Progress - Week 2 Day 4 Complete
 
-This repository contains scripts, projects, and experiments I've written during my MLOps (Machine Learning Operations) learning journey. The focus is on building production-ready AI applications using modern tools and frameworks.
+This repository contains my implementations of projects and exercises from the "AI in Production" course. The focus is on building production-ready generative AI and agentic AI applications using modern cloud infrastructure and MLOps practices.
 
 ## 📋 Overview
 
-This repository is organized by weeks and days, with each day containing a complete project or exercise. Projects range from simple API integrations to full-stack applications with AI capabilities.
+This repository is organized by weeks and days, with each day containing a complete hands-on project. Projects progress from simple API integrations to full-stack serverless applications with advanced AI capabilities deployed on AWS.
+
+### Key Difference from Course
+
+**Note**: While the original course uses **OpenAI API**, this repository uses **Ollama** with the **Gemma 3 27B** model running on a remote server. This approach provides:
+- Full control over the inference environment
+- Cost-effective AI processing
+- Privacy and data sovereignty
+- Compatibility with open-source models
 
 ## 🗺️ Roadmap & Progress
 
@@ -105,24 +115,66 @@ flowchart LR
 
 ---
 
+## ✅ Prerequisites
+
+Before starting this learning journey, ensure you have:
+
+### Required
+- **Python 3.10+** - Core programming language
+- **Node.js 18+** - For frontend development
+- **Git** - Version control
+- **AWS Account** - For cloud deployments (Week 1 Day 5+)
+- **Cursor IDE** or VS Code - Development environment
+
+### For Local AI Development
+- **Ollama** - Local LLM runtime
+- **Gemma 3 27B Model** - Pull via `ollama pull gemma3:27b`
+- **Remote Server** (optional) - For hosting Ollama remotely
+
+### For Production Deployment
+- **Docker** - Containerization
+- **Terraform** - Infrastructure as Code (Week 2 Day 4)
+- **AWS CLI** - AWS command-line tools
+- **Vercel Account** - Serverless hosting (Week 1)
+
+---
+
 ## 🛠️ Technologies
 
+### AI & LLM
+- **Ollama** - Local/Remote LLM Runtime
+- **Gemma 3 27B** - Primary language model
+- **LangChain** - LLM orchestration framework
+- **AWS Bedrock** - Managed AI service (Week 2 Day 3+)
+
 ### Backend
-- **Python 3.10+** - Core logic
-- **FastAPI** - High-performance API
-- **LangChain** - LLM Orchestration
-- **Ollama** - Local LLM Runtime (Gemma 2, Llama 3)
+- **Python 3.10+** - Core programming language
+- **FastAPI** - High-performance async API framework
+- **Mangum** - ASGI adapter for AWS Lambda
+- **Boto3** - AWS SDK for Python
 
 ### Frontend
-- **Next.js 16** - React Framework
-- **Tailwind CSS 4** - Styling
-- **Clerk** - Authentication
-- **Mermaid.js** - Diagrams
+- **Next.js 16** - React framework with App Router
+- **React 19** - UI library
+- **Tailwind CSS 4** - Utility-first CSS
+- **Clerk** - Authentication service
+- **Lucide React** - Icon library
+- **Mermaid.js** - Diagram generation
 
-### Deployment
-- **Vercel** - Serverless Hosting
-- **AWS App Runner** - Docker Container Hosting
-- **Cloudflare Tunnel** - Exposing local LLMs to the web
+### Cloud Infrastructure (AWS)
+- **AWS Lambda** - Serverless compute
+- **Amazon S3** - Object storage
+- **Amazon CloudFront** - CDN
+- **Amazon API Gateway** - API management
+- **AWS Bedrock** - Foundation models
+- **AWS App Runner** - Container hosting
+
+### DevOps & IaC
+- **Terraform** - Infrastructure as Code
+- **Docker** - Containerization
+- **AWS CLI** - Cloud management
+- **Vercel** - Frontend deployment
+- **Cloudflare Tunnel** - Secure tunneling
 
 ## 🚀 Quick Start
 
@@ -140,9 +192,23 @@ flowchart LR
 3.  **Follow the local README**
     Each project folder contains its own `README.md` with specific setup instructions.
 
+## 📚 Learning Resources
+
+- **Course Repository**: [ed-donner/production](https://github.com/ed-donner/production)
+- **Course on Udemy**: [AI in Production](https://edwarddonner.com/2025/05/28/connecting-my-courses-become-an-llm-expert-and-leader/)
+- **Additional Resources**: [Course Website](https://edwarddonner.com/2025/09/15/ai-in-production-gen-ai-and-agentic-ai-on-aws-at-scale/)
+
+## 🤝 Support
+
+If you're following along with the course:
+- Review the [course guides](https://github.com/ed-donner/production/tree/main/guides)
+- Check the [troubleshooting sections](https://github.com/ed-donner/production) in each day's guide
+- Join the course community for support
+
 ## 📄 License
 
 This project is for educational purposes. Feel free to use it as you wish.
 
 ---
-*Created by [Your Name] as part of the MLOps Production Course.*
+
+*Learning journey based on the "AI in Production" course by Ed Donner*

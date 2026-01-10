@@ -1,6 +1,23 @@
-# Digital Twin Project (Week 2 - Day 3)
+# Serverless Digital Twin with AWS Bedrock (Week 2 - Day 3)
 
-A serverless "Digital Twin" AI application deployed on AWS. This system simulates a professional persona using **AWS Bedrock** (running high-performance LLMs) and **AWS Lambda** for serverless compute, offering a scalable and cost-effective solution compared to local execution.
+> **Learning Focus**: Transitioning to serverless architecture with managed AI
+
+Transform your Digital Twin into a fully serverless application! This project demonstrates the migration from local/remote Ollama to **AWS Bedrock**, creating a scalable, production-ready serverless architecture with managed AI services.
+
+**Course Guide**: 👉 [Week 2 - Day 3: Transition to AWS Bedrock](https://github.com/ed-donner/production/blob/main/week2/day3.md)
+
+## 🎯 What You'll Learn
+
+- Migrating from local LLMs to AWS Bedrock
+- Building fully serverless AI applications
+- Using AWS Lambda for serverless compute
+- Deploying static frontends with CloudFront + S3
+- Implementing API Gateway for HTTP APIs
+- Understanding managed AI service benefits
+
+## 📋 Overview
+
+A serverless "Digital Twin" AI application deployed on AWS. This system simulates a professional persona using **AWS Bedrock** (running high-performance LLMs) and **AWS Lambda** for serverless compute, offering a scalable and cost-effective solution.
 
 ## 🏗 Architecture
 
@@ -52,16 +69,39 @@ graph TB
 
 ## 🛠 Tech Stack
 
--   **Cloud Provider**: AWS
--   **Core Services**: 
-    -   **Compute**: AWS Lambda (Python Runtime)
-    -   **AI/ML**: AWS Bedrock
-    -   **API**: Amazon API Gateway
-    -   **Storage**: Amazon S3 (Frontend hosting & Data persistence)
-    -   **CDN**: Amazon CloudFront
--   **Backend Framework**: FastAPI, Mangum (Adapter for Lambda)
--   **Frontend**: Next.js (Exported as static site)
--   **IaC / Deployment**: Python scripts (Boto3), Docker (for building Lambda layers)
+### Cloud Provider
+- **AWS** - Complete cloud infrastructure
+
+### Core Services
+- **AWS Lambda** - Serverless compute (Python 3.12)
+- **AWS Bedrock** - Managed AI/ML service with foundation models
+- **Amazon API Gateway** - HTTP API management
+- **Amazon S3** - Storage (frontend hosting & conversation memory)
+- **Amazon CloudFront** - Global CDN for low-latency delivery
+
+### Backend Framework
+- **FastAPI** - Python async API framework
+- **Mangum** - ASGI adapter for AWS Lambda
+- **LangChain AWS** - Bedrock integration
+- **Boto3** - AWS SDK for Python
+
+### Frontend
+- **Next.js** - Exported as static site
+- **React** - UI library
+- **Tailwind CSS** - Styling
+
+### 🔄 Evolution from Previous Days
+
+| Aspect | Day 1-2 (Local) | Day 3 (Serverless) |
+|--------|----------------|-------------------|
+| **LLM** | Ollama + Gemma 3 27B | AWS Bedrock (Nova/Claude) |
+| **Compute** | FastAPI on server | AWS Lambda |
+| **Frontend** | Next.js dev server | S3 + CloudFront |
+| **Memory** | Local files / S3 | S3 only |
+| **Scaling** | Manual | Automatic |
+| **Cost** | Fixed (server) | Pay-per-use |
+
+**Note**: This implementation uses AWS Bedrock instead of Ollama, demonstrating the transition to managed AI services in production environments.
 
 ## 📸 Usage
 
@@ -113,4 +153,25 @@ The application relies on a `facts.json` file to populate the Digital Twin's kno
 | `personal_interests` | List[String] | Hobbies and interests. |
 | `certificates` | List[Object] | Certifications: `name`, `issuer`, `date`, `url`, `tags`. |
 | `easter_eggs` | Object | Key-value pairs for special trigger phrases and their corresponding custom responses. |
+
+## 💡 Key Takeaways
+
+- **Serverless Advantages**: No server management, automatic scaling, pay-per-use
+- **Managed AI**: AWS Bedrock eliminates model hosting complexity
+- **Global Distribution**: CloudFront provides low-latency access worldwide
+- **Lambda Benefits**: Event-driven, scales to zero when not in use
+- **Production Ready**: AWS-native architecture for enterprise deployment
+- **Cost Optimization**: Pay only for actual usage (requests + inference time)
+
+## 📚 Additional Resources
+
+- [AWS Bedrock Documentation](https://docs.aws.amazon.com/bedrock/)
+- [AWS Lambda Documentation](https://docs.aws.amazon.com/lambda/)
+- [Amazon CloudFront](https://docs.aws.amazon.com/cloudfront/)
+- [API Gateway HTTP APIs](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api.html)
+- [Course Guide - Week 2 Day 3](https://github.com/ed-donner/production/blob/main/week2/day3.md)
+
+---
+
+*Part of the AI in Production course - Week 2, Day 3*
 

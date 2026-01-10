@@ -1,8 +1,22 @@
-# AI Digital Twin Project (Week 2 - Day 1)
+# AI Digital Twin (Week 2 - Day 1)
 
-This project is an **AI Digital Twin** system designed to mimic a specific personality using a local LLM. It consists of a modern **Next.js** frontend and a robust **FastAPI** backend, leveraging **Ollama** for AI processing and a file-based JSON system for persistent memory.
+> **Learning Focus**: Creating a persistent AI personality clone
 
-This implementation follows the development steps outlined in the [Production Engineering Guide (Week 2 Day 1)](https://github.com/ed-donner/production/blob/main/week2/day1.md).
+Build your first AI Digital Twin! This project creates a chatbot that mimics a specific persona using memory and context management. The twin remembers conversations across sessions and responds in a consistent style based on personal data.
+
+**Course Guide**: 👉 [Week 2 - Day 1: Build Your Digital Twin](https://github.com/ed-donner/production/blob/main/week2/day1.md)
+
+## 🎯 What You'll Learn
+
+- Creating persistent AI personalities
+- Implementing conversation memory with file storage
+- Building context from structured personal data
+- Managing stateful AI interactions
+- Developing persona-driven AI applications
+
+## 📋 Overview
+
+This project is an **AI Digital Twin** system designed to mimic a specific personality using a local LLM. It consists of a modern **Next.js** frontend and a robust **FastAPI** backend, leveraging **Ollama (Gemma 3 27B)** for AI processing and a file-based JSON system for persistent memory.
 
 ## 🏗️ Architecture
 
@@ -34,6 +48,32 @@ graph TD
     Mem_Mgr -->|Read/Write| FileSystem
     Logic -->|Generate Response| Ollama
 ```
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Next.js 16** - React framework with App Router
+- **React 19** - UI library
+- **Tailwind CSS** - Styling
+- **TypeScript** - Type safety
+
+### Backend
+- **FastAPI** - Python async API framework
+- **LangChain** - LLM orchestration and conversation management
+- **Ollama** - Local/Remote LLM runtime
+- **Gemma 3 27B** - Language model (via Ollama)
+- **Python 3.8+** - Runtime environment
+
+### Storage
+- **JSON Files** - Persistent conversation memory
+- **File System** - Local storage for memory and context
+
+### 🔄 Difference from Course
+
+**Course Version**: May use OpenAI API  
+**This Implementation**: Uses **Ollama** with **Gemma 3 27B** model
+
+This demonstrates how to build digital twins with open-source models and local/remote inference.
 
 ## 🚀 Setup & Running
 
@@ -92,4 +132,23 @@ The application relies on a `facts.json` file to populate the Digital Twin's kno
 | `personal_interests` | List[String] | Hobbies and interests. |
 | `certificates` | List[Object] | Certifications: `name`, `issuer`, `date`, `url`, `tags`. |
 | `easter_eggs` | Object | Key-value pairs for special trigger phrases and their corresponding custom responses. |
+
+## 💡 Key Takeaways
+
+- **Digital Twins**: AI that mimics specific personalities require structured context
+- **Memory Management**: File-based storage provides simple persistence for conversations
+- **Context Building**: Rich personal data creates more authentic responses
+- **Persona Consistency**: System prompts and facts maintain character
+- **Open Source Advantage**: Gemma 3 27B runs locally for privacy and control
+
+## 📚 Additional Resources
+
+- [LangChain Memory](https://python.langchain.com/docs/modules/memory/)
+- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+- [Ollama Documentation](https://ollama.ai/)
+- [Course Guide - Week 2 Day 1](https://github.com/ed-donner/production/blob/main/week2/day1.md)
+
+---
+
+*Part of the AI in Production course - Week 2, Day 1*
 
