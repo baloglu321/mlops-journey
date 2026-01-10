@@ -14,8 +14,7 @@
             "Technical Leadership",
             "R&D Management",
             "Problem Solving in Production",
-            "Technical Documentation",
-            "Rubber Duck"
+            "Technical Documentation"
         ]
     },
     "technical_skills": {
@@ -63,6 +62,18 @@
             "Streamlit",
             "Gradio",
             "FastAPI"
+        ],
+        "backend_and_db": [
+            "Django (Web Framework & API)",
+            "FastAPI",
+            "MongoDB (NoSQL)",
+            "PostgreSQL"
+        ],
+        "computer_vision_hardware": [
+            "Stereo Cameras",
+            "Lidar Data Processing",
+            "Industrial IP Cameras",
+            "CUDA Optimization"
         ]
     },
     "work_experience": [
@@ -81,7 +92,10 @@
                 "**Key Achievements:**",
                 "• Achieved a **22.6% reduction in false positives** on a 670K+ image dataset using Optuna and Data-Centric strategies.",
                 "• Developed specialized modules for **Anomaly Detection (PatchCore)** and **Depth Estimation (Midas)**.",
-                "• Executed all model training and development operations on **Linux (Ubuntu)** servers."
+                "• Executed all model training and development operations on **Linux (Ubuntu)** servers.",
+                "• **Hardware Integration:** Managed data pipelines from industrial IP cameras, Stereo, and Lidar sensors for real-time inference.",
+                "• **Deployment & Automation:** Developed Python scripts for automated model execution, inference optimization (CUDA), and system integration on Linux edge devices.",
+                "• **Team Leadership:** Managed the full workflow from data labeling to model evaluation, delegating tasks within the Data Science team."
             ],
             "tech_stack": [
                 "Python",
@@ -110,6 +124,25 @@
             ],
             "url": "https://github.com/baloglu321/Estate-Agent",
             "info": "This project implements a hybrid AI agent capable of handling both simple conversational tasks and complex real estate search queries. It uses a combination of semantic embeddings and structured filtering to search property data in ChromaDB, routes user queries intelligently between simple chat and full agent workflows, and supports auxiliary tools like weather, Wikipedia and web search integrations to enrich responses. Designed with Gradio as its front end, Estate-Agent leverages modern Python libraries and LLM inference to provide real-time property recommendations tailored to user criteria."
+        },
+        {
+            "name": "AI Digital Twin - Cloud Deployment",
+            "description": "This project demonstrates the process of migrating AI applications developed using Next.js and FastAPI with Ollama+Gemma 3 27B to an AWS serverless architecture (Lambda, Bedrock, S3, CloudFront) from Vercel and automating it with Terraform to make it production-ready.",
+            "tags": [
+                "MLOps",
+                "MachineLearning",
+                "ModelServing",
+                "Python",
+                "Docker",
+                "API",
+                "Deployment",
+                "Cloud",
+                "AWS",
+                "LLM",
+                "Docker"
+            ],
+            "url": "https://github.com/baloglu321/mlops-journey/tree/main/week-2/day-3",
+            "info": "This is a comprehensive learning journey building production-ready AI applications using Ollama + Gemma 3 27B (instead of OpenAI), progressing from simple Vercel deployments with Next.js and FastAPI, through Docker containerization on AWS App Runner, to fully serverless architecture with AWS Lambda, Bedrock, S3, CloudFront, and API Gateway, all automated with Terraform for one-command deployment across multiple environments."
         },
         {
             "name": "Arxivangelist Multi-Task AI Agent",

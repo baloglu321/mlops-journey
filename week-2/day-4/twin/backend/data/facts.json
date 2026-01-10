@@ -127,7 +127,7 @@
         },
         {
             "name": "AI Digital Twin - Cloud Deployment",
-            "description": "A hands-on MLOps project focused on building and deploying a production-ready machine learning service. The project demonstrates how to package an ML model as an API, containerize it, and expose it through a scalable deployment setup, emphasizing reproducibility, deployment best practices, and real-world MLOps workflows.",
+            "description": "This project demonstrates the process of migrating AI applications developed using Next.js and FastAPI with Ollama+Gemma 3 27B to an AWS serverless architecture (Lambda, Bedrock, S3, CloudFront) from Vercel and automating it with Terraform to make it production-ready.",
             "tags": [
                 "MLOps",
                 "MachineLearning",
@@ -142,7 +142,7 @@
                 "Docker"
             ],
             "url": "https://github.com/baloglu321/mlops-journey/tree/main/week-2/day-3",
-            "info": "This project showcases a practical MLOps workflow starting from a trained machine learning model to a deployable inference service. It includes API-based model serving, containerization for environment consistency, and a deployment-ready structure suitable for cloud environments. The focus is on operationalizing ML models rather than model training, highlighting key MLOps concepts such as reproducibility, service abstraction, and scalable deployment."
+            "info": "This is a comprehensive learning journey building production-ready AI applications using Ollama + Gemma 3 27B (instead of OpenAI), progressing from simple Vercel deployments with Next.js and FastAPI, through Docker containerization on AWS App Runner, to fully serverless architecture with AWS Lambda, Bedrock, S3, CloudFront, and API Gateway, all automated with Terraform for one-command deployment across multiple environments."
         },
         {
             "name": "Arxivangelist Multi-Task AI Agent",
