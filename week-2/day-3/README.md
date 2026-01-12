@@ -65,6 +65,7 @@ graph TB
 -   **Serverless Efficiency**: No servers to manage; pay only for what you use.
 -   **Advanced AI**: Leveraging AWS Bedrock for robust and scalable LLM inference.
 -   **Persistent Context**: Maintains conversation history across sessions using S3.
+-   **Custom Avatar Support**: Dynamically displays a personalized avatar (`avatar.png`) if present, otherwise uses a default Bot icon.
 -   **Secure**: Uses IAM roles for fine-grained permission control between services.
 
 ## 🛠 Tech Stack
@@ -89,6 +90,9 @@ graph TB
 - **Next.js** - Exported as static site
 - **React** - UI library
 - **Tailwind CSS** - Styling
+- **React Markdown** - Markdown rendering for rich AI responses
+- **Lucide React** - Icon library
+- **Dynamic Avatar Support** - Automatic detection and display of custom avatars
 
 ### 🔄 Evolution from Previous Days
 
@@ -103,11 +107,6 @@ graph TB
 
 **Note**: This implementation uses AWS Bedrock instead of Ollama, demonstrating the transition to managed AI services in production environments.
 
-## 📸 Usage
-
-The application provides a seamless chat interface where users can interact with the Digital Twin.
-
-*(Add more screenshots of the running application here)*
 
 ## 🔗 Development Steps
 
@@ -135,6 +134,38 @@ npm run build
 # Sync command (example)
 aws s3 sync out/ s3://your-bucket-name
 ```
+
+## 🎨 Customization
+
+### Adding a Custom Avatar
+
+The Digital Twin interface supports personalized avatars. To add your own profile picture:
+
+1. **Prepare Your Image**:
+   - Use a square image (recommended: 200x200px)
+   - Save it as `avatar.png`
+
+2. **Add to Frontend**:
+   ```bash
+   # Place the image in the frontend public directory
+   cp your-avatar.png twin/frontend/public/avatar.png
+   ```
+
+3. **Deploy**:
+   After adding the avatar, rebuild and redeploy the frontend:
+   ```bash
+   cd twin/frontend
+   npm run build
+   aws s3 sync out/ s3://your-bucket-name
+   ```
+
+The application will automatically detect `avatar.png` and display it in:
+- Welcome screen header
+- Assistant message bubbles
+- Loading indicator
+
+If no custom avatar is found, the interface defaults to a Bot icon.
+
 
 ## 📂 Data Architecture (facts.json)
 

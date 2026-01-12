@@ -2,7 +2,7 @@
 
 > **Course**: Based on [AI in Production: Deploy Gen AI and Agentic AI at Scale](https://github.com/ed-donner/production) by Ed Donner
 > 
-> **Status**: 🚧 Work in Progress - Week 2 Day 4 Complete
+> **Status**: 🚧 Work in Progress - Week 2 Day 5 Complete
 
 This repository contains my implementations of projects and exercises from the "AI in Production" course. The focus is on building production-ready generative AI and agentic AI applications using modern cloud infrastructure and MLOps practices.
 
@@ -33,7 +33,8 @@ graph LR
     H --> I[Day 1<br/>AI Digital Twin]
     I --> J[Day 2<br/>Digital Twin +<br/>Memory]
     J --> K["Day 3<br/>Serverless Digital Twin<br/>(AWS Bedrock + Lambda)"]
-    K ---> L["Day 4<br/>IaC Deployment<br/>(Terraform)"]
+    K --> L["Day 4<br/>IaC Deployment<br/>(Terraform)"]
+    L --> M["Day 5<br/>GitHub Actions CI/CD<br/>(AWS)"]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -47,6 +48,7 @@ graph LR
     style J fill:#334155,stroke:#60a5fa,color:#fff
     style K fill:#334155,stroke:#60a5fa,color:#fff
     style L fill:#334155,stroke:#60a5fa,color:#fff
+    style M fill:#334155,stroke:#60a5fa,color:#fff
 ```
 
 ## 📚 Projects
@@ -111,6 +113,28 @@ flowchart LR
 **Goal**: Automate infrastructure provisioning and deployment with Terraform.
 - **Tech**: Terraform, AWS (Lambda, Bedrock, S3, CloudFront, API Gateway), Bash/PowerShell Scripts
 - **Outcome**: One-command deployment and destruction of the entire serverless stack across multiple environments (dev/test/prod).
+
+#### [Day 5: CI/CD Pipeline with GitHub Actions](./week-2/day-5/)
+**Goal**: Implement continuous deployment with GitHub Actions to AWS.
+- **Development Guide**: [Week 2 - Day 5](https://github.com/ed-donner/production/blob/main/week2/day5.md)
+- **Tech**: GitHub Actions, AWS, CI/CD Automation
+- **Outcome**: Automated deployment pipeline that builds and deploys the Digital Twin to AWS on every push.
+
+> [!NOTE]
+> The source code repository for this project is **private** due to AWS credentials and sensitive configuration. The implementation demonstrates a complete CI/CD workflow with automated testing and deployment.
+
+**CI/CD Workflow:**
+
+![GitHub Actions Workflow](./week-2/day-5/screenshots/screenshot-1.png)
+
+**Deployment Status:**
+
+![Deployment Summary](./week-2/day-5/screenshots/screenshot-2.png)
+
+**Live Application:**
+
+![Live Digital Twin on AWS](./week-2/day-5/screenshots/screenshot-3.png)
+
 
 
 ---
