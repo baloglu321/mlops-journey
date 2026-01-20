@@ -23,24 +23,25 @@ This cybersecurity analyzer leverages the power of **local/remote Ollama models*
 ## 🏗️ System Architecture
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#90EE90','primaryTextColor':'#333','primaryBorderColor':'#333','secondaryColor':'#87CEEB','secondaryTextColor':'#333','secondaryBorderColor':'#333','tertiaryColor':'#FFD700','tertiaryTextColor':'#333','tertiaryBorderColor':'#333'}}}%%
 graph TB
     subgraph "Frontend Layer"
-        A[Next.js React App<br/>Port 3000]
+        A["<b>Next.js React App</b><br/>Port 3000"]
     end
     
     subgraph "Backend Layer"
-        B[FastAPI Server<br/>Port 8000]
-        C[OpenAI Agents SDK]
-        D[MCP Server<br/>Semgrep Integration]
+        B["<b>FastAPI Server</b><br/>Port 8000"]
+        C["<b>OpenAI Agents SDK</b>"]
+        D["<b>MCP Server</b><br/>Semgrep Integration"]
     end
     
     subgraph "Translation Layer"
-        E[Ollama Proxy<br/>ollama_proxy.py<br/>Port 4000]
+        E["<b>Ollama Proxy</b><br/>ollama_proxy.py<br/>Port 4000"]
     end
     
     subgraph "AI Infrastructure"
-        F[Cloudflare Tunnel<br/>HTTPS]
-        G[Remote Ollama Server<br/>Gemma3 27B]
+        F["<b>Cloudflare Tunnel</b><br/>HTTPS"]
+        G["<b>Remote Ollama Server</b><br/>Gemma3 27B"]
     end
     
     A -->|HTTP POST /api/analyze| B
@@ -55,9 +56,9 @@ graph TB
     C -->|Combined analysis| B
     B -->|JSON security report| A
     
-    style E fill:#90EE90
-    style G fill:#87CEEB
-    style C fill:#FFD700
+    style E fill:#90EE90,stroke:#2d5016,stroke-width:3px,color:#000
+    style G fill:#1e3a5f,stroke:#87CEEB,stroke-width:3px,color:#fff
+    style C fill:#FFD700,stroke:#b8860b,stroke-width:3px,color:#000
 ```
 
 ## 🔧 Technical Stack
