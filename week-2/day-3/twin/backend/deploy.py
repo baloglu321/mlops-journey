@@ -41,13 +41,13 @@ def main():
     )
     # --- 🧹 KRİTİK TEMİZLİK ADIMI ---
     print("🧹 Gereksiz kütüphaneler (Lambda'da zaten var olanlar) temizleniyor...")
-    
+
     # Bu kütüphaneler AWS Lambda Python Runtime içinde zaten var.
     # Paketine dahil etmene gerek yok, yer kaplamasınlar.
     libs_to_remove = ["boto3", "botocore", "s3transfer", "jmespath"]
-    
+
     package_dir = "lambda-package"
-    
+
     for item in os.listdir(package_dir):
         # Klasör/Dosya adı listemizdekilerden biriyle başlıyorsa sil
         for lib in libs_to_remove:

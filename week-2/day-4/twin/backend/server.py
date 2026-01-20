@@ -54,10 +54,7 @@ REGION = "eu-central-1"
 
 
 try:
-    bedrock_client = boto3.client(
-        service_name="bedrock-runtime",
-        region_name=REGION
-    )
+    bedrock_client = boto3.client(service_name="bedrock-runtime", region_name=REGION)
 except Exception as e:
     print(f"AWS Bağlantı Hatası: {e}")
 
@@ -66,11 +63,12 @@ llm = ChatBedrock(
     model_id=MODEL_ID,
     region_name=REGION,
     model_kwargs={
-        "temperature": 0.3,      # Daha teknik ve tutarlı cevaplar için
-        "max_tokens": 2048,      # Cevap uzunluğu
+        "temperature": 0.3,  # Daha teknik ve tutarlı cevaplar için
+        "max_tokens": 2048,  # Cevap uzunluğu
         "top_p": 0.9,
-    }
+    },
 )
+
 
 # --- VERİ MODELLERİ ---
 class ChatRequest(BaseModel):
@@ -137,7 +135,6 @@ def save_conversation(session_id: str, messages: List[Dict]):
 
 
 # --- ENDPOINTLER ---
-
 
 
 @app.get("/")

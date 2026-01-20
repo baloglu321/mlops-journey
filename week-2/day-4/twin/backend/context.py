@@ -4,16 +4,25 @@ from datetime import datetime
 
 # --- VERİ HAZIRLIĞI (Tüm Veri Tiplerini Kapsayacak Şekilde) ---
 profile_json = json.dumps(facts.get("profile", {}), indent=2, ensure_ascii=False)
-skills_json = json.dumps(facts.get("technical_skills", {}), indent=2, ensure_ascii=False)
-experience_json = json.dumps(facts.get("work_experience", []), indent=2, ensure_ascii=False)
+skills_json = json.dumps(
+    facts.get("technical_skills", {}), indent=2, ensure_ascii=False
+)
+experience_json = json.dumps(
+    facts.get("work_experience", []), indent=2, ensure_ascii=False
+)
 projects_json = json.dumps(facts.get("projects", []), indent=2, ensure_ascii=False)
-certificates_json = json.dumps(facts.get("certificates", []), indent=2, ensure_ascii=False)
+certificates_json = json.dumps(
+    facts.get("certificates", []), indent=2, ensure_ascii=False
+)
 education_json = json.dumps(facts.get("education", []), indent=2, ensure_ascii=False)
 languages_json = json.dumps(facts.get("languages", []), indent=2, ensure_ascii=False)
-easter_eggs_json = json.dumps(facts.get("easter_eggs", {}), indent=2, ensure_ascii=False)
+easter_eggs_json = json.dumps(
+    facts.get("easter_eggs", {}), indent=2, ensure_ascii=False
+)
 
 full_name = facts["profile"].get("full_name", "Mehmet Emin Baloğlu")
 name = facts["profile"].get("name", "Mehmet")
+
 
 def prompt():
     return f"""

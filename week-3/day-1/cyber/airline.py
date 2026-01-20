@@ -19,9 +19,13 @@ initial_ticket_prices = {"london": 799, "paris": 899, "tokyo": 1400, "sydney": 2
 
 with sqlite3.connect(DB) as conn:
     cursor = conn.cursor()
-    cursor.execute("CREATE TABLE IF NOT EXISTS prices (city TEXT PRIMARY KEY, price REAL)")
+    cursor.execute(
+        "CREATE TABLE IF NOT EXISTS prices (city TEXT PRIMARY KEY, price REAL)"
+    )
     for city, price in initial_ticket_prices.items():
-        cursor.execute(f"INSERT OR IGNORE INTO prices (city, price) VALUES ('{city}', {price})")
+        cursor.execute(
+            f"INSERT OR IGNORE INTO prices (city, price) VALUES ('{city}', {price})"
+        )
     conn.commit()
 
 
@@ -59,7 +63,10 @@ async def chat(message, history):
     messages = [{"role": m["role"], "content": m["content"]} for m in history]
     messages += [{"role": "user", "content": message}]
     agent = Agent(
-        name="FlightAI", instructions=instructions, model=MODEL, tools=[get_ticket_price, calculate]
+        name="FlightAI",
+        instructions=instructions,
+        model=MODEL,
+        tools=[get_ticket_price, calculate],
     )
     result = await Runner.run(agent, messages)
     return result.final_output
