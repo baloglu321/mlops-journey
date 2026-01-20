@@ -2,7 +2,7 @@
 
 > **Course**: Based on [AI in Production: Deploy Gen AI and Agentic AI at Scale](https://github.com/ed-donner/production) by Ed Donner
 > 
-> **Status**: 🚧 Work in Progress - Week 2 Day 5 Complete
+> **Status**: 🚧 Work in Progress - Week 3 Day 1 Complete
 
 This repository contains my implementations of projects and exercises from the "AI in Production" course. The focus is on building production-ready generative AI and agentic AI applications using modern cloud infrastructure and MLOps practices.
 
@@ -134,6 +134,41 @@ flowchart LR
 **Live Application:**
 
 ![Live Digital Twin on AWS](./week-2/day-5/screenshots/screenshot-3.png)
+
+### Week 3: Production AI Systems (🚧 In Progress)
+
+#### [Day 1: AI-Powered Cybersecurity Code Analyzer](./week-3/day-1/cyber/)
+**Goal**: Build an intelligent security analysis tool with AI agents and static analysis.
+- **Development Guide**: [Week 3 - Day 1 Part 0](https://github.com/ed-donner/production/blob/main/week3/day1_part0.md)
+- **Tech**: FastAPI, Next.js, OpenAI Agents SDK, MCP Protocol, Semgrep, Ollama
+- **AI Model**: **Gemma3 27B via Ollama** (instead of OpenAI API)
+- **Outcome**: A production-ready security analyzer that combines Semgrep static analysis with AI-powered deep analysis.
+
+**Key Features:**
+- 🤖 Dual analysis: Semgrep + AI (detected 4 vulnerabilities)
+- 🌉 Custom OpenAI ↔ Ollama translation proxy
+- 🎯 CVSS scoring and severity classification
+- 📊 Comprehensive vulnerability reports with fix recommendations
+- 🔧 Model Context Protocol (MCP) for tool integration
+
+**Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph LR
+    A[Next.js Frontend] -->|Code Analysis| B[FastAPI Backend]
+    B -->|Agents SDK| C[Ollama Proxy]
+    C -->|API Translation| D[Gemma3 27B]
+    B -->|MCP Protocol| E[Semgrep]
+    style C fill:#10b981,stroke:#059669,color:#fff
+    style D fill:#6366f1,stroke:#4f46e5,color:#fff
+```
+
+> [!NOTE]
+> Unlike the course which uses OpenAI's API, this implementation uses **Ollama with Gemma3 27B** on a remote server. A custom Python proxy (`ollama_proxy.py`) translates between OpenAI SDK format and Ollama's native API, enabling seamless integration without code changes to the Agents SDK.
+
+**Demo:**
+
+![Security Analysis Demo](./week-3/day-1/cyber/screenshots/shot-1.png)
 
 
 
