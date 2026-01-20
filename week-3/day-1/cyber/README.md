@@ -23,7 +23,7 @@ This cybersecurity analyzer leverages the power of **local/remote Ollama models*
 ## 🏗️ System Architecture
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#90EE90','primaryTextColor':'#333','primaryBorderColor':'#333','secondaryColor':'#87CEEB','secondaryTextColor':'#333','secondaryBorderColor':'#333','tertiaryColor':'#FFD700','tertiaryTextColor':'#333','tertiaryBorderColor':'#333'}}}%%
+%%{init: {'theme':'dark', 'themeVariables': { 'primaryColor':'#1a202c','primaryTextColor':'#fff','primaryBorderColor':'#4fd1c5','lineColor':'#4fd1c5','secondaryColor':'#2d3748','secondaryTextColor':'#fff','tertiaryColor':'#553c9a','tertiaryTextColor':'#fff'}}}%%
 graph TB
     subgraph "Frontend Layer"
         A["<b>Next.js React App</b><br/>Port 3000"]
@@ -56,9 +56,13 @@ graph TB
     C -->|Combined analysis| B
     B -->|JSON security report| A
     
-    style E fill:#90EE90,stroke:#2d5016,stroke-width:3px,color:#000
-    style G fill:#1e3a5f,stroke:#87CEEB,stroke-width:3px,color:#fff
-    style C fill:#FFD700,stroke:#b8860b,stroke-width:3px,color:#000
+    style E fill:#10b981,stroke:#059669,stroke-width:3px,color:#fff
+    style G fill:#6366f1,stroke:#4f46e5,stroke-width:3px,color:#fff
+    style C fill:#f59e0b,stroke:#d97706,stroke-width:3px,color:#000
+    style A fill:#1e293b,stroke:#64748b,stroke-width:2px,color:#fff
+    style B fill:#1e293b,stroke:#64748b,stroke-width:2px,color:#fff
+    style D fill:#1e293b,stroke:#64748b,stroke-width:2px,color:#fff
+    style F fill:#1e293b,stroke:#64748b,stroke-width:2px,color:#fff
 ```
 
 ## 🔧 Technical Stack
