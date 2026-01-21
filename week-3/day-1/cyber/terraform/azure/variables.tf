@@ -35,3 +35,8 @@ variable "docker_image_tag" {
   type        = string
   default     = "latest"
 }
+
+variable "ollama_api_url" {
+  description = "The Cloudflare Tunnel URL for the remote Ollama server (e.g., https://...trycloudflare.com)"
+  type        = string
+}

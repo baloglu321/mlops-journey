@@ -9,16 +9,21 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import StreamingResponse
 import httpx
 import uvicorn
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
-OLLAMA_BASE_URL = "https://alloy-xbox-window-compromise.trycloudflare.com"
+OLLAMA_BASE_URL = os.getenv("OLLAMA_API_URL", "http://localhost:11434/v1")
 
+timeout = httpx.Timeout(60.0, connect=30.0)
 
 @app.get("/v1/models")
 async def list_models():
     """Translate OpenAI models endpoint to Ollama /api/tags."""
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=timeout) as client:
         response = await client.get(f"{OLLAMA_BASE_URL}/api/tags")
         ollama_models = response.json()
 

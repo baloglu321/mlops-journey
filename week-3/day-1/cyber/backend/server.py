@@ -5,6 +5,7 @@ load_dotenv()
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from typing import List
 from agents import Agent, Runner, trace
@@ -18,7 +19,7 @@ from mcp_servers import create_semgrep_server
 
 
 openai.api_key = os.getenv("OPENAI_API_KEY", "ollama")
-openai.base_url = os.getenv("OPENAI_BASE_URL", "http://localhost:11434/v1")
+openai.base_url = os.getenv("OPENAI_BASE_URL", "http://127.0.0.1:4000")
 
 load_dotenv()
 
@@ -27,7 +28,9 @@ app = FastAPI(title="Cybersecurity Analyzer API")
 # Configure CORS for development and production
 cors_origins = [
     "http://localhost:3000",  # Local development
+    "http://127.0.0.1:3000",  # Alternative localhost
     "http://frontend:3000",  # Docker development
+    "http://192.168.1.100:3000",  # Network access (your local IP)
 ]
 
 # In production, allow same-origin requests (static files served from same domain)
@@ -96,6 +99,16 @@ def check_api_keys() -> None:
     if not os.getenv("OLLAMA_API_URL"):
         # Varsayılan olarak localhost'a fallback yapabilir veya hata fırlatabilirsiniz
         print("Warning: OLLAMA_API_URL not set, defaulting to localhost")
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Docker and load balancers."""
+    return {
+        "status": "healthy",
+        "service": "cybersecurity-analyzer-backend",
+        "version": "1.0.0"
+    }
 
 
 async def run_security_analysis(code: str) -> SecurityReport:
@@ -261,12 +274,53 @@ async def semgrep_test():
         return {"semgrep_install": False, "error": str(e)}
 
 
-# Mount static files for frontend
-if os.path.exists("static"):
-    app.mount("/", StaticFiles(directory="static", html=True), name="static")
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Olası frontend yollarını sırayla deneyeceğiz
+possible_frontend_paths = [
+    "/app/frontend",                               # 1. Docker Ortamı (Linux Mutlak Yol)
+    os.path.join(current_dir, "../frontend/out"),  # 2. Local Dev (Backend klasöründen çalıştırıyorsan)
+    os.path.join(current_dir, "frontend/out"),     # 3. Local Dev (Proje ana dizininden çalıştırıyorsan)
+    os.path.join(current_dir, "static"),           # 4. Eski usul static klasörü
+]
+
+frontend_path = None
+
+for path in possible_frontend_paths:
+    # Hem klasör var mı hem de içinde index.html var mı diye bakıyoruz
+    if os.path.exists(path) and os.path.exists(os.path.join(path, "index.html")):
+        frontend_path = path
+        break
+
+# --- STATİK DOSYALARI BAĞLAMA ---
+if frontend_path:
+    print(f"✅ Frontend bulundu ve sunuluyor: {frontend_path}")
+
+    # 1. Next.js Static Assets (_next klasörü)
+    # Next.js stilleri ve scriptleri için bu şart!
+    next_static_path = os.path.join(frontend_path, "_next")
+    if os.path.exists(next_static_path):
+        app.mount("/_next", StaticFiles(directory=next_static_path), name="next-static")
+
+    # 2. Kök Dizin (index.html, favicon, vb.)
+    app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend-root")
+
+    # 3. SPA (Single Page App) Yönlendirmesi
+    # Sayfa yenilendiğinde 404 almamak için
+    @app.exception_handler(404)
+    async def custom_404_handler(request, exc):
+        if not request.url.path.startswith("/api") and not request.url.path.startswith("/v1"):
+            return FileResponse(os.path.join(frontend_path, "index.html"))
+        return {"detail": "Not Found"}
+
+else:
+    print("⚠️ UYARI: Frontend build dosyaları bulunamadı!")
+    print(f"   Aranan yerler: {possible_frontend_paths}")
+    print("   Sadece API modunda çalışılıyor.")
 
 
 if __name__ == "__main__":
     import uvicorn
-
+    # Localde çalışırken hot-reload görmek istersen 'reload=True' ekleyebilirsin ama production'da kapalı olmalı
     uvicorn.run(app, host="0.0.0.0", port=8000)
+

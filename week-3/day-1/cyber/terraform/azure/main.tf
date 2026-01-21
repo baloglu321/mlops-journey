@@ -116,35 +116,70 @@ resource "azurerm_container_app" "main" {
   resource_group_name          = data.azurerm_resource_group.main.name
   revision_mode                = "Single"
 
+  # --- TÜM SECRET'LAR BURADA TOPLU DURACAK ---
+  secret {
+    name  = "openai-api-key"
+    value = var.openai_api_key
+  }
+
+  secret {
+    name  = "semgrep-app-token"
+    value = var.semgrep_app_token
+  }
+
+  secret {
+    name  = "registry-password"
+    value = azurerm_container_registry.acr.admin_password
+  }
+  # -------------------------------------------
+
   template {
     container {
       name   = "main"
       image  = docker_registry_image.app.name
-      cpu    = 1.0
-      memory = "2.0Gi"
+      cpu    = 2.0
+      memory = "4.0Gi"
 
       env {
-        name  = "OPENAI_API_KEY"
-        value = var.openai_api_key
+        name  = "OLLAMA_API_URL"
+        value = var.ollama_api_url
+      }
+      
+      env {
+        name  = "OPENAI_BASE_URL"
+        value = "http://127.0.0.1:4000"
       }
 
       env {
-        name  = "SEMGREP_APP_TOKEN"
-        value = var.semgrep_app_token
+        name        = "OPENAI_API_KEY"
+        secret_name = "openai-api-key"
       }
 
+      env {
+        name        = "SEMGREP_APP_TOKEN"
+        secret_name = "semgrep-app-token"
+      }
+      
       env {
         name  = "ENVIRONMENT"
         value = "production"
       }
 
-
       env {
         name  = "PYTHONUNBUFFERED"
         value = "1"
       }
+      env {
+        name  = "OTEL_TRACES_EXPORTER"
+        value = "none"
+      }
+      
+      env {
+        name  = "PHOENIX_TRACING"
+        value = "false"
+      }
     }
-
+    
     min_replicas = 0
     max_replicas = 1
   }
@@ -152,7 +187,6 @@ resource "azurerm_container_app" "main" {
   ingress {
     external_enabled = true
     target_port      = 8000
-    
     traffic_weight {
       percentage      = 100
       latest_revision = true
@@ -160,15 +194,12 @@ resource "azurerm_container_app" "main" {
   }
 
   registry {
-    server   = azurerm_container_registry.acr.login_server
-    username = azurerm_container_registry.acr.admin_username
+    server               = azurerm_container_registry.acr.login_server
+    username             = azurerm_container_registry.acr.admin_username
     password_secret_name = "registry-password"
   }
 
-  secret {
-    name  = "registry-password"
-    value = azurerm_container_registry.acr.admin_password
-  }
+  # BURADAKİ SECRET BLOĞUNU SİLDİK (Çünkü en tepeye taşıdık)
 
   tags = {
     environment = terraform.workspace

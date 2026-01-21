@@ -197,6 +197,105 @@ Open your browser and navigate to:
 http://localhost:3000
 ```
 
+## 🐳 Docker Deployment
+
+The application is containerized using Docker with a multi-stage build process. All three services (Frontend, Backend, and Ollama Proxy) run in a single container managed by Supervisor.
+
+### Docker Architecture
+
+**Multi-stage Build:**
+1. **Stage 1**: Builds Next.js frontend (Node.js 20 Alpine)
+2. **Stage 2**: Creates production image with Python 3.12, backend, and static frontend files
+
+**Process Management:**
+- **Supervisor** orchestrates both backend (`server.py`) and proxy (`ollama_proxy.py`)
+- Backend runs on port `8000` with FastAPI
+- Proxy runs on port `4000` translating OpenAI ↔ Ollama
+- Frontend static files served by FastAPI at port `8000`
+
+### Build the Docker Image
+
+```bash
+docker build -t cyber-analyzer .
+```
+
+This will:
+- Build the Next.js frontend (`npm run build`)
+- Install Python dependencies with `uv`
+- Copy backend code and configuration
+- Set up Supervisor for process management
+
+### Run the Container
+
+```bash
+docker run -d \
+  --name cyber-analyzer \
+  -e OLLAMA_API_URL=https://your-cloudflare-tunnel-url.trycloudflare.com \
+  -e SEMGREP_APP_TOKEN=your-semgrep-token-here \
+  -p 8000:8000 \
+  -p 4000:4000 \
+  cyber-analyzer:latest
+```
+
+**Environment Variables:**
+- `OLLAMA_API_URL` - Your Ollama server endpoint (Cloudflare tunnel or local)
+- `SEMGREP_APP_TOKEN` - Your Semgrep API token
+- `OPENAI_API_KEY` - Pre-configured as `sk-1234` (dummy key for proxy)
+- `OPENAI_BASE_URL` - Pre-configured as `http://localhost:4000`
+
+**Ports:**
+- `8000` - Main application (Frontend + Backend API)
+- `4000` - Ollama proxy (internal, optional expose)
+
+### Access the Dockerized Application
+
+Once running, access at:
+```
+http://localhost:8000
+```
+
+### Container Management
+
+```bash
+# View logs (all services)
+docker logs cyber-analyzer --tail 50 -f
+
+# Stop container
+docker stop cyber-analyzer
+
+# Start container
+docker start cyber-analyzer
+
+# Remove container
+docker rm cyber-analyzer
+
+# Rebuild and restart
+docker stop cyber-analyzer
+docker rm cyber-analyzer
+docker build -t cyber-analyzer .
+docker run -d --name cyber-analyzer -e OLLAMA_API_URL=... -e SEMGREP_APP_TOKEN=... -p 8000:8000 cyber-analyzer:latest
+```
+
+### Health Checks
+
+Docker performs automatic health checks every 30 seconds:
+- Checks proxy at `http://localhost:4000/v1/models`
+- Checks backend at `http://localhost:8000/health`
+
+View health status:
+```bash
+docker ps  # Look at STATUS column
+```
+
+### Production Considerations
+
+- ✅ **Single container** - All services in one deployable unit
+- ✅ **Process supervision** - Automatic restart on failures
+- ✅ **Health monitoring** - Built-in health checks
+- ⚠️ **Environment variables** - Must be provided at runtime
+- ⚠️ **No .env file** - Environment vars passed via `-e` flags
+- ⚠️ **Persistent logs** - Use `docker logs` or mount volumes for log persistence
+
 ## 📝 Usage
 
 1. **Paste Python Code**: Enter or paste vulnerable Python code in the editor
@@ -324,8 +423,10 @@ Contributions are welcome! Areas for improvement:
 - [ ] Add support for more programming languages
 - [ ] Implement caching for repeated analyses
 - [ ] Add batch processing capabilities
-- [ ] Create Docker deployment configuration
+- [x] ~~Create Docker deployment configuration~~ ✅ **Completed**
 - [ ] Add unit tests for proxy translation logic
+- [ ] Add Kubernetes deployment manifests
+- [ ] Implement Redis caching layer
 
 ## 📄 License
 

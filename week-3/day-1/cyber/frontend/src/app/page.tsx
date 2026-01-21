@@ -5,13 +5,13 @@ import { AnalysisResponse } from '@/types/security';
 import CodeInput from '@/components/CodeInput';
 import AnalysisResults from '@/components/AnalysisResults';
 
-// Force relative URLs in production builds
-// Only use localhost when explicitly running in development mode
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 
-  (process.env.NODE_ENV === 'development' && typeof window !== 'undefined' && window.location?.hostname === 'localhost' 
-    ? 'http://localhost:8000' 
-    : '');
-
+// API Base URL configuration
+// Development: use localhost
+// Production/Docker: use relative URL (same domain)
+//const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:8000'  // Senin makinen (npm run dev)
+  : '';                      // Docker/Azure (Relative Path)
 
 /**
  * Main application page for cybersecurity code analysis
@@ -87,7 +87,7 @@ export default function Home() {
             onAnalyzeCode={handleAnalyzeCode}
             isAnalyzing={isAnalyzing}
           />
-          
+
           <AnalysisResults
             analysisResults={analysisResults}
             isAnalyzing={isAnalyzing}
