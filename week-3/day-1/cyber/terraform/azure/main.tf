@@ -147,7 +147,7 @@ resource "azurerm_container_app" "main" {
       
       env {
         name  = "OPENAI_BASE_URL"
-        value = "http://127.0.0.1:4000"
+        value = var.openai_base_url
       }
 
       env {

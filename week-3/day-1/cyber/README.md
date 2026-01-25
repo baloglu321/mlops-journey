@@ -19,6 +19,7 @@ This cybersecurity analyzer leverages the power of **local/remote Ollama models*
 | **API Translation** | Direct OpenAI SDK | Custom `ollama_proxy.py` layer |
 | **Cost** | Pay-per-token | Free (self-hosted) |
 | **Latency** | ~2-5s | ~5-10s (depends on server) |
+| **Deployment** | Docker only | Docker + Azure (Terraform) |
 
 ## 🏗️ System Architecture
 
@@ -296,6 +297,202 @@ docker ps  # Look at STATUS column
 - ⚠️ **No .env file** - Environment vars passed via `-e` flags
 - ⚠️ **Persistent logs** - Use `docker logs` or mount volumes for log persistence
 
+## ☁️ Azure Cloud Deployment (Terraform)
+
+Deploy the application to **Azure Container Apps** with full infrastructure automation using Terraform.
+
+### Azure Infrastructure
+
+The Terraform configuration provisions:
+
+- **Azure Container Registry (ACR)** - Private Docker registry with admin access
+- **Azure Container Apps** - Serverless container hosting (2 vCPU, 4GB RAM)
+- **Azure Log Analytics** - Centralized logging and monitoring (30-day retention)
+- **Container App Environment** - Managed environment with auto-scaling (0-1 replicas)
+
+**Architecture:**
+```
+Terraform ──┬─► Azure Container Registry (ACR)
+            │   └─► Docker Image Build & Push
+            │
+            ├─► Log Analytics Workspace
+            │   └─► Container Logs & Metrics
+            │
+            └─► Container App Environment
+                └─► Container App (cyber-analyzer)
+                    ├─► Ingress: HTTPS (Port 8000)
+                    ├─► Secrets: API Keys
+                    └─► Environment Variables
+```
+
+### Prerequisites
+
+1. **Azure CLI** installed and authenticated
+   ```bash
+   az login
+   ```
+
+2. **Terraform** installed (v1.0+)
+   ```bash
+   terraform version
+   ```
+
+3. **Resource Group** created in Azure
+   ```bash
+   az group create --name cyber-analyzer-rg --location eastus
+   ```
+
+4. **Environment Variables** set in your shell
+   ```powershell
+   # PowerShell (Windows)
+   $env:OLLAMA_API_URL = "https://your-cloudflare-tunnel-url.trycloudflare.com"
+   $env:OPENAI_API_KEY = "sk-1234"
+   $env:OPENAI_BASE_URL = "http://127.0.0.1:4000"
+   $env:SEMGREP_APP_TOKEN = "your-semgrep-token-here"
+   ```
+
+### Deployment Steps
+
+#### 1. Navigate to Terraform Directory
+
+```bash
+cd terraform/azure
+```
+
+#### 2. Initialize Terraform
+
+```bash
+terraform init
+```
+
+This downloads the required providers (Azure, Docker, Random).
+
+#### 3. Deploy Infrastructure
+
+```powershell
+# PowerShell (Windows)
+terraform apply `
+  -var="ollama_api_url=$env:OLLAMA_API_URL" `
+  -var="openai_api_key=$env:OPENAI_API_KEY" `
+  -var="semgrep_app_token=$env:SEMGREP_APP_TOKEN" `
+  -var="openai_base_url=$env:OPENAI_BASE_URL" `
+  -auto-approve
+```
+
+```bash
+# Bash (Linux/Mac)
+terraform apply \
+  -var="ollama_api_url=$OLLAMA_API_URL" \
+  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="semgrep_app_token=$SEMGREP_APP_TOKEN" \
+  -var="openai_base_url=$OPENAI_BASE_URL" \
+  -auto-approve
+```
+
+**What happens during deployment:**
+1. ✅ Creates Azure Container Registry with unique name
+2. ✅ Builds Docker image locally (multi-stage build)
+3. ✅ Pushes image to ACR
+4. ✅ Creates Log Analytics Workspace
+5. ✅ Provisions Container App Environment
+6. ✅ Deploys Container App with secrets and environment variables
+7. ✅ Configures HTTPS ingress on port 8000
+
+**Expected output:**
+```
+Apply complete! Resources: 7 added, 0 changed, 0 destroyed.
+
+Outputs:
+app_url = "https://cyber-analyzer.redforest-12345678.eastus.azurecontainerapps.io"
+acr_login_server = "cyberanalyzer123456.azurecr.io"
+resource_group = "cyber-analyzer-rg"
+```
+
+#### 4. Access the Application
+
+Open the URL from the `app_url` output in your browser. The application is now live on Azure! 🚀
+
+![Azure Deployment Running](screenshots/shot-2.png)
+
+### Verify Deployment
+
+```bash
+# Check container app status
+az containerapp show \
+  --name cyber-analyzer \
+  --resource-group cyber-analyzer-rg \
+  --query "properties.runningStatus"
+
+# View live logs
+az containerapp logs show \
+  --name cyber-analyzer \
+  --resource-group cyber-analyzer-rg \
+  --follow
+```
+
+### Update Deployment
+
+To update the application with new code:
+
+```powershell
+# PowerShell
+terraform apply `
+  -var="ollama_api_url=$env:OLLAMA_API_URL" `
+  -var="openai_api_key=$env:OPENAI_API_KEY" `
+  -var="semgrep_app_token=$env:SEMGREP_APP_TOKEN" `
+  -var="openai_base_url=$env:OPENAI_BASE_URL" `
+  -auto-approve
+```
+
+Terraform will rebuild the image, push to ACR, and update the container app.
+
+### Teardown Infrastructure
+
+To completely destroy all Azure resources:
+
+```bash
+cd terraform/azure
+terraform destroy -auto-approve
+```
+
+This will delete:
+- Container App
+- Container App Environment
+- Log Analytics Workspace
+- Container Registry (and all images)
+
+**⚠️ Warning:** This is irreversible. All logs and container images will be permanently deleted.
+
+### Cost Considerations
+
+**Estimated monthly cost (as of 2026):**
+- Azure Container Apps: ~$30-50/month (2 vCPU, 4GB RAM)
+- Azure Container Registry (Basic): ~$5/month
+- Log Analytics: ~$2-5/month (30-day retention)
+- **Total: ~$37-60/month** with continuous running
+
+**Cost optimization:**
+- Set `min_replicas = 0` to scale to zero when idle (included in config)
+- Use consumption-based pricing for sporadic usage
+- Delete deployment when not needed with `terraform destroy`
+
+### Environment Variables in Azure
+
+The following variables are configured in the container app:
+
+**Public (Non-sensitive):**
+- `OLLAMA_API_URL` - Your Ollama server endpoint
+- `OPENAI_BASE_URL` - Internal proxy URL (http://127.0.0.1:4000)
+- `ENVIRONMENT` - Set to "production"
+- `PYTHONUNBUFFERED` - Enables real-time logging
+- `OTEL_TRACES_EXPORTER` - Disabled to prevent 401 errors
+- `PHOENIX_TRACING` - Disabled for production
+
+**Secrets (Encrypted):**
+- `OPENAI_API_KEY` - Dummy key for proxy
+- `SEMGREP_APP_TOKEN` - Semgrep API token
+- `registry-password` - ACR admin password
+
 ## 📝 Usage
 
 1. **Paste Python Code**: Enter or paste vulnerable Python code in the editor
@@ -420,13 +617,8 @@ This project follows the structure from [Week 3 Day 1 Part 0](https://github.com
 
 Contributions are welcome! Areas for improvement:
 
-- [ ] Add support for more programming languages
-- [ ] Implement caching for repeated analyses
-- [ ] Add batch processing capabilities
 - [x] ~~Create Docker deployment configuration~~ ✅ **Completed**
-- [ ] Add unit tests for proxy translation logic
-- [ ] Add Kubernetes deployment manifests
-- [ ] Implement Redis caching layer
+- [x] ~~Azure Terraform deployment~~ ✅ **Completed**
 
 ## 📄 License
 

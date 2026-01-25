@@ -22,6 +22,11 @@ variable "openai_api_key" {
   sensitive   = true
   default     = ""
 }
+variable "openai_base_url" {
+  description = "OpenAI Proxy or API Base URL address"
+  type        = string
+  default     = "http://127.0.0.1:4000"
+}
 
 variable "semgrep_app_token" {
   description = "Semgrep app token for security scanning"
