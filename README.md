@@ -37,7 +37,7 @@ graph LR
     L --> M["Day 5<br/>GitHub Actions CI/CD<br/>(AWS)"]
     A --> N[Week 3: Production AI Systems]
     N --> O["Day 1<br/>AI Cybersecurity<br/>Analyzer<br/>(On Azure)"]
-    N --> P["Day 2<br/>AI Cybersecurity<br/>Analyzer<br/>(On GCP)"]
+    O --> P["Day 2<br/>AI Cybersecurity<br/>Analyzer<br/>(On GCP)"]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
