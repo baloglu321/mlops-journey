@@ -35,7 +35,12 @@ resource "google_project_service" "cloudbuild" {
   disable_on_destroy = false
 }
 
-# Configure Docker provider to use GCR
+resource "google_project_service" "iam" {
+  service            = "iam.googleapis.com"
+  disable_on_destroy = false
+}
+
+# Configure Docker provider to use GCR/Artifact Registry
 provider "docker" {
   registry_auth {
     address  = "${var.region}-docker.pkg.dev"
@@ -53,6 +58,8 @@ resource "google_artifact_registry_repository" "app" {
   repository_id = var.service_name
   format        = "DOCKER"
   description   = "Docker repository for ${var.service_name}"
+  
+  depends_on = [google_project_service.artifactregistry]
 }
 
 # Build Docker image
@@ -89,16 +96,33 @@ resource "google_cloud_run_service" "app" {
 
   template {
     spec {
+      timeout_seconds = 300 # AI işlemleri uzun sürebilir, süreyi 5 dakikaya çıkardık.
+      
       containers {
-        image = docker_image.app.name
+        image = docker_registry_image.app.name # Push edilmiş imajı kullan
 
         resources {
           limits = {
-            cpu    = "1"
-            memory = "2Gi" # 2GB required for Semgrep MCP server
+            cpu    = "2"    # Azure ile eşitledik (Performans için)
+            memory = "4Gi"  # Azure ile eşitledik (Crash olmaması için)
           }
         }
 
+        # --- KRİTİK DEĞİŞKENLER (Azure'dan Eksik Olanlar Eklendi) ---
+        
+        # 1. Tünel Adresi (Evdeki bilgisayara ulaşmak için)
+        env {
+          name  = "OLLAMA_API_URL"
+          value = var.ollama_api_url
+        }
+
+        # 2. Proxy Yönlendirmesi (Python'un 4000 portuna gitmesi için)
+        env {
+          name  = "OPENAI_BASE_URL"
+          value = var.openai_base_url
+        }
+
+        # 3. API Anahtarları
         env {
           name  = "OPENAI_API_KEY"
           value = var.openai_api_key
@@ -109,6 +133,7 @@ resource "google_cloud_run_service" "app" {
           value = var.semgrep_app_token
         }
 
+        # 4. Diğer Ayarlar
         env {
           name  = "ENVIRONMENT"
           value = "production"
@@ -127,8 +152,12 @@ resource "google_cloud_run_service" "app" {
 
     metadata {
       annotations = {
+        # Soğuk başlangıç (Cold Start) maliyetini önlemek için minScale 0 yaptık.
         "autoscaling.knative.dev/minScale" = "0"
         "autoscaling.knative.dev/maxScale" = "1"
+        
+        # SQL bağlantıları için gerekirse buraya Cloud SQL connection eklenebilir
+        "run.googleapis.com/client-name" = "terraform"
       }
     }
   }
@@ -138,14 +167,13 @@ resource "google_cloud_run_service" "app" {
     latest_revision = true
   }
 
-
   depends_on = [
     google_project_service.cloudrun,
     docker_registry_image.app
   ]
 }
 
-# Make the service publicly accessible
+# Make the service publicly accessible (Unauthenticated)
 resource "google_cloud_run_service_iam_member" "public" {
   service  = google_cloud_run_service.app.name
   location = google_cloud_run_service.app.location

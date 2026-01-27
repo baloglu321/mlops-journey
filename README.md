@@ -146,6 +146,7 @@ flowchart LR
 - **Development Guide**: [Week 3 - Day 1 Part 0](https://github.com/ed-donner/production/blob/main/week3/day1_part0.md)
 - **Tech**: FastAPI, Next.js, OpenAI Agents SDK, MCP Protocol, Semgrep, Ollama
 - **AI Model**: **Gemma3 27B via Ollama** (instead of OpenAI API)
+- **Deployment**: Docker + Azure Container Apps + GCP Cloud Run (Terraform)
 - **Outcome**: A production-ready security analyzer that combines Semgrep static analysis with AI-powered deep analysis.
 
 **Key Features:**
@@ -154,6 +155,7 @@ flowchart LR
 - 🎯 CVSS scoring and severity classification
 - 📊 Comprehensive vulnerability reports with fix recommendations
 - 🔧 Model Context Protocol (MCP) for tool integration
+- ☁️ Multi-cloud deployment (Azure Container Apps + GCP Cloud Run)
 
 **Architecture:**
 ```mermaid
@@ -170,9 +172,11 @@ graph LR
 > [!NOTE]
 > Unlike the course which uses OpenAI's API, this implementation uses **Ollama with Gemma3 27B** on a remote server. A custom Python proxy (`ollama_proxy.py`) translates between OpenAI SDK format and Ollama's native API, enabling seamless integration without code changes to the Agents SDK.
 
-**Demo:**
+**Deployment Demos:**
 
-![Security Analysis Demo](./week-3/day-1/cyber/screenshots/shot-1.png)
+| Local Docker | Azure Container Apps | GCP Cloud Run |
+|--------------|---------------------|---------------|
+| ![Docker](./week-3/day-1/cyber/screenshots/shot-1.png) | ![Azure](./week-3/day-1/cyber/screenshots/shot-2.png) | ![GCP](./week-3/day-1/cyber/screenshots/shot-3.png) |
 
 
 

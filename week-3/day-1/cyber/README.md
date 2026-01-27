@@ -19,7 +19,7 @@ This cybersecurity analyzer leverages the power of **local/remote Ollama models*
 | **API Translation** | Direct OpenAI SDK | Custom `ollama_proxy.py` layer |
 | **Cost** | Pay-per-token | Free (self-hosted) |
 | **Latency** | ~2-5s | ~5-10s (depends on server) |
-| **Deployment** | Docker only | Docker + Azure (Terraform) |
+| **Deployment** | Docker only | Docker + Azure + GCP (Terraform) |
 
 ## 🏗️ System Architecture
 
@@ -493,6 +493,234 @@ The following variables are configured in the container app:
 - `SEMGREP_APP_TOKEN` - Semgrep API token
 - `registry-password` - ACR admin password
 
+## ☁️ Google Cloud Platform Deployment (Terraform)
+
+Deploy the application to **Google Cloud Run** with serverless auto-scaling using Terraform.
+
+### GCP Infrastructure
+
+The Terraform configuration provisions:
+
+- **Artifact Registry** - Private Docker repository for container images
+- **Cloud Run** - Serverless container platform (2 vCPU, 4GB RAM)
+- **API Enablement** - Automatically enables required GCP APIs
+  - Cloud Run API
+  - Artifact Registry API
+  - Cloud Build API
+  - IAM API
+
+**Architecture:**
+```
+Terraform ──┬─► Enable GCP APIs
+            │   (Cloud Run, Artifact Registry, Cloud Build, IAM)
+            │
+            ├─► Artifact Registry Repository
+            │   └─► Docker Image Build & Push
+            │
+            └─► Cloud Run Service
+                ├─► Auto-scaling (0-1 instances)
+                ├─► Public HTTPS Endpoint
+                ├─► Environment Variables
+                └─► 300s Timeout (AI operations)
+```
+
+### Prerequisites
+
+1. **Google Cloud SDK (gcloud)** installed and authenticated
+   ```bash
+   gcloud auth login
+   gcloud auth application-default login
+   ```
+
+2. **GCP Project** created
+   ```bash
+   # Create a new project (optional)
+   gcloud projects create YOUR-PROJECT-ID
+   
+   # Set as active project
+   gcloud config set project YOUR-PROJECT-ID
+   ```
+
+3. **Terraform** installed (v1.0+)
+   ```bash
+   terraform version
+   ```
+
+4. **Environment Variables** set in your shell
+   ```powershell
+   # PowerShell (Windows)
+   $env:TF_VAR_project_id = "your-gcp-project-id"
+   $env:OLLAMA_API_URL = "https://your-cloudflare-tunnel-url.trycloudflare.com"
+   $env:OPENAI_API_KEY = "sk-1234"
+   $env:OPENAI_BASE_URL = "http://127.0.0.1:4000"
+   $env:SEMGREP_APP_TOKEN = "your-semgrep-token-here"
+   ```
+
+### Deployment Steps
+
+#### 1. Navigate to Terraform Directory
+
+```bash
+cd terraform/gcp
+```
+
+#### 2. Initialize Terraform
+
+```bash
+terraform init
+```
+
+This downloads the required providers (Google Cloud, Docker).
+
+#### 3. Deploy Infrastructure
+
+```powershell
+# PowerShell (Windows)
+terraform apply `
+  -var="project_id=$env:TF_VAR_project_id" `
+  -var="openai_api_key=$env:OPENAI_API_KEY" `
+  -var="semgrep_app_token=$env:SEMGREP_APP_TOKEN" `
+  -var="ollama_api_url=$env:OLLAMA_API_URL" `
+  -var="openai_base_url=$env:OPENAI_BASE_URL" `
+  -auto-approve
+```
+
+```bash
+# Bash (Linux/Mac)
+terraform apply \
+  -var="project_id=$TF_VAR_project_id" \
+  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="semgrep_app_token=$SEMGREP_APP_TOKEN" \
+  -var="ollama_api_url=$OLLAMA_API_URL" \
+  -var="openai_base_url=$OPENAI_BASE_URL" \
+  -auto-approve
+```
+
+**What happens during deployment:**
+1. ✅ Enables required GCP APIs (Cloud Run, Artifact Registry, etc.)
+2. ✅ Creates Artifact Registry repository in `europe-west3` (Frankfurt)
+3. ✅ Builds Docker image locally (multi-stage build)
+4. ✅ Authenticates with Artifact Registry using OAuth2
+5. ✅ Pushes image to Artifact Registry
+6. ✅ Deploys Cloud Run service with 2 vCPU, 4GB RAM
+7. ✅ Configures auto-scaling (0-1 instances)
+8. ✅ Makes service publicly accessible (unauthenticated)
+9. ✅ Sets 300s timeout for AI operations
+
+**Expected output:**
+```
+Apply complete! Resources: 8 added, 0 changed, 0 destroyed.
+
+Outputs:
+service_url = "https://cyber-analyzer-abc123-ew.a.run.app"
+project_id = "your-gcp-project-id"
+region = "europe-west3"
+```
+
+#### 4. Access the Application
+
+Open the URL from the `service_url` output in your browser. The application is now live on GCP! 🚀
+
+![GCP Cloud Run Deployment](screenshots/shot-3.png)
+
+### Verify Deployment
+
+```bash
+# Check Cloud Run service status
+gcloud run services describe cyber-analyzer \
+  --region=europe-west3 \
+  --format="value(status.conditions)"
+
+# View live logs
+gcloud run services logs read cyber-analyzer \
+  --region=europe-west3 \
+  --follow
+
+# Test the endpoint
+curl https://$(gcloud run services describe cyber-analyzer \
+  --region=europe-west3 \
+  --format="value(status.url)")/health
+```
+
+### Update Deployment
+
+To update the application with new code:
+
+```powershell
+# PowerShell
+terraform apply `
+  -var="project_id=$env:TF_VAR_project_id" `
+  -var="openai_api_key=$env:OPENAI_API_KEY" `
+  -var="semgrep_app_token=$env:SEMGREP_APP_TOKEN" `
+  -var="ollama_api_url=$env:OLLAMA_API_URL" `
+  -var="openai_base_url=$env:OPENAI_BASE_URL" `
+  -auto-approve
+```
+
+Terraform will rebuild the image, push to Artifact Registry, and deploy a new revision.
+
+### Teardown Infrastructure
+
+To completely destroy all GCP resources:
+
+```bash
+cd terraform/gcp
+terraform destroy `
+  -var="project_id=$env:TF_VAR_project_id" `
+  -var="openai_api_key=$env:OPENAI_API_KEY" `
+  -var="semgrep_app_token=$env:SEMGREP_APP_TOKEN" `
+  -var="ollama_api_url=$env:OLLAMA_API_URL" `
+  -var="openai_base_url=$env:OPENAI_BASE_URL" `
+  -auto-approve
+```
+
+This will delete:
+- Cloud Run service
+- Artifact Registry repository (and all images)
+- All associated resources
+
+**⚠️ Warning:** This is irreversible. All container images will be permanently deleted.
+
+### Cost Considerations
+
+**Estimated monthly cost (as of 2026):**
+
+**Cloud Run (Pay-per-use):**
+- 2 vCPU, 4GB RAM: $0.00002400/vCPU-second, $0.00000250/GB-second
+- First 2 million requests FREE per month
+- **Actual cost depends on usage** - can be $0 with minimal traffic
+
+**Artifact Registry:**
+- Storage: $0.10/GB per month (first 0.5GB FREE)
+- Network egress: Varies by region
+
+**Estimated total with scale-to-zero:**
+- Low traffic: **$0-10/month**
+- Continuous running: **$50-80/month**
+
+**Cost optimization:**
+- ✅ `minScale = 0` - Scales to zero when idle (no cost)
+- ✅ `maxScale = 1` - Prevents unnecessary scaling
+- ✅ Delete deployment with `terraform destroy` when not needed
+- ✅ Use Cloud Run's free tier (2M requests/month)
+
+### Cloud Run Features
+
+**Auto-scaling:**
+- Scales to zero when no traffic (saves cost)
+- Auto-scales up to 1 instance on demand
+- 300-second timeout for long AI operations
+
+**Security:**
+- HTTPS by default with Google-managed certificates
+- Environment variables for sensitive data
+- IAM-based access control (currently public)
+
+**Monitoring:**
+- Built-in Cloud Logging integration
+- Request metrics and traces
+- Error reporting
+
 ## 📝 Usage
 
 1. **Paste Python Code**: Enter or paste vulnerable Python code in the editor
@@ -612,6 +840,7 @@ This project follows the structure from [Week 3 Day 1 Part 0](https://github.com
 2. ✅ **Custom proxy layer** - Translates API formats automatically
 3. ✅ **Enhanced error handling** - Robust parsing of Ollama responses
 4. ✅ **Production-ready** - Full error logging and graceful fallbacks
+5. ✅ **GCP Terraform deployment** - Full infrastructure as code
 
 ## 🤝 Contributing
 
@@ -619,6 +848,7 @@ Contributions are welcome! Areas for improvement:
 
 - [x] ~~Create Docker deployment configuration~~ ✅ **Completed**
 - [x] ~~Azure Terraform deployment~~ ✅ **Completed**
+- [x] ~~GCP Terraform deployment~~ ✅ **Completed**
 
 ## 📄 License
 
