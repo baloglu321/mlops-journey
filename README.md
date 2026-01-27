@@ -36,7 +36,8 @@ graph LR
     K --> L["Day 4<br/>IaC Deployment<br/>(Terraform)"]
     L --> M["Day 5<br/>GitHub Actions CI/CD<br/>(AWS)"]
     A --> N[Week 3: Production AI Systems]
-    N --> O["Day 1<br/>AI Cybersecurity<br/>Analyzer"]
+    N --> O["Day 1<br/>AI Cybersecurity<br/>Analyzer<br/>(On Azure)"]
+    N --> P["Day 2<br/>AI Cybersecurity<br/>Analyzer<br/>(On GCP)"]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -53,6 +54,7 @@ graph LR
     style M fill:#334155,stroke:#60a5fa,color:#fff
     style N fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
     style O fill:#334155,stroke:#60a5fa,color:#fff
+    style P fill:#334155,stroke:#60a5fa,color:#fff
 ```
 
 ## 📚 Projects
@@ -141,7 +143,7 @@ flowchart LR
 
 ### Week 3: Production AI Systems (🚧 In Progress)
 
-#### [Day 1: AI-Powered Cybersecurity Code Analyzer](./week-3/day-1/cyber/)
+#### [Day 1-2: AI-Powered Cybersecurity Code Analyzer](./week-3/day-1/cyber/)
 **Goal**: Build an intelligent security analysis tool with AI agents and static analysis.
 - **Development Guide**: [Week 3 - Day 1 Part 0](https://github.com/ed-donner/production/blob/main/week3/day1_part0.md)
 - **Tech**: FastAPI, Next.js, OpenAI Agents SDK, MCP Protocol, Semgrep, Ollama
