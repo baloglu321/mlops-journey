@@ -2,7 +2,7 @@
 
 > **Course**: Based on [AI in Production: Deploy Gen AI and Agentic AI at Scale](https://github.com/ed-donner/production) by Ed Donner
 > 
-> **Status**: 🚧 Work in Progress - Week 3 Day 1 Complete
+> **Status**: 🚧 Work in Progress - Week 3 Day 3 Complete
 
 This repository contains my implementations of projects and exercises from the "AI in Production" course. The focus is on building production-ready generative AI and agentic AI applications using modern cloud infrastructure and MLOps practices.
 
@@ -36,8 +36,8 @@ graph LR
     K --> L["Day 4<br/>IaC Deployment<br/>(Terraform)"]
     L --> M["Day 5<br/>GitHub Actions CI/CD<br/>(AWS)"]
     A --> N[Week 3: Production AI Systems]
-    N --> O["Day 1<br/>AI Cybersecurity<br/>Analyzer<br/>(On Azure)"]
-    O --> P["Day 2<br/>AI Cybersecurity<br/>Analyzer<br/>(On GCP)"]
+    N --> O["Day 1-2<br/>AI Cybersecurity<br/>Analyzer"]
+    O --> P["Day 3<br/>Alex SageMaker<br/>Serverless ML"]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -179,6 +179,55 @@ graph LR
 | Local Docker | Azure Container Apps | GCP Cloud Run |
 |--------------|---------------------|---------------|
 | ![Docker](./week-3/day-1/cyber/screenshots/shot-1.png) | ![Azure](./week-3/day-1/cyber/screenshots/shot-2.png) | ![GCP](./week-3/day-1/cyber/screenshots/shot-3.png) |
+
+#### [Day 3: Alex - AWS SageMaker Serverless ML Deployment](./week-3/day-3/alex/)
+**Goal**: Deploy production-grade ML embeddings service using AWS SageMaker Serverless.
+- **Development Guides**: 
+  - [Part 1: AWS Permissions](https://github.com/ed-donner/alex/blob/main/guides/1_permissions.md)
+  - [Part 2: SageMaker Deployment](https://github.com/ed-donner/alex/blob/main/guides/2_sagemaker.md)
+- **Tech**: AWS SageMaker, Terraform, HuggingFace Transformers, IAM
+- **Model**: `sentence-transformers/all-MiniLM-L6-v2` (embeddings)
+- **Deployment**: AWS SageMaker Serverless Endpoint (Terraform IaC)
+- **Outcome**: A production-ready, auto-scaling embeddings service for Alex AI financial planner.
+
+**Key Features:**
+- ☁️ **Serverless Inference** - Scales to zero, pay-per-use pricing
+- 🧠 **HuggingFace Integration** - Automatic model download from HuggingFace Hub
+- 🏗️ **Infrastructure as Code** - Full Terraform automation
+- 🔐 **IAM Best Practices** - Custom policies with least-privilege access
+- 📊 **MLOps Ready** - SageMaker monitoring and management
+- 💰 **Cost Optimized** - 3GB memory, 2 max concurrency
+
+**Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph LR
+    A[Terraform] -->|Provisions| B[SageMaker Model]
+    B -->|Configured by| C[Serverless Endpoint]
+    C -->|Generates| D[Text Embeddings]
+    E[IAM Role] -->|Grants Access| C
+    F[S3 Bucket] -->|Stores| G[Vector Data]
+    C -->|Reads/Writes| F
+    
+    style B fill:#ff6b6b,stroke:#c92a2a,color:#fff
+    style C fill:#51cf66,stroke:#2f9e44,color:#fff
+    style E fill:#339af0,stroke:#1864ab,color:#fff
+```
+
+> [!NOTE]
+> This project demonstrates production MLOps practices using AWS SageMaker instead of Bedrock. SageMaker provides more control over model deployment, monitoring, and custom inference logic, making it ideal for specialized ML workloads.
+
+**What Alex Does:**
+- AI-powered personal financial planner
+- Investment portfolio management
+- Retirement planning assistance
+- Uses embeddings for semantic search over financial knowledge
+
+**Deployment Components:**
+1. **IAM Setup**: Custom S3 policy for vector storage
+2. **SageMaker Model**: HuggingFace PyTorch inference container
+3. **Serverless Config**: 3GB memory, 2 max concurrency
+4. **Endpoint**: alex-embedding-endpoint (auto-scaling)
 
 
 
