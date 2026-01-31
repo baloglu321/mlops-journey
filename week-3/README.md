@@ -117,6 +117,59 @@ graph TB
 
 ---
 
+### Day 4: Alex - S3 Vectors Ingestion Pipeline
+
+**[View Project →](day-3/alex/)**
+
+Building the data ingestion pipeline for Alex using AWS S3 Vectors - a cost-effective vector storage solution that's 90% cheaper than traditional vector databases.
+
+**Key Features:**
+- 📦 **S3 Vectors Storage** - AWS native vector database (90% cost savings)
+- 🔄 **Lambda Ingestion** - Serverless document processing pipeline
+- 🔐 **API Gateway** - Authenticated API with API key protection
+- 🧠 **SageMaker Integration** - Automatic embeddings generation
+- 💾 **Vector Indexing** - Cosine similarity search with 384 dimensions
+
+**Tech Stack:**
+- **Vector Storage**: AWS S3 Vectors (dedicated namespace)
+- **Compute**: AWS Lambda (serverless)
+- **API**: Amazon API Gateway (REST API with API key)
+- **Embeddings**: SageMaker Endpoint (from Day 3)
+- **Infrastructure**: Terraform
+
+**Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph LR
+    A[Client] -->|API Key| B[API Gateway]
+    B --> C[Lambda Function]
+    C --> D[SageMaker Endpoint]
+    D -->|Embeddings| C
+    C --> E[S3 Vectors]
+    
+    style E fill:#90EE90,stroke:#228B22,stroke-width:3px,color:#000
+    style C fill:#ff9900,stroke:#cc7a00,color:#fff
+    style D fill:#ff6b6b,stroke:#c92a2a,color:#fff
+```
+
+**Cost Savings:**
+
+| Service | Monthly Cost |
+|---------|-------------|
+| OpenSearch Serverless | ~$200-300 |
+| **S3 Vectors** | **~$20-30** |
+| **Savings** | **90%!** |
+
+**Highlights:**
+- ✅ **90% Cost Reduction** - Massive savings vs OpenSearch
+- ✅ **Serverless Pipeline** - Pay only for execution time
+- ✅ **API Security** - Key-based authentication
+- ✅ **Auto Indexing** - Real-time vector indexing
+
+**Reference:** Based on [Alex Guide 3: Ingestion Pipeline](https://github.com/ed-donner/alex/blob/main/guides/3_ingest.md)
+
+---
+
 ## 🎯 Learning Objectives
 
 - **Agent Orchestration**: Using OpenAI Agents SDK for complex workflows
@@ -126,6 +179,8 @@ graph TB
 - **Production Deployment**: Running AI systems with custom infrastructure
 - **AWS SageMaker**: Serverless ML inference and MLOps practices
 - **Infrastructure as Code**: Terraform for reproducible ML deployments
+- **Vector Databases**: S3 Vectors for cost-effective semantic search
+- **Serverless Data Pipelines**: Lambda-based ingestion architectures
 
 ## 🚀 Getting Started
 
@@ -137,4 +192,4 @@ Projects are based on the [AI Engineering Production Course](https://github.com/
 
 ---
 
-**Status**: Week 3 Days 1-3 Complete ✅
+**Status**: Week 3 Days 1-4 Complete ✅

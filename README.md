@@ -2,7 +2,7 @@
 
 > **Course**: Based on [AI in Production: Deploy Gen AI and Agentic AI at Scale](https://github.com/ed-donner/production) by Ed Donner
 > 
-> **Status**: 🚧 Work in Progress - Week 3 Day 3 Complete
+> **Status**: 🚧 Work in Progress - Week 3 Day 4 Complete
 
 This repository contains my implementations of projects and exercises from the "AI in Production" course. The focus is on building production-ready generative AI and agentic AI applications using modern cloud infrastructure and MLOps practices.
 
@@ -38,6 +38,7 @@ graph LR
     A --> N[Week 3: Production AI Systems]
     N --> O["Day 1-2<br/>AI Cybersecurity<br/>Analyzer"]
     O --> P["Day 3<br/>Alex SageMaker<br/>Serverless ML"]
+    P --> Q["Day 4<br/>S3 Vectors<br/>Ingestion Pipeline"]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -55,6 +56,7 @@ graph LR
     style N fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
     style O fill:#334155,stroke:#60a5fa,color:#fff
     style P fill:#334155,stroke:#60a5fa,color:#fff
+    style Q fill:#334155,stroke:#60a5fa,color:#fff
 ```
 
 ## 📚 Projects
@@ -228,6 +230,54 @@ graph LR
 2. **SageMaker Model**: HuggingFace PyTorch inference container
 3. **Serverless Config**: 3GB memory, 2 max concurrency
 4. **Endpoint**: alex-embedding-endpoint (auto-scaling)
+
+#### [Day 4: Alex - S3 Vectors Ingestion Pipeline](./week-3/day-3/alex/)
+**Goal**: Build a cost-effective data ingestion pipeline using AWS S3 Vectors.
+- **Development Guide**: [Part 3: Ingestion Pipeline](https://github.com/ed-donner/alex/blob/main/guides/3_ingest.md)
+- **Tech**: AWS Lambda, S3 Vectors, API Gateway, SageMaker, Terraform
+- **Storage**: S3 Vectors with `financial-research` index (384 dims, Cosine)
+- **API**: REST API with API key authentication
+- **Outcome**: A serverless ingestion pipeline that's 90% cheaper than traditional vector databases.
+
+**Key Features:**
+- 📦 **S3 Vectors Storage** - AWS native vector database (90% cost savings)
+- 🔄 **Lambda Ingestion** - Serverless document processing
+- 🔐 **API Gateway** - Secure API with key authentication
+- 🧠 **SageMaker Integration** - Automatic embeddings via Day 3 endpoint
+- 💾 **Vector Indexing** - Real-time cosine similarity search
+- 💰 **Cost Optimized** - $20-30/month vs $200-300/month (OpenSearch)
+
+**Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph LR
+    A[Client] -->|API Key| B[API Gateway]
+    B --> C[Lambda Function]
+    C --> D[SageMaker Endpoint]
+    D -->|Embeddings| C
+    C --> E[S3 Vectors]
+    
+    style E fill:#90EE90,stroke:#228B22,stroke-width:3px,color:#000
+    style C fill:#ff9900,stroke:#cc7a00,color:#fff
+    style D fill:#ff6b6b,stroke:#c92a2a,color:#fff
+```
+
+> [!NOTE]
+> S3 Vectors provides 90% cost savings compared to OpenSearch Serverless while maintaining production-grade semantic search capabilities. This is AWS's native solution for cost-effective vector storage.
+
+**Cost Comparison:**
+
+| Service | Monthly Cost | Savings |
+|---------|--------------|--------|
+| OpenSearch Serverless | ~$200-300 | - |
+| **S3 Vectors** | **~$20-30** | **90%** |
+
+**Pipeline Components:**
+1. **S3 Vector Bucket**: Dedicated namespace for vector storage
+2. **Vector Index**: 384-dimensional embeddings with cosine similarity
+3. **Lambda Function**: Serverless document processing
+4. **API Gateway**: REST API with API key protection
+5. **Terraform IaC**: Complete infrastructure automation
 
 
 
