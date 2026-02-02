@@ -170,6 +170,104 @@ graph LR
 
 ---
 
+### Day 5: Alex - Researcher Agent (App Runner + Bedrock)
+
+**[View Project →](day-3/alex/)**
+
+Deploying the Alex Researcher Agent - an AI-powered service that generates investment research using AWS Bedrock and automatically stores it in your knowledge base.
+
+**Key Features:**
+- 🤖 **AI Agent System** - OpenAI Agents SDK for agent orchestration
+- 🧠 **AWS Bedrock** - OpenAI OSS 120B model (us-west-2)
+- 🌐 **Web Browsing** - Playwright MCP server for real-time data retrieval
+- 🚀 **AWS App Runner** - Fully managed container deployment
+- 📄 **Auto Storage** - Integrates with Day 4 ingestion pipeline
+- ⏰ **Optional Scheduler** - EventBridge automated research (every 2 hours)
+
+**Tech Stack:**
+- **Platform**: AWS App Runner (managed containers)
+- **AI Model**: AWS Bedrock - OpenAI OSS 120B
+- **Agent Framework**: OpenAI Agents SDK
+- **Web Tools**: Playwright MCP (Model Context Protocol)
+- **API**: REST API for on-demand research
+- **Infrastructure**: Terraform + Docker
+
+**Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph TB
+    subgraph "User Interaction"
+        USER[User Request]
+    end
+    
+    subgraph "Scheduling (Optional)"
+        EVENTB[EventBridge<br/>Every 2 Hours]
+        SCHEDLAM[Lambda Scheduler]
+    end
+    
+    subgraph "Researcher Service"
+        APPRUNNER[App Runner<br/>Researcher Agent]
+        MCP[Playwright MCP<br/>Web Browsing]
+    end
+    
+    subgraph "AI Layer"
+        BEDROCK[AWS Bedrock<br/>OpenAI OSS 120B<br/>us-west-2]
+    end
+    
+    subgraph "Storage Pipeline (Day 3-4)"
+        APIGW[API Gateway]
+        LAMBDA[Lambda Ingest]
+        SAGE[SageMaker<br/>Embeddings]
+        S3V[(S3 Vectors<br/>Knowledge Base)]
+    end
+    
+    USER -->|Research Request| APPRUNNER
+    EVENTB -->|Trigger| SCHEDLAM
+    SCHEDLAM -->|Auto Research| APPRUNNER
+    
+    APPRUNNER -->|Agent Calls| BEDROCK
+    APPRUNNER -->|Browse Web| MCP
+    BEDROCK -->|Analysis| APPRUNNER
+    
+    APPRUNNER -->|Store Research| APIGW
+    APIGW --> LAMBDA
+    LAMBDA --> SAGE
+    LAMBDA --> S3V
+    
+    style APPRUNNER fill:#FF9900,stroke:#cc7a00,color:#fff
+    style BEDROCK fill:#FF9900,stroke:#cc7a00,color:#fff
+    style S3V fill:#90EE90,stroke:#228B22,color:#000
+    style EVENTB fill:#9333EA,stroke:#7c3aed,color:#fff
+```
+
+**Highlights:**
+- ✅ **Complete AI Agent** - Autonomous research generation
+- ✅ **Production Bedrock** - Enterprise-grade AI models
+- ✅ **Managed Deployment** - App Runner handles scaling & updates
+- ✅ **MCP Integration** - Model Context Protocol for tool use
+- ✅ **Full Pipeline** - Research → Embeddings → Vector Storage
+- ✅ **Automation Ready** - Optional scheduled research
+
+**What You'll Learn:**
+1. **AI Agent Patterns** - OpenAI Agents SDK for orchestration
+2. **AWS Bedrock** - Using managed AI models in production
+3. **MCP Protocol** - Model Context Protocol for tool integration
+4. **App Runner** - Containerized deployments without K8s
+5. **EventBridge** - Scheduled automation patterns
+6. **End-to-End AI** - Complete AI research pipeline
+
+**System Capabilities:**
+- 📈 Generate investment research on demand
+- 🌐 Browse web for real-time financial data
+- 💾 Auto-store research in vector database
+- 🔍 Semantic search across all research
+- ⏰ Optional automated research scheduling
+- 📄 Professional-quality financial analysis
+
+**Reference:** Based on [Alex Guide 4: Researcher Agent](https://github.com/ed-donner/alex/blob/main/guides/4_researcher.md)
+
+---
+
 ## 🎯 Learning Objectives
 
 - **Agent Orchestration**: Using OpenAI Agents SDK for complex workflows
@@ -181,6 +279,9 @@ graph LR
 - **Infrastructure as Code**: Terraform for reproducible ML deployments
 - **Vector Databases**: S3 Vectors for cost-effective semantic search
 - **Serverless Data Pipelines**: Lambda-based ingestion architectures
+- **AI Agent Systems**: Autonomous agents with tool use and web browsing
+- **AWS Bedrock**: Production AI model deployment
+- **Container Orchestration**: AWS App Runner for managed deployments
 
 ## 🚀 Getting Started
 
@@ -192,4 +293,4 @@ Projects are based on the [AI Engineering Production Course](https://github.com/
 
 ---
 
-**Status**: Week 3 Days 1-4 Complete ✅
+**Status**: Week 3 Days 1-5 Complete ✅

@@ -2,7 +2,7 @@
 
 > **Course**: Based on [AI in Production: Deploy Gen AI and Agentic AI at Scale](https://github.com/ed-donner/production) by Ed Donner
 > 
-> **Status**: 🚧 Work in Progress - Week 3 Day 4 Complete
+> **Status**: 🚧 Work in Progress - Week 3 Day 5 Complete
 
 This repository contains my implementations of projects and exercises from the "AI in Production" course. The focus is on building production-ready generative AI and agentic AI applications using modern cloud infrastructure and MLOps practices.
 
@@ -39,6 +39,7 @@ graph LR
     N --> O["Day 1-2<br/>AI Cybersecurity<br/>Analyzer"]
     O --> P["Day 3<br/>Alex SageMaker<br/>Serverless ML"]
     P --> Q["Day 4<br/>S3 Vectors<br/>Ingestion Pipeline"]
+    Q --> R["Day 5<br/>Researcher Agent<br/>App Runner + Bedrock"]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -57,6 +58,7 @@ graph LR
     style O fill:#334155,stroke:#60a5fa,color:#fff
     style P fill:#334155,stroke:#60a5fa,color:#fff
     style Q fill:#334155,stroke:#60a5fa,color:#fff
+    style R fill:#334155,stroke:#60a5fa,color:#fff
 ```
 
 ## 📚 Projects
@@ -278,6 +280,90 @@ graph LR
 3. **Lambda Function**: Serverless document processing
 4. **API Gateway**: REST API with API key protection
 5. **Terraform IaC**: Complete infrastructure automation
+
+#### [Day 5: Alex - Researcher Agent (App Runner + Bedrock)](./week-3/day-3/alex/)
+**Goal**: Deploy an AI agent that generates investment research and stores it in your knowledge base.
+- **Development Guide**: [Part 4: Researcher Agent](https://github.com/ed-donner/alex/blob/main/guides/4_researcher.md)
+- **Tech**: AWS App Runner, Bedrock (OpenAI OSS 120B), OpenAI Agents SDK, Playwright MCP
+- **AI Model**: AWS Bedrock - OpenAI OSS 120B (us-west-2)
+- **Deployment**: Docker container on App Runner with EventBridge scheduling
+- **Outcome**: A complete AI research pipeline with autonomous agents and optional automation.
+
+**Key Features:**
+- 🤖 **AI Agent System** - OpenAI Agents SDK for orchestration
+- 🧠 **AWS Bedrock** - Production-grade AI with OSS 120B model
+- 🌐 **Web Browsing** - Playwright MCP for real-time data retrieval
+- 🚀 **Managed Deployment** - App Runner handles containers & scaling
+- 📄 **Auto Storage** - Integrates with Day 3-4 pipeline
+- ⏰ **Scheduled Research** - Optional EventBridge automation
+
+**Complete Alex System Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph TB
+    subgraph "User Layer"
+        USER[User]
+    end
+    
+    subgraph "Automation (Optional)"
+        EB[EventBridge<br/>Every 2 Hours]
+        SCHED[Lambda Scheduler]
+    end
+    
+    subgraph "Day 5: Researcher Agent"
+        AR[App Runner<br/>Researcher Service]
+        MCP[Playwright MCP<br/>Web Browsing]
+        BEDROCK[AWS Bedrock<br/>OpenAI OSS 120B]
+    end
+    
+    subgraph "Day 4: Ingestion Pipeline"
+        APIGW[API Gateway]
+        INGEST[Lambda Ingest]
+    end
+    
+    subgraph "Day 3: ML Infrastructure"
+        SAGE[SageMaker<br/>Embeddings]
+        S3V[(S3 Vectors<br/>Knowledge Base)]
+    end
+    
+    USER -->|Research Request| AR
+    EB -->|Trigger| SCHED
+    SCHED -->|Auto Research| AR
+    
+    AR -->|AI Calls| BEDROCK
+    AR -->|Browse| MCP
+    AR -->|Store| APIGW
+    
+    APIGW --> INGEST
+    INGEST --> SAGE
+    INGEST --> S3V
+    
+    USER -->|Search| S3V
+    
+    style AR fill:#FF9900,stroke:#cc7a00,color:#fff
+    style BEDROCK fill:#FF9900,stroke:#cc7a00,color:#fff
+    style S3V fill:#90EE90,stroke:#228B22,color:#000
+    style EB fill:#9333EA,stroke:#7c3aed,color:#fff
+```
+
+> [!NOTE]
+> This completes the Alex AI research system! The Researcher Agent uses AWS Bedrock (production AI), browses the web with Playwright MCP, and automatically stores research in your vector database. Optional EventBridge scheduling enables fully autonomous research generation.
+
+**Complete System Capabilities:**
+- 📈 **Generate Research**: On-demand investment analysis
+- 🌐 **Web Browsing**: Real-time financial data retrieval
+- 🧠 **AI Reasoning**: Bedrock OpenAI OSS 120B model
+- 💾 **Auto Storage**: Research → Lambda → SageMaker → S3 Vectors
+- 🔍 **Semantic Search**: Query across all stored research
+- ⏰ **Automation**: Optional scheduled research (every 2 hours)
+- 📊 **Production Grade**: Fully managed AWS infrastructure
+
+**Deployment Stack:**
+1. **App Runner**: Managed container deployment
+2. **Bedrock**: Enterprise AI model (us-west-2)
+3. **MCP Server**: Playwright for web automation
+4. **EventBridge**: Optional research scheduling
+5. **Integration**: Connects Days 3-4 infrastructure
 
 
 
