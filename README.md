@@ -2,7 +2,7 @@
 
 > **Course**: Based on [AI in Production: Deploy Gen AI and Agentic AI at Scale](https://github.com/ed-donner/production) by Ed Donner
 > 
-> **Status**: 🚧 Work in Progress - Week 3 Day 5 Complete
+> **Status**: 🚧 Work in Progress - Week 4 Day 1 Complete
 
 This repository contains my implementations of projects and exercises from the "AI in Production" course. The focus is on building production-ready generative AI and agentic AI applications using modern cloud infrastructure and MLOps practices.
 
@@ -40,6 +40,8 @@ graph LR
     O --> P["Day 3<br/>Alex SageMaker<br/>Serverless ML"]
     P --> Q["Day 4<br/>S3 Vectors<br/>Ingestion Pipeline"]
     Q --> R["Day 5<br/>Researcher Agent<br/>App Runner + Bedrock"]
+    A --> S[Week 4: Advanced AI Systems]
+    S --> T["Day 1<br/>Aurora Database<br/>PostgreSQL + Data API"]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -59,6 +61,8 @@ graph LR
     style P fill:#334155,stroke:#60a5fa,color:#fff
     style Q fill:#334155,stroke:#60a5fa,color:#fff
     style R fill:#334155,stroke:#60a5fa,color:#fff
+    style S fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
+    style T fill:#334155,stroke:#60a5fa,color:#fff
 ```
 
 ## 📚 Projects
@@ -364,6 +368,86 @@ graph TB
 3. **MCP Server**: Playwright for web automation
 4. **EventBridge**: Optional research scheduling
 5. **Integration**: Connects Days 3-4 infrastructure
+
+### Week 4: Advanced AI Agent Systems
+
+> **Note**: Week 4 continues the Alex project from Week 3. All work remains in `./week-3/day-3/alex/` directory.
+
+#### [Day 1: Alex - Aurora Database & Shared Infrastructure](./week-3/day-3/alex/)
+**Goal**: Deploy production database for financial planning SaaS platform.
+- **Development Guide**: [Part 5: Database](https://github.com/ed-donner/alex/blob/main/guides/5_database.md)
+- **Tech**: Aurora Serverless v2, PostgreSQL, RDS Data API, Pydantic, Terraform
+- **Database**: Aurora Serverless v2 with Data API (HTTP-based, no VPC)
+- **Schema**: Users, portfolios, instruments, holdings, reports, projections
+- **Outcome**: Production-grade financial database with type-safe operations.
+
+**Key Features:**
+- 📦 **Aurora Serverless v2** - Auto-scaling PostgreSQL (0.5-1 ACU)
+- 🔌 **RDS Data API** - HTTP-based access, no VPC complexity
+- 📑 **Complete Schema** - Financial SaaS data model
+- ✅ **Pydantic Validation** - Type-safe database operations
+- 📊 **22 ETFs Seed Data** - Popular investment instruments
+- 📦 **Shared Library** - Reusable package for all AI agents
+
+**Database Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph TB
+    subgraph "APIs"
+        API[API Gateway]
+        LAM[Lambda]
+    end
+    
+    subgraph "AI Agents Orchestra"
+        PLAN[Financial Planner]
+        TAG[Instrument Tagger]
+        REP[Report Writer]
+        CHART[Chart Maker]
+        RET[Retirement Specialist]
+    end
+    
+    subgraph "Database"
+        DB[(Aurora Serverless v2<br/>PostgreSQL<br/>Data API)]
+    end
+    
+    API --> LAM
+    LAM -->|Data API| DB
+    
+    PLAN -->|CRUD| DB
+    TAG -->|Update| DB
+    REP -->|Store| DB
+    CHART -->|Save| DB
+    RET -->|Write| DB
+    
+    style DB fill:#FF9900,stroke:#cc7a00,color:#fff
+    style PLAN fill:#FFD700,stroke:#FFA500,color:#000
+```
+
+> [!IMPORTANT]
+> Week 4 transforms Alex from a research tool into a complete financial planning SaaS platform. Aurora Serverless v2 with Data API eliminates VPC complexity while providing production-grade database capabilities.
+
+**Database Schema:**
+- **users**: User accounts and authentication
+- **portfolios**: Investment portfolios per user
+- **instruments**: ETFs, stocks, bonds (22 pre-loaded ETFs)
+- **holdings**: Portfolio holdings with quantities
+- **reports**: AI-generated financial reports
+- **retirement_projections**: Retirement planning calculations
+
+**Technical Highlights:**
+- 🔧 **No VPC Required**: Data API uses HTTPS, no network config
+- 💰 **Auto-Scaling**: 0.5-1 ACU, pay only for usage
+- 🛡️ **Type Safety**: Pydantic models for all operations
+- 📦 **Shared Package**: `shared/database/` used by all agents
+- 🔄 **Migrations**: Schema versioning and upgrades
+- 🎯 **Production Ready**: Complete with seed data
+
+**Alex System Evolution:**
+1. **Week 3 Day 3**: SageMaker embeddings endpoint
+2. **Week 3 Day 4**: S3 Vectors ingestion (90% cost savings)
+3. **Week 3 Day 5**: Researcher Agent (Bedrock + MCP)
+4. **Week 4 Day 1**: PostgreSQL database (financial SaaS foundation)
+5. **Next**: AI agent orchestra for financial planning
 
 
 

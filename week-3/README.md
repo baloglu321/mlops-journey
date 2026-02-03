@@ -268,6 +268,100 @@ graph TB
 
 ---
 
+## Week 4: Advanced AI Agent Systems
+
+> **Note**: Week 4 continues the Alex project from Week 3. All work is in the same `week-3/day-3/alex/` directory - no new folders created.
+
+### Day 1 (Week 4): Alex - Aurora Database & Shared Infrastructure
+
+**[View Project →](day-3/alex/)** *(Same alex project, continued)*
+
+Deploying Aurora Serverless v2 PostgreSQL with Data API - transforming Alex from a research tool into a complete financial planning SaaS platform.
+
+**Key Features:**
+- 📦 **Aurora Serverless v2** - PostgreSQL with auto-scaling (0.5-1 ACU)
+- 🔌 **Data API** - HTTP-based database access (no VPC complexity!)
+- 📑 **Complete Schema** - Portfolios, users, instruments, reports, projections
+- ✅ **Pydantic Validation** - Type-safe database operations
+- 📊 **22 ETFs Seed Data** - Pre-loaded popular investment instruments
+- 📦 **Shared Package** - Reusable database library for all agents
+
+**Tech Stack:**
+- **Database**: Aurora Serverless v2 PostgreSQL
+- **Access**: RDS Data API (HTTP-based, serverless)
+- **Schema**: Users, portfolios, instruments, reports, projections
+- **Validation**: Pydantic models
+- **Infrastructure**: Terraform
+- **Migrations**: Python database management
+
+**Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph TB
+    subgraph "User APIs"
+        API[API Gateway]
+        APILAM[API Lambda]
+    end
+    
+    subgraph "AI Agents Orchestra"
+        PLANNER[Financial Planner<br/>Orchestrator]
+        TAGGER[Instrument Tagger]
+        REPORTER[Report Writer]
+        CHARTER[Chart Maker]
+        RETIRE[Retirement Specialist]
+    end
+    
+    subgraph "Database Layer"
+        AURORA[(Aurora Serverless v2<br/>PostgreSQL<br/>Data API)]
+    end
+    
+    API --> APILAM
+    APILAM -->|Data API| AURORA
+    
+    PLANNER -->|Read/Write| AURORA
+    TAGGER -->|Update Instruments| AURORA
+    REPORTER -->|Store Reports| AURORA
+    CHARTER -->|Store Charts| AURORA
+    RETIRE -->|Store Projections| AURORA
+    
+    style AURORA fill:#FF9900,stroke:#cc7a00,color:#fff
+    style PLANNER fill:#FFD700,stroke:#FFA500,color:#000
+    style API fill:#90EE90,stroke:#228B22,color:#000
+```
+
+**Database Schema:**
+- **users**: User accounts and profiles
+- **portfolios**: User investment portfolios
+- **instruments**: Financial instruments (ETFs, stocks, bonds)
+- **holdings**: Portfolio holdings
+- **reports**: Generated financial reports
+- **retirement_projections**: Retirement planning data
+
+**Highlights:**
+- ✅ **No VPC Complexity** - Data API eliminates network configuration
+- ✅ **Auto-Scaling** - Scales from 0.5 to 1 ACU automatically
+- ✅ **Type Safety** - Pydantic models for all database operations
+- ✅ **Production Ready** - Complete schema with migrations
+- ✅ **Shared Library** - Reusable database package for all agents
+- ✅ **Cost Efficient** - Pay only for actual usage
+
+**What You'll Learn:**
+1. **Aurora Serverless v2** - Modern auto-scaling database
+2. **RDS Data API** - HTTP-based database access
+3. **Database Design** - Financial SaaS schema patterns
+4. **Pydantic Validation** - Type-safe data models
+5. **Shared Libraries** - Package design for multi-agent systems
+6. **Database Migrations** - Schema evolution strategies
+
+**System Evolution:**
+- **Week 3 Days 3-5**: AI research pipeline (SageMaker, S3 Vectors, Researcher Agent)
+- **Week 4 Day 1**: Database foundation for financial planning SaaS
+- **Next**: AI agent orchestra using this database
+
+**Reference:** Based on [Alex Guide 5: Database](https://github.com/ed-donner/alex/blob/main/guides/5_database.md)
+
+---
+
 ## 🎯 Learning Objectives
 
 - **Agent Orchestration**: Using OpenAI Agents SDK for complex workflows
@@ -282,10 +376,15 @@ graph TB
 - **AI Agent Systems**: Autonomous agents with tool use and web browsing
 - **AWS Bedrock**: Production AI model deployment
 - **Container Orchestration**: AWS App Runner for managed deployments
+- **Aurora Serverless**: Auto-scaling PostgreSQL databases
+- **Database Design**: Financial SaaS schema architecture
+- **Type-Safe Development**: Pydantic validation patterns
 
 ## 🚀 Getting Started
 
 Each project has its own detailed README with setup instructions. Navigate to the project directory and follow the specific guides.
+
+> **Note**: Week 4 continues the Alex project from Week 3 in the same `week-3/day-3/alex/` folder.
 
 ## 📖 Course Reference
 
@@ -293,4 +392,5 @@ Projects are based on the [AI Engineering Production Course](https://github.com/
 
 ---
 
-**Status**: Week 3 Days 1-5 Complete ✅
+**Week 3 Status**: Days 1-5 Complete ✅  
+**Week 4 Status**: Day 1 Complete ✅
