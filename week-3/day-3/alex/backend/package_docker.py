@@ -11,7 +11,7 @@ from pathlib import Path
 
 
 def run_packaging(agent_name):
-    """Run packaging for a specific agent."""
+    """Run packaging for a specific agent with isolated environment."""
     agent_dir = Path(__file__).parent / agent_name
     package_script = agent_dir / "package_docker.py"
 
@@ -20,15 +20,26 @@ def run_packaging(agent_name):
         return False
 
     print(f"\n📦 Packaging {agent_name.upper()} agent...")
-    print(f"  Running: cd {agent_dir} && uv run package_docker.py")
+    
+    # 1. Ortam İzolasyonu (Kritik!)
+    env = os.environ.copy()
+    env.pop("VIRTUAL_ENV", None)
+    env.pop("PYTHONPATH", None)
+    env["PYTHONUTF8"] = "1"
 
     try:
+        # 2. Text=True yerine bytes alıp manuel decode ederek encoding hatasını önlüyoruz
         result = subprocess.run(
-            ["uv", "run", "package_docker.py"], cwd=str(agent_dir), capture_output=True, text=True
+            ["uv", "run", "package_docker.py"], 
+            cwd=str(agent_dir), 
+            capture_output=True,
+            env=env # Temiz ortamı verdik
         )
 
+        stdout = result.stdout.decode('utf-8', errors='replace')
+        stderr = result.stderr.decode('utf-8', errors='replace')
+
         if result.returncode == 0:
-            # Look for the created zip file
             zip_files = list(agent_dir.glob("*.zip"))
             if zip_files:
                 zip_file = zip_files[0]
@@ -39,15 +50,14 @@ def run_packaging(agent_name):
                 print(f"  ⚠️  Warning: No zip file found after packaging")
                 return True
         else:
-            print(
-                f"  ❌ Error with {agent_name.upper()}:\nPlease note that warnings about uv environment can be ignored:\n{result.stderr}\nOutput from script is:\n{result.stdout}"
-            )
+            print(f"  ❌ Error with {agent_name.upper()}:")
+            print(f"  --- STDERR ---\n{stderr}")
+            print(f"  --- STDOUT ---\n{stdout}")
             return False
 
     except Exception as e:
-        print(f"  ❌ Error: {e}")
+        print(f"  ❌ Exception: {e}")
         return False
-
 
 def main():
     """Package all Lambda functions."""

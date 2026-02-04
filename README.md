@@ -2,7 +2,7 @@
 
 > **Course**: Based on [AI in Production: Deploy Gen AI and Agentic AI at Scale](https://github.com/ed-donner/production) by Ed Donner
 > 
-> **Status**: 🚧 Work in Progress - Week 4 Day 1 Complete
+> **Status**: 🚧 Work in Progress - Week 4 Day 2 Complete
 
 This repository contains my implementations of projects and exercises from the "AI in Production" course. The focus is on building production-ready generative AI and agentic AI applications using modern cloud infrastructure and MLOps practices.
 
@@ -42,6 +42,7 @@ graph LR
     Q --> R["Day 5<br/>Researcher Agent<br/>App Runner + Bedrock"]
     A --> S[Week 4: Advanced AI Systems]
     S --> T["Day 1<br/>Aurora Database<br/>PostgreSQL + Data API"]
+    T --> U["Day 2<br/>AI Agents Orchestra<br/>5 Specialized Agents"]
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -63,6 +64,7 @@ graph LR
     style R fill:#334155,stroke:#60a5fa,color:#fff
     style S fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
     style T fill:#334155,stroke:#60a5fa,color:#fff
+    style U fill:#334155,stroke:#60a5fa,color:#fff
 ```
 
 ## 📚 Projects
@@ -448,6 +450,122 @@ graph TB
 3. **Week 3 Day 5**: Researcher Agent (Bedrock + MCP)
 4. **Week 4 Day 1**: PostgreSQL database (financial SaaS foundation)
 5. **Next**: AI agent orchestra for financial planning
+
+#### [Day 2: Alex - AI Agent Orchestra](./week-3/day-3/alex/)
+**Goal**: Deploy multi-agent AI system for comprehensive financial analysis.
+- **Development Guide**: [Part 6: AI Agents](https://github.com/ed-donner/alex/blob/main/guides/6_agents.md)
+- **Tech**: AWS Lambda, SQS, Bedrock Nova Pro, OpenAI Agents SDK, Polygon API
+- **Agents**: 5 specialized agents (Planner, Tagger, Reporter, Charter, Retirement)
+- **Deployment**: Lambda functions with SQS orchestration
+- **Outcome**: Production multi-agent financial planning system.
+
+**Key Features:**
+- 🎯 **Financial Planner** - Orchestrator coordinating all agents
+- 🏷️ **InstrumentTagger** - Financial instrument classification
+- 📝 **Report Writer** - Portfolio analysis reports
+- 📊 **Chart Maker** - Data visualizations
+- 🎯 **Retirement Specialist** - Monte Carlo projections
+- 📨 **SQS Queue** - Asynchronous agent communication
+
+**Complete Multi-Agent System:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph TB
+    USER[User]
+    
+    subgraph "Orchestration Layer"
+        SQS[SQS Queue]
+        PLAN[🎯 Planner<br/>Orchestrator]
+    end
+    
+    subgraph "Specialized Agents"
+        TAG[🏷️ Tagger]
+        REP[📝 Reporter]
+        CHART[📊 Charter]
+        RET[🎯 Retirement]
+    end
+    
+    subgraph "Data & Knowledge"
+        DB[(Aurora DB)]
+        S3V[(S3 Vectors)]
+    end
+    
+    USER -->|Trigger| SQS
+    SQS --> PLAN
+    
+    PLAN -->|Classify| TAG
+    PLAN -->|Analyze| REP
+    PLAN -->|Visualize| CHART
+    PLAN -->|Project| RET
+    
+    TAG --> DB
+    REP --> DB
+    REP --> S3V
+    CHART --> DB
+    RET --> DB
+    
+    PLAN -->|Finalize| DB
+    DB --> USER
+    
+    style PLAN fill:#FFD700,stroke:#FFA500,color:#000
+    style REP fill:#90EE90,stroke:#228B22,color:#000
+    style CHART fill:#87CEEB,stroke:#4682B4,color:#000
+    style RET fill:#DDA0DD,stroke:#9370DB,color:#000
+    style TAG fill:#FFB6C1,stroke:#FF1493,color:#000
+```
+
+> [!NOTE]
+> This completes Alex's transformation into a production SaaS platform! Five specialized AI agents collaborate using sophisticated orchestration patterns. The Financial Planner coordinates parallel execution while each agent excels at its specific domain.
+
+**Agent Specializations:**
+
+1. **🎯 Financial Planner (Orchestrator)**
+   - Coordinates all agent work
+   - Manages pre-processing and finalization
+   - Uses tools to invoke other agents
+   - Ensures atomic job completion
+
+2. **🏷️ InstrumentTagger**
+   - Classifies ETFs, stocks, bonds
+   - Structured outputs (no tools)
+   - Updates instrument metadata
+
+3. **📝 Report Writer**
+   - Portfolio analysis with recommendations
+   - Accesses S3 Vectors knowledge base
+   - Generates markdown reports
+
+4. **📊 Chart Maker**
+   - Allocation and trend visualizations
+   - Returns JSON specifications
+   - Direct output (no tools)
+
+5. **🎯 Retirement Specialist**
+   - Monte Carlo simulations
+   - Retirement projections
+   - Stores detailed scenarios
+
+**Multi-Agent Benefits:**
+- 🎯 **Specialization**: Each agent excels at its task
+- ⚡ **Parallel Processing**: Simultaneous execution
+- 🛡️ **Reliability**: Focused, tested prompts
+- 🔧 **Maintainability**: Independent updates
+- 💰 **Cost Efficiency**: Run only needed agents
+
+**Communication Architecture:**
+- **Async Triggering**: SQS decouples requests
+- **Pre-processing**: Orchestrator prepares data
+- **Parallel Execution**: Agents work simultaneously
+- **Isolated Writes**: Each writes to own DB field
+- **Atomic Completion**: All succeed or job fails
+
+**Complete Alex System (Weeks 3-4):**
+1. **W3D3**: SageMaker embeddings endpoint
+2. **W3D4**: S3 Vectors ingestion (90% cheaper)
+3. **W3D5**: Researcher Agent (Bedrock + MCP)
+4. **W4D1**: Aurora PostgreSQL database
+5. **W4D2**: 5-agent AI orchestra 🎭
+6. **Next**: Frontend application
 
 
 

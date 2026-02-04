@@ -362,6 +362,137 @@ graph TB
 
 ---
 
+### Day 2 (Week 4): Alex - AI Agent Orchestra
+
+**[View Project →](day-3/alex/)** *(Same alex project, continued)*
+
+Deploying a sophisticated multi-agent AI system with 5 specialized agents that collaborate to provide comprehensive financial analysis.
+
+**Key Features:**
+- 🎯 **Financial Planner** - Orchestrator agent that coordinates all others
+- 🏷️ **InstrumentTagger** - Classifies and tags financial instruments
+- 📝 **Report Writer** - Generates detailed portfolio analysis
+- 📊 **Chart Maker** - Creates data visualizations
+- 🎯 **Retirement Specialist** - Monte Carlo retirement projections
+- 📨 **SQS Orchestration** - Async agent communication
+
+**Tech Stack:**
+- **Platform**: AWS Lambda (5 specialized agents)
+- **Orchestration**: Amazon SQS (message queue)
+- **AI Model**: AWS Bedrock - Amazon Nova Pro (us-west-2)
+- **Market Data**: Polygon.io API (real-time)
+- **Agent Framework**: OpenAI Agents SDK
+- **Infrastructure**: Terraform
+
+**Multi-Agent Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph TB
+    USER[User Request]
+    
+    subgraph "Orchestration"
+        SQS[SQS Queue<br/>Async Trigger]
+        PLANNER[🎯 Financial Planner<br/>Orchestrator]
+    end
+    
+    subgraph "Specialized Agents"
+        TAGGER[🏷️ InstrumentTagger<br/>Classification]
+        REPORTER[📝 Report Writer<br/>Analysis]
+        CHARTER[📊 Chart Maker<br/>Visualizations]
+        RETIRE[🎯 Retirement<br/>Projections]
+    end
+    
+    subgraph "Data Layer"
+        DB[(Aurora DB)]
+        S3V[(S3 Vectors<br/>Knowledge)]
+    end
+    
+    USER -->|Trigger| SQS
+    SQS -->|Message| PLANNER
+    
+    PLANNER -->|Auto-tag| TAGGER
+    TAGGER -->|Update instruments| DB
+    
+    PLANNER -->|Delegate| REPORTER
+    PLANNER -->|Delegate| CHARTER
+    PLANNER -->|Delegate| RETIRE
+    
+    REPORTER -->|Markdown| DB
+    REPORTER -->|Access knowledge| S3V
+    CHARTER -->|JSON charts| DB
+    RETIRE -->|Simulations| DB
+    
+    PLANNER -->|Finalize| DB
+    DB -->|Results| USER
+    
+    style PLANNER fill:#FFD700,stroke:#FFA500,color:#000
+    style REPORTER fill:#90EE90,stroke:#228B22,color:#000
+    style CHARTER fill:#87CEEB,stroke:#4682B4,color:#000
+    style RETIRE fill:#DDA0DD,stroke:#9370DB,color:#000
+    style TAGGER fill:#FFB6C1,stroke:#FF1493,color:#000
+```
+
+**Agent Roles:**
+1. **🎯 Financial Planner (Orchestrator)**
+   - Coordinates all agent work
+   - Manages database pre-processing
+   - Finalizes complete analysis
+   - Uses tools to invoke other agents
+
+2. **🏷️ InstrumentTagger**
+   - Classifies financial instruments
+   - No tools (structured outputs)
+   - Updates instrument metadata
+
+3. **📝 Report Writer**
+   - Portfolio analysis and recommendations
+   - Accesses S3 Vectors knowledge base
+   - Generates markdown reports
+
+4. **📊 Chart Maker**
+   - Data visualizations (allocation, trends)
+   - Returns JSON chart specifications
+   - No tools (direct JSON output)
+
+5. **🎯 Retirement Specialist**
+   - Monte Carlo simulations
+   - Retirement projections
+   - Stores detailed scenarios
+
+**Why Multi-Agent Architecture:**
+- ✅ **Specialization** - Each agent excels at specific tasks
+- ✅ **Reliability** - Smaller, focused prompts
+- ✅ **Parallel Processing** - Simultaneous execution
+- ✅ **Maintainability** - Update agents independently
+- ✅ **Cost Efficiency** - Only run needed agents
+
+**Communication Pattern:**
+1. **Asynchronous Triggering**: SQS decouples request/processing
+2. **Pre-processing**: Orchestrator prepares data
+3. **Parallel Execution**: Agents work simultaneously
+4. **Isolated Writes**: Each agent writes to own DB field
+5. **Atomic Completion**: Job complete when all succeed
+
+**What You'll Learn:**
+1. **Multi-Agent Systems** - Specialized agent collaboration
+2. **Agent Orchestration** - SQS-based async patterns
+3. **Lambda Architecture** - Serverless agent deployment
+4. **Context Engineering** - Optimizing agent prompts
+5. **Tool Usage Strategy** - Structured outputs vs tools
+6. **Production AI** - Error handling and monitoring
+
+**System Capabilities:**
+- 📈 Complete portfolio analysis
+- 🌐 Real-time market data (Polygon API)
+- 📊 Data visualizations
+- 👴 Retirement projections with Monte Carlo
+- 💾 Knowledge-enhanced reports
+- ⏱️ Async processing with SQS
+
+**Reference:** Based on [Alex Guide 6: AI Agents Orchestra](https://github.com/ed-donner/alex/blob/main/guides/6_agents.md)
+
+---
+
 ## 🎯 Learning Objectives
 
 - **Agent Orchestration**: Using OpenAI Agents SDK for complex workflows
@@ -379,6 +510,10 @@ graph TB
 - **Aurora Serverless**: Auto-scaling PostgreSQL databases
 - **Database Design**: Financial SaaS schema architecture
 - **Type-Safe Development**: Pydantic validation patterns
+- **Multi-Agent AI Systems**: Specialized agent orchestration
+- **SQS Messaging**: Async communication patterns
+- **Lambda Functions**: Serverless agent deployment
+- **Context Engineering**: Optimizing AI agent prompts
 
 ## 🚀 Getting Started
 
@@ -393,4 +528,4 @@ Projects are based on the [AI Engineering Production Course](https://github.com/
 ---
 
 **Week 3 Status**: Days 1-5 Complete ✅  
-**Week 4 Status**: Day 1 Complete ✅
+**Week 4 Status**: Days 1-2 Complete ✅

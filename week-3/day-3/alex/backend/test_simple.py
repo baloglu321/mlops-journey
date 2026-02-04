@@ -12,7 +12,14 @@ from pathlib import Path
 def run_command(cmd, cwd):
     """Run a command and capture output."""
     print(f"Running in {cwd}: {' '.join(cmd)}")
-    result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+    env = os.environ.copy()
+    env.pop("VIRTUAL_ENV", None)
+    env.pop("PYTHONPATH", None)
+    # Windows emoji/karakter hatası için zorunlu UTF-8
+    env["PYTHONUTF8"] = "1"
+    result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True,env=env,
+        encoding='utf-8', 
+        errors='replace')
     return result.returncode == 0, result.stdout, result.stderr
 
 def test_agent(agent_name, test_file="test_simple.py"):

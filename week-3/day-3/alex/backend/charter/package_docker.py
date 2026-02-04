@@ -12,13 +12,22 @@ import argparse
 from pathlib import Path
 
 def run_command(cmd, cwd=None):
-    """Run a command and capture output."""
+    """Run a command and show output in real-time to avoid deadlocks."""
     print(f"Running: {' '.join(cmd)}")
-    result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
+    
+    # capture_output=True yerine direkt terminale akıtıyoruz
+    # Bu sayede Windows pipe kilitlenmesi yaşanmaz.
+    result = subprocess.run(
+        cmd, 
+        cwd=cwd, 
+        capture_output=False, 
+        text=False
+    )
+    
     if result.returncode != 0:
-        print(f"Error: {result.stderr}")
+        print(f"Error: Command failed with return code {result.returncode}")
         sys.exit(1)
-    return result.stdout
+    return ""
 
 def package_lambda():
     """Package the Lambda function with all dependencies."""
@@ -37,10 +46,15 @@ def package_lambda():
         
         # Export exact requirements from uv.lock (excluding the editable database package)
         print("Exporting requirements from uv.lock...")
-        requirements_result = run_command(
+        requirements_proc = subprocess.run(
             ["uv", "export", "--no-hashes", "--no-emit-project"],
-            cwd=str(charter_dir)
+            cwd=str(charter_dir),
+            capture_output=True,
+            text=True,
+            encoding='utf-8',
+            errors='replace'
         )
+        requirements_result = requirements_proc.stdout
 
         # Filter out packages that don't work in Lambda
         filtered_requirements = []
@@ -83,10 +97,7 @@ def package_lambda():
         
         # Create new zip
         print(f"Creating zip file: {zip_path}")
-        run_command(
-            ["zip", "-r", str(zip_path), "."],
-            cwd=str(package_dir)
-        )
+        shutil.make_archive(str(Path(zip_path).with_suffix('')), 'zip', package_dir)
         
         # Get file size
         size_mb = zip_path.stat().st_size / (1024 * 1024)

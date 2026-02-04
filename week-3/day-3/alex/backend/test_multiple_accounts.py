@@ -37,7 +37,8 @@ def test_multiple_accounts():
     print(f'\n✅ Created test user: {test_user_id}')
     
     # Ensure instruments exist
-    instruments = ["SPY", "BND", "VTI", "VXUS", "QQQ", "IWM", "EFA", "AGG", "VNQ", "GLD"]
+    #instruments = ["SPY", "BND", "VTI", "VXUS", "QQQ", "IWM", "EFA", "AGG", "VNQ", "GLD"]
+    instruments = ["SPY", "BND", "VTI", "VXUS", "QQQ", "IWM", "EFA", "AGG", "VNQ", "GLD", "VEA", "TSLA", "ARKK"]
     for i, symbol in enumerate(instruments):
         existing = db.instruments.find_by_symbol(symbol)
         if not existing:
