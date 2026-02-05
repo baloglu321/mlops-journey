@@ -666,18 +666,15 @@ graph TB
 
 **Production Screenshots:**
 
-<details>
-  <summary>🚀 <b>Click to view Production Screenshots</b></summary>
-  <br>
-  <p align="center">
-    <img src="week-3/day-3/alex/screenshots/shot-2.png" width="800" alt="Landing Page">
-    <br><i>Landing Page - AI Financial Advisor</i><br><br>
-    <img src="week-3/day-3/alex/screenshots/shot-3.png" width="800" alt="Dashboard">
-    <br><i>Dashboard - Portfolio Management</i><br><br>
-    <img src="week-3/day-3/alex/screenshots/shot-4.png" width="800" alt="Analysis">
-    <br><i>Comprehensive Portfolio Analysis Report</i>
-  </p>
-</details>
+````carousel
+![CloudFront Deployment - Application live at production URL](week-3/day-3/alex/screenshots/shot-1.png)
+<!-- slide -->
+![Landing Page - AI Financial Advisor showcasing the 4-agent advisory team](week-3/day-3/alex/screenshots/shot-2.png)
+<!-- slide -->
+![Dashboard - Portfolio management with $332K+ total value, user settings, and allocation charts](week-3/day-3/alex/screenshots/shot-3.png)
+<!-- slide -->
+![Analysis Results - Comprehensive AI-generated portfolio analysis with detailed insights](week-3/day-3/alex/screenshots/shot-4.png)
+````
 
 **Application Features:**
 1. 📊 **Dashboard**: Portfolio value, accounts, allocation, settings
