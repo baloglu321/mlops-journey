@@ -667,13 +667,13 @@ graph TB
 **Production Screenshots:**
 
 ````carousel
-![CloudFront Deployment - Application live at production URL](../week-3/day-3/alex/screenshots/shot-1.png)
+![CloudFront Deployment - Application live at production URL](week-3/day-3/alex/screenshots/shot-1.png)
 <!-- slide -->
-![Landing Page - AI Financial Advisor showcasing the 4-agent advisory team](../week-3/day-3/alex/screenshots/shot-2.png)
+![Landing Page - AI Financial Advisor showcasing the 4-agent advisory team](week-3/day-3/alex/screenshots/shot-2.png)
 <!-- slide -->
-![Dashboard - Portfolio management with $332K+ total value, user settings, and allocation charts](../week-3/day-3/alex/screenshots/shot-3.png)
+![Dashboard - Portfolio management with $332K+ total value, user settings, and allocation charts](week-3/day-3/alex/screenshots/shot-3.png)
 <!-- slide -->
-![Analysis Results - Comprehensive AI-generated portfolio analysis with detailed insights](../week-3/day-3/alex/screenshots/shot-4.png)
+![Analysis Results - Comprehensive AI-generated portfolio analysis with detailed insights](week-3/day-3/alex/screenshots/shot-4.png)
 ````
 
 **Application Features:**
