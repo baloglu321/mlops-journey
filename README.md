@@ -666,11 +666,6 @@ graph TB
 
 **Production Screenshots:**
 
-<<<<<<< HEAD
-=======
-**1. CloudFront Deployment Success**
-
->>>>>>> 2c909d8 (docs: add project guides and documentation)
 <details>
   <summary>🚀 <b>Click to view Production Screenshots</b></summary>
   <br>
