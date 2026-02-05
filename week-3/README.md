@@ -593,19 +593,19 @@ graph TB
 
 **1. CloudFront Deployment Success**
 
-![Deployment Success - CloudFront CDN deployed and ready](screenshots/shot-1.png)
+![Deployment Success - CloudFront CDN deployed and ready](day-3/alex/screenshots/shot-1.png)
 
 **2. Landing Page - AI Advisory Team**
 
-![Landing Page - AI Financial Advisor with 4 specialized agents](screenshots/shot-2.png)
+![Landing Page - AI Financial Advisor with 4 specialized agents](day-3/alex/screenshots/shot-2.png)
 
 **3. Dashboard - Portfolio Overview**
 
-![Dashboard - Portfolio overview with $332K+ total value and user settings](screenshots/shot-3.png)
+![Dashboard - Portfolio overview with $332K+ total value and user settings](day-3/alex/screenshots/shot-3.png)
 
 **4. Analysis Results**
 
-![Analysis Results - Comprehensive portfolio analysis with AI-generated insights](screenshots/shot-4.png)
+![Analysis Results - Comprehensive portfolio analysis with AI-generated insights](day-3/alex/screenshots/shot-4.png)
 
 **Deployment Components:**
 - ☁️ **CloudFront**: Global CDN with custom domain support
