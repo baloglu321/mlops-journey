@@ -666,15 +666,21 @@ graph TB
 
 **Production Screenshots:**
 
-````carousel
+**1. CloudFront Deployment Success**
+
 ![CloudFront Deployment - Application live at production URL](week-3/day-3/alex/screenshots/shot-1.png)
-<!-- slide -->
+
+**2. Landing Page - AI Advisory Team**
+
 ![Landing Page - AI Financial Advisor showcasing the 4-agent advisory team](week-3/day-3/alex/screenshots/shot-2.png)
-<!-- slide -->
+
+**3. Dashboard - Portfolio Overview**
+
 ![Dashboard - Portfolio management with $332K+ total value, user settings, and allocation charts](week-3/day-3/alex/screenshots/shot-3.png)
-<!-- slide -->
+
+**4. Analysis Results**
+
 ![Analysis Results - Comprehensive AI-generated portfolio analysis with detailed insights](week-3/day-3/alex/screenshots/shot-4.png)
-````
 
 **Application Features:**
 1. 📊 **Dashboard**: Portfolio value, accounts, allocation, settings
