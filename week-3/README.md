@@ -493,6 +493,150 @@ graph TB
 
 ---
 
+### Day 3 (Week 4): Alex - Frontend & API Deployment
+
+**[View Project →](day-3/alex/)** *(Same alex project, continued)*
+
+Deploying the complete SaaS frontend with Next.js, Clerk authentication, and production infrastructure on AWS.
+
+**Key Features:**
+- 🔐 **Clerk Authentication** - Sign-in/sign-up with auto user creation
+- 📊 **Portfolio Management** - Add accounts, track positions, edit holdings
+- 🤖 **AI Analysis UI** - Trigger and monitor multi-agent analysis
+- 📈 **Interactive Reports** - Markdown reports, charts, retirement projections
+- ⚡ **CloudFront CDN** - Global content delivery
+- 📡 **API Gateway + Lambda** - Serverless REST API
+
+**Tech Stack:**
+- **Frontend**: Next.js, React, TypeScript, Tailwind CSS
+- **Authentication**: Clerk (JWT-based)
+- **Backend API**: FastAPI on AWS Lambda
+- **CDN**: CloudFront
+- **Static Hosting**: S3
+- **API Infrastructure**: API Gateway, Lambda
+- **Infrastructure**: Terraform
+
+**Full Stack Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph TB
+    USER[User Browser]
+    
+    subgraph "CDN Layer"
+        CF[CloudFront CDN<br/>Global Distribution]
+    end
+    
+    subgraph "Frontend"
+        S3[S3 Static Site<br/>Next.js Build]
+    end
+    
+    subgraph "Authentication"
+        CLERK[Clerk Auth<br/>JWT Tokens]
+    end
+    
+    subgraph "API Layer"
+        APIG[API Gateway]
+        APILAM[API Lambda<br/>FastAPI]
+    end
+    
+    subgraph "Backend (Previous Days)"
+        SQS[SQS Queue]
+        AGENTS[5 AI Agents]
+        DB[(Aurora DB)]
+    end
+    
+    USER -->|HTTPS| CF
+    USER -->|Auth| CLERK
+    
+    CF -->|Static Files| S3
+    CF -->|/api/*| APIG
+    
+    APIG -->|JWT Verify| APILAM
+    APILAM -->|Data API| DB
+    APILAM -->|Trigger| SQS
+    
+    SQS --> AGENTS
+    AGENTS --> DB
+    
+    style CF fill:#FF9900,stroke:#cc7a00,color:#fff
+    style S3 fill:#569A31,stroke:#3d6b23,color:#fff
+    style APILAM fill:#FF9900,stroke:#cc7a00,color:#fff
+    style CLERK fill:#6C5CE7,stroke:#5b4fc4,color:#fff
+```
+
+**Application Features:**
+1. **Dashboard**
+   - Total portfolio value
+   - Number of accounts
+   - Asset allocation charts
+   - User settings (risk tolerance, retirement goals)
+
+2. **Portfolio Management**
+   - Add/edit/delete accounts
+   - Track holdings and positions
+   - Real-time valuation
+
+3. **AI Advisor Team**
+   - Start comprehensive analysis
+   - Real-time agent progress tracking
+   - View detailed reports
+   - Interactive charts
+   - Retirement projections
+
+4. **Analysis Results**
+   - Markdown-formatted reports
+   - Dynamic visualizations
+   - Monte Carlo simulations
+   - Investment recommendations
+
+**Production Screenshots:**
+
+````carousel
+![Deployment Success - CloudFront CDN deployed and ready](screenshots/shot-1.png)
+<!-- slide -->
+![Landing Page - AI Financial Advisor with 4 specialized agents](screenshots/shot-2.png)
+<!-- slide -->
+![Dashboard - Portfolio overview with $332K+ total value and user settings](screenshots/shot-3.png)
+<!-- slide -->
+![Analysis Results - Comprehensive portfolio analysis with AI-generated insights](screenshots/shot-4.png)
+````
+
+**Deployment Components:**
+- ☁️ **CloudFront**: Global CDN with custom domain support
+- 📏 **S3**: Static site hosting (Next.js export)
+- 🔑 **API Gateway**: REST API with CORS
+- 📦 **Lambda**: FastAPI backend with JWT auth
+- 🔐 **Clerk**: Authentication provider
+- 🏗️ **Terraform**: Complete infrastructure automation
+
+**What You'll Learn:**
+1. **Next.js Deployment** - Static export and S3 hosting
+2. **CloudFront CDN** - Global content distribution
+3. **Clerk Integration** - Modern authentication
+4. **FastAPI on Lambda** - Serverless Python API
+5. **Full Stack AWS** - Complete SaaS architecture
+6. **Production Deployment** - Real-world infrastructure
+
+**System Highlights:**
+- ✅ **Production Ready** - Complete SaaS platform
+- ✅ **Global CDN** - Fast worldwide access
+- ✅ **Secure Auth** - JWT-based authentication
+- ✅ **Real-time UI** - Agent progress tracking
+- ✅ **Responsive Design** - Modern, professional interface
+- ✅ **Cost Efficient** - Serverless, pay-per-use
+
+**Complete Alex Timeline:**
+- **W3D3**: SageMaker embeddings
+- **W3D4**: S3 Vectors ingestion (90% savings)
+- **W3D5**: Researcher Agent (Bedrock + MCP)
+- **W4D1**: Aurora PostgreSQL database
+- **W4D2**: 5-agent AI orchestra
+- **W4D3**: Frontend & API deployment 🎉
+
+**Reference:** Based on [Alex Guide 7: Frontend & API](https://github.com/ed-donner/alex/blob/main/guides/7_frontend.md)
+
+---
+
 ## 🎯 Learning Objectives
 
 - **Agent Orchestration**: Using OpenAI Agents SDK for complex workflows
@@ -514,6 +658,10 @@ graph TB
 - **SQS Messaging**: Async communication patterns
 - **Lambda Functions**: Serverless agent deployment
 - **Context Engineering**: Optimizing AI agent prompts
+- **Next.js Deployment**: Static site generation and hosting
+- **CloudFront CDN**: Global content distribution
+- **Full Stack AWS**: Complete SaaS infrastructure
+- **Modern Authentication**: Clerk integration patterns
 
 ## 🚀 Getting Started
 
@@ -528,4 +676,4 @@ Projects are based on the [AI Engineering Production Course](https://github.com/
 ---
 
 **Week 3 Status**: Days 1-5 Complete ✅  
-**Week 4 Status**: Days 1-2 Complete ✅
+**Week 4 Status**: Days 1-3 Complete ✅ **🎉 Alex Project COMPLETE!**

@@ -43,9 +43,13 @@ def check_requirements():
 
     # Check npm
     try:
-        result = subprocess.run(["npm", "--version"], capture_output=True, text=True)
-        npm_version = result.stdout.strip()
-        checks.append(f"✅ npm: {npm_version}")
+        # shell=True eklendiğinde Windows npm.cmd'yi otomatik bulur
+        result = subprocess.run(["npm", "--version"], capture_output=True, text=True, shell=True)
+        if result.returncode == 0:
+            npm_version = result.stdout.strip()
+            checks.append(f"✅ npm: {npm_version}")
+        else:
+            checks.append("❌ npm found but returned an error")
     except FileNotFoundError:
         checks.append("❌ npm not found - please install npm")
 
@@ -137,55 +141,63 @@ def start_frontend():
 
     # Check if dependencies are installed
     if not (frontend_dir / "node_modules").exists():
-        print("  Installing frontend dependencies...")
-        subprocess.run(["npm", "install"], cwd=frontend_dir, check=True)
+        print("   Installing frontend dependencies...")
+        # Windows için shell=True kritik
+        subprocess.run(["npm", "install"], cwd=frontend_dir, check=True, shell=True)
 
     # Start the frontend
+    # stdout=subprocess.PIPE yerine stdout=None yaparak logları doğrudan terminale verebilir 
+    # veya aşağıdaki gibi boruyu manuel boşaltabiliriz.
     proc = subprocess.Popen(
         ["npm", "run", "dev"],
         cwd=frontend_dir,
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,  # Combine stderr with stdout
+        stderr=subprocess.STDOUT,
+        shell=True,
         text=True,
         bufsize=1
     )
     processes.append(proc)
 
     # Wait for frontend to start
-    print("  Waiting for frontend to start...")
+    print("   Waiting for frontend to start...")
     import httpx
-    import select
+    import os
 
-    started = False
-    for i in range(30):  # 30 second timeout
-        # Check for any output from the process using non-blocking read
-        if proc.stdout:
-            ready, _, _ = select.select([proc.stdout], [], [], 0)
-            if ready:
-                line = proc.stdout.readline()
-                if line:
-                    print(f"    Frontend: {line.strip()}")
-                    # NextJS dev server prints "Ready" when it's ready
-                    if "ready" in line.lower() or "compiled" in line.lower() or "started server" in line.lower():
-                        started = True
+    # Windows'ta borunun dolup kilitlenmesini önlemek için 
+    # stdout'u bir dosyaya veya çöpe yönlendirmek daha sağlıklıdır 
+    # ama bu döngüde manuel okuyacağız.
+    if os.name == 'nt':
+        import msvcrt
+        # Boruyu non-blocking yapamayacağımız için httpx kontrolüne odaklanıyoruz
 
-        # Also try to connect
-        if started or i > 5:  # Start checking after 5 seconds or when we see "ready"
-            try:
-                response = httpx.get("http://localhost:3000", timeout=1)
-                print("  ✅ Frontend running at http://localhost:3000")
+    for i in range(45):  # 45 saniye daha güvenli (NextJS 15 biraz yavaş açılabilir)
+        # HTTP Kontrolü
+        try:
+            with httpx.Client() as client:
+                # timeout=0.1 gibi çok düşük değerler yerine 
+                # sadece bağlantıyı kontrol edip beklemeyi döngüye bırakıyoruz
+                response = client.get("http://localhost:3000", timeout=2.0)
+                print("   ✅ Frontend running at http://localhost:3000")
                 return proc
-            except httpx.ConnectError:
-                pass  # Server not ready yet
-            except:
-                # Any other response means server is up
-                print("  ✅ Frontend running at http://localhost:3000")
-                return proc
+        except (httpx.ConnectError, httpx.ConnectTimeout, httpx.ReadTimeout):
+            # Sunucu ya henüz yok (Connect) ya da çok meşgul (ReadTimeout)
+            # Bu hataları yutarak döngünün devam etmesini sağlıyoruz
+            pass
+        
+        # Süreci kontrol et: Erken kapandıysa hata ver
+        if proc.poll() is not None:
+            print("   ❌ Frontend process exited unexpectedly")
+            break
 
+        if i % 5 == 0:
+            print(f"   ... still waiting ({i}s)")
+            
         time.sleep(1)
 
-    print("  ❌ Frontend failed to start")
+    print("   ❌ Frontend failed to start or timed out")
     cleanup()
+    sys.exit(1)
 
 def monitor_processes():
     """Monitor running processes and show their output"""

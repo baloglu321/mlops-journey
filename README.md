@@ -2,7 +2,7 @@
 
 > **Course**: Based on [AI in Production: Deploy Gen AI and Agentic AI at Scale](https://github.com/ed-donner/production) by Ed Donner
 > 
-> **Status**: 🚧 Work in Progress - Week 4 Day 2 Complete
+> **Status**: ✅ **Week 4 Day 3 Complete - Alex Project FINISHED!**
 
 This repository contains my implementations of projects and exercises from the "AI in Production" course. The focus is on building production-ready generative AI and agentic AI applications using modern cloud infrastructure and MLOps practices.
 
@@ -43,6 +43,7 @@ graph LR
     A --> S[Week 4: Advanced AI Systems]
     S --> T["Day 1<br/>Aurora Database<br/>PostgreSQL + Data API"]
     T --> U["Day 2<br/>AI Agents Orchestra<br/>5 Specialized Agents"]
+    U --> V["Day 3<br/>Frontend & API<br/>Next.js + CloudFront"]:::complete
     
     style A fill:#2563eb,stroke:#3b82f6,stroke-width:3px,color:#fff
     style B fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
@@ -65,6 +66,9 @@ graph LR
     style S fill:#1e40af,stroke:#60a5fa,stroke-width:2px,color:#fff
     style T fill:#334155,stroke:#60a5fa,color:#fff
     style U fill:#334155,stroke:#60a5fa,color:#fff
+    style V fill:#10b981,stroke:#059669,stroke-width:3px,color:#fff
+    
+    classDef complete fill:#10b981,stroke:#059669,stroke-width:3px,color:#fff
 ```
 
 ## 📚 Projects
@@ -566,6 +570,145 @@ graph TB
 4. **W4D1**: Aurora PostgreSQL database
 5. **W4D2**: 5-agent AI orchestra 🎭
 6. **Next**: Frontend application
+
+#### [Day 3: Alex - Frontend & API Deployment](./week-3/day-3/alex/)
+**Goal**: Deploy production SaaS frontend with Next.js and complete AWS infrastructure.
+- **Development Guide**: [Part 7: Frontend & API](https://github.com/ed-donner/alex/blob/main/guides/7_frontend.md)
+- **Tech**: Next.js, React, TypeScript, Clerk Auth, FastAPI, CloudFront, S3
+- **Frontend**: Next.js static export with Tailwind CSS
+- **Backend API**: FastAPI on Lambda with JWT authentication
+- **Deployment**: CloudFront CDN + S3 + API Gateway + Lambda
+- **Outcome**: Complete production SaaS financial planning platform! 🎉
+
+**Key Features:**
+- 🔐 **Clerk Authentication** - Modern sign-in/sign-up
+- 📊 **Portfolio Management** - Full CRUD operations
+- 🤖 **AI Analysis UI** - Real-time agent monitoring
+- 📈 **Interactive Reports** - Charts, projections, insights
+- ⚡ **CloudFront CDN** - Global content delivery
+- 📡 **REST API** - FastAPI on Lambda
+
+**Complete Production Architecture:**
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph TB
+    USER[User Browser]
+    
+    subgraph "Frontend Layer"
+        CF[CloudFront CDN]
+        S3[S3 Static Site<br/>Next.js]
+    end
+    
+    subgraph "Auth Layer"
+        CLERK[Clerk Auth<br/>JWT]
+    end
+    
+    subgraph "API Layer"
+        APIG[API Gateway]
+        API[API Lambda<br/>FastAPI]
+    end
+    
+    subgraph "Orchestration"
+        SQS[SQS Queue]
+    end
+    
+    subgraph "AI Agents (W4D2)"
+        PLAN[Planner]
+        TAG[Tagger]
+        REP[Reporter]
+        CHART[Charter]
+        RET[Retirement]
+    end
+    
+    subgraph "Data Layer (W4D1 + W3D4)"
+        DB[(Aurora DB)]
+        S3V[(S3 Vectors)]
+    end
+    
+    USER -->|HTTPS| CF
+    USER -->|Auth| CLERK
+    
+    CF -->|Static| S3
+    CF -->|/api/*| APIG
+    
+    APIG --> API
+    API -->|CRUD| DB
+    API -->|Trigger| SQS
+    
+    SQS --> PLAN
+    PLAN --> TAG
+    PLAN --> REP
+    PLAN --> CHART
+    PLAN --> RET
+    
+    TAG --> DB
+    REP --> DB
+    REP --> S3V
+    CHART --> DB
+    RET --> DB
+    
+    style CF fill:#FF9900,stroke:#cc7a00,color:#fff
+    style S3 fill:#569A31,stroke:#3d6b23,color:#fff
+    style API fill:#FF9900,stroke:#cc7a00,color:#fff
+    style CLERK fill:#6C5CE7,stroke:#5b4fc4,color:#fff
+    style PLAN fill:#FFD700,stroke:#FFA500,color:#000
+```
+
+> [!IMPORTANT]
+> **Alex Project Complete!** This is a production-ready SaaS financial planning platform with:
+> - Next.js frontend with global CDN
+> - Clerk authentication
+> - FastAPI REST API
+> - 5 specialized AI agents
+> - Aurora PostgreSQL database
+> - S3 Vectors knowledge base
+> - Complete serverless architecture
+
+**Production Screenshots:**
+
+````carousel
+![CloudFront Deployment - Application live at production URL](../week-3/day-3/alex/screenshots/shot-1.png)
+<!-- slide -->
+![Landing Page - AI Financial Advisor showcasing the 4-agent advisory team](../week-3/day-3/alex/screenshots/shot-2.png)
+<!-- slide -->
+![Dashboard - Portfolio management with $332K+ total value, user settings, and allocation charts](../week-3/day-3/alex/screenshots/shot-3.png)
+<!-- slide -->
+![Analysis Results - Comprehensive AI-generated portfolio analysis with detailed insights](../week-3/day-3/alex/screenshots/shot-4.png)
+````
+
+**Application Features:**
+1. 📊 **Dashboard**: Portfolio value, accounts, allocation, settings
+2. 💼 **Portfolio Management**: Add/edit accounts and holdings
+3. 🤖 **AI Advisor Team**: Trigger analysis, track progress
+4. 📈 **Reports**: Markdown analysis, charts, projections
+
+**Full Stack Components:**
+- ☁️ **CloudFront**: Global CDN distribution
+- 📏 **S3**: Static site hosting
+- 🔑 **API Gateway**: REST API endpoint
+- 📦 **Lambda**: FastAPI backend
+- 🔐 **Clerk**: JWT authentication
+- 💾 **Aurora**: PostgreSQL database
+- 🤖 **5 AI Agents**: Multi-agent system
+- 📢 **SQS**: Agent orchestration
+- 📚 **S3 Vectors**: Knowledge base
+
+**Complete Alex Journey (6 Guides):**
+1. **W3D3** (Guide 2): SageMaker serverless ML endpoint
+2. **W3D4** (Guide 3): S3 Vectors ingestion (90% cost savings)
+3. **W3D5** (Guide 4): Researcher Agent (Bedrock + MCP + web browsing)
+4. **W4D1** (Guide 5): Aurora Serverless v2 PostgreSQL database
+5. **W4D2** (Guide 6): 5-agent AI orchestra (Planner, Tagger, Reporter, Charter, Retirement)
+6. **W4D3** (Guide 7): Next.js frontend + CloudFront + complete SaaS! 🎉🎆
+
+**Production Stack Highlights:**
+- ✅ Serverless architecture (auto-scaling)
+- ✅ Multi-agent AI system
+- ✅ Global CDN delivery
+- ✅ Modern authentication
+- ✅ Cost-optimized (S3 Vectors 90% cheaper)
+- ✅ Production-ready infrastructure
+- ✅ Complete financial SaaS platform
 
 
 

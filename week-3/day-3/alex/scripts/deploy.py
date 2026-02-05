@@ -16,21 +16,31 @@ import sys
 import os
 import json
 import time
+import shutil
+import platform
 from pathlib import Path
 
 
 def run_command(cmd, cwd=None, check=True, capture_output=False, env=None):
     """Run a command and optionally capture output."""
-    print(f"Running: {' '.join(cmd) if isinstance(cmd, list) else cmd}")
+    import platform
+    
+    # Komut listesini yazdırırken güzel görünsün
+    cmd_str = ' '.join(cmd) if isinstance(cmd, list) else cmd
+    print(f"Running: {cmd_str}")
+
+    # Windows üzerinde liste halindeki komutların (npm gibi) çalışması için 
+    # shell=True zorunluluğu var.
+    use_shell = isinstance(cmd, str) or platform.system() == "Windows"
 
     if capture_output:
-        result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, shell=isinstance(cmd, str), env=env)
+        result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, shell=use_shell, env=env)
         if check and result.returncode != 0:
             print(f"Error: {result.stderr}")
             sys.exit(1)
         return result.stdout.strip()
     else:
-        result = subprocess.run(cmd, cwd=cwd, shell=isinstance(cmd, str), env=env)
+        result = subprocess.run(cmd, cwd=cwd, shell=use_shell, env=env)
         if check and result.returncode != 0:
             sys.exit(1)
         return None
@@ -48,11 +58,17 @@ def check_prerequisites():
         "aws": "AWS CLI is required for S3 sync and CloudFront invalidation"
     }
 
+    is_windows = platform.system() == "Windows"
+
     for tool, message in tools.items():
         try:
-            run_command([tool, "--version"], capture_output=True)
+            # Komutu liste yerine string olarak gönderirsek 
+            # run_command içindeki isinstance(cmd, str) True döner 
+            # ve shell=True aktif olur.
+            run_command(f"{tool} --version", capture_output=True)
             print(f"  ✅ {tool} is installed")
-        except (subprocess.CalledProcessError, FileNotFoundError):
+        except (subprocess.CalledProcessError, FileNotFoundError, SystemExit):
+            # SystemExit ekledik çünkü run_command hata anında sys.exit(1) yapıyor
             print(f"  ❌ {message}")
             sys.exit(1)
 
