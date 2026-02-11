@@ -117,7 +117,12 @@ INSTRUMENTS = [
         "name": "Vanguard FTSE Emerging Markets ETF",
         "instrument_type": "etf",
         "current_price": 42.15,
-        "allocation_regions": {"asia": 75, "latin_america": 10, "africa": 8, "europe": 7},
+        "allocation_regions": {
+            "asia": 75,
+            "latin_america": 10,
+            "africa": 8,
+            "europe": 7,
+        },
         "allocation_sectors": {
             "technology": 22,
             "financials": 20,
@@ -387,22 +392,31 @@ def insert_instrument(instrument_data):
             parameters=[
                 {"name": "symbol", "value": {"stringValue": validated["symbol"]}},
                 {"name": "name", "value": {"stringValue": validated["name"]}},
-                {"name": "instrument_type", "value": {"stringValue": validated["instrument_type"]}},
+                {
+                    "name": "instrument_type",
+                    "value": {"stringValue": validated["instrument_type"]},
+                },
                 {
                     "name": "current_price",
                     "value": {"stringValue": str(validated.get("current_price", 0))},
                 },
                 {
                     "name": "allocation_regions",
-                    "value": {"stringValue": json.dumps(validated["allocation_regions"])},
+                    "value": {
+                        "stringValue": json.dumps(validated["allocation_regions"])
+                    },
                 },
                 {
                     "name": "allocation_sectors",
-                    "value": {"stringValue": json.dumps(validated["allocation_sectors"])},
+                    "value": {
+                        "stringValue": json.dumps(validated["allocation_sectors"])
+                    },
                 },
                 {
                     "name": "allocation_asset_class",
-                    "value": {"stringValue": json.dumps(validated["allocation_asset_class"])},
+                    "value": {
+                        "stringValue": json.dumps(validated["allocation_asset_class"])
+                    },
                 },
             ],
         )
@@ -442,7 +456,9 @@ def main():
             all_valid = False
 
     if not all_valid:
-        print("\n❌ Some instruments have invalid allocations. Please fix before continuing.")
+        print(
+            "\n❌ Some instruments have invalid allocations. Please fix before continuing."
+        )
         exit(1)
 
     print("  ✅ All allocations valid!")

@@ -12,6 +12,7 @@ from pathlib import Path
 import tempfile
 import zipfile
 
+
 def run_command(cmd, cwd=None):
     """Run a shell command and handle errors."""
     print(f"Running: {' '.join(cmd)}")
@@ -20,6 +21,7 @@ def run_command(cmd, cwd=None):
         print(f"Error: {result.stderr}")
         sys.exit(1)
     return result.stdout
+
 
 def main():
     # Get the API directory
@@ -48,9 +50,18 @@ def main():
 
         # Copy API code
         api_package = package_dir / "api"
-        shutil.copytree(api_dir, api_package, ignore=shutil.ignore_patterns(
-            "__pycache__", "*.pyc", ".env*", "*.zip", "package_docker.py", "test_*.py"
-        ))
+        shutil.copytree(
+            api_dir,
+            api_package,
+            ignore=shutil.ignore_patterns(
+                "__pycache__",
+                "*.pyc",
+                ".env*",
+                "*.zip",
+                "package_docker.py",
+                "test_*.py",
+            ),
+        )
 
         # Copy lambda_handler.py to root level for Lambda to find it
         shutil.copy2(api_dir / "lambda_handler.py", package_dir / "lambda_handler.py")
@@ -59,9 +70,11 @@ def main():
         database_src = backend_dir / "database" / "src"
         database_dst = package_dir / "src"
         if database_src.exists():
-            shutil.copytree(database_src, database_dst, ignore=shutil.ignore_patterns(
-                "__pycache__", "*.pyc"
-            ))
+            shutil.copytree(
+                database_src,
+                database_dst,
+                ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+            )
             print(f"Copied database package from {database_src}")
         else:
             print(f"Warning: Database package not found at {database_src}")
@@ -99,12 +112,18 @@ CMD ["api.main.handler"]
 
         # Build Docker image for x86_64 architecture (Lambda runtime)
         print("Building Docker image for x86_64 architecture...")
-        run_command([
-            "docker", "build",
-            "--platform", "linux/amd64",
-            "-t", "alex-api-packager",
-            "."
-        ], cwd=package_dir)
+        run_command(
+            [
+                "docker",
+                "build",
+                "--platform",
+                "linux/amd64",
+                "-t",
+                "alex-api-packager",
+                ".",
+            ],
+            cwd=package_dir,
+        )
 
         # Create container and extract files
         print("Extracting Lambda package...")
@@ -114,21 +133,16 @@ CMD ["api.main.handler"]
         run_command(["docker", "rm", "-f", container_name], cwd=package_dir)
 
         # Create container
-        run_command([
-            "docker", "create",
-            "--name", container_name,
-            "alex-api-packager"
-        ], cwd=package_dir)
+        run_command(
+            ["docker", "create", "--name", container_name, "alex-api-packager"],
+            cwd=package_dir,
+        )
 
         # Extract /var/task contents
         extract_dir = temp_path / "lambda"
         extract_dir.mkdir()
 
-        run_command([
-            "docker", "cp",
-            f"{container_name}:/var/task/.",
-            str(extract_dir)
-        ])
+        run_command(["docker", "cp", f"{container_name}:/var/task/.", str(extract_dir)])
 
         # Clean up container
         run_command(["docker", "rm", "-f", container_name])
@@ -137,14 +151,14 @@ CMD ["api.main.handler"]
         zip_path = api_dir / "api_lambda.zip"
         print(f"Creating zip file: {zip_path}")
 
-        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
             for root, dirs, files in os.walk(extract_dir):
                 # Skip __pycache__ directories
-                dirs[:] = [d for d in dirs if d != '__pycache__']
+                dirs[:] = [d for d in dirs if d != "__pycache__"]
 
                 for file in files:
                     # Skip .pyc files
-                    if file.endswith('.pyc'):
+                    if file.endswith(".pyc"):
                         continue
 
                     file_path = Path(root) / file
@@ -157,12 +171,13 @@ CMD ["api.main.handler"]
 
         # Verify the package
         print("\nPackage contents (first 20 files):")
-        with zipfile.ZipFile(zip_path, 'r') as zipf:
+        with zipfile.ZipFile(zip_path, "r") as zipf:
             files = zipf.namelist()[:20]
             for f in files:
                 print(f"  - {f}")
             if len(zipf.namelist()) > 20:
                 print(f"  ... and {len(zipf.namelist()) - 20} more files")
+
 
 if __name__ == "__main__":
     main()

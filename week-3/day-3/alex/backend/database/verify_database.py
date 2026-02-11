@@ -25,33 +25,32 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 # Get config from environment
-cluster_arn = os.environ.get('AURORA_CLUSTER_ARN')
-secret_arn = os.environ.get('AURORA_SECRET_ARN')
-database = os.environ.get('AURORA_DATABASE', 'alex')
-region = os.environ.get('DEFAULT_AWS_REGION', 'us-east-1')
+cluster_arn = os.environ.get("AURORA_CLUSTER_ARN")
+secret_arn = os.environ.get("AURORA_SECRET_ARN")
+database = os.environ.get("AURORA_DATABASE", "alex")
+region = os.environ.get("DEFAULT_AWS_REGION", "us-east-1")
 
 if not cluster_arn or not secret_arn:
     print("❌ Missing AURORA_CLUSTER_ARN or AURORA_SECRET_ARN in .env file")
     exit(1)
 
-client = boto3.client('rds-data', region_name=region)
+client = boto3.client("rds-data", region_name=region)
+
 
 def execute_query(sql, description):
     """Execute a query and return results"""
     print(f"\n{description}")
     print("-" * 50)
-    
+
     try:
         response = client.execute_statement(
-            resourceArn=cluster_arn,
-            secretArn=secret_arn,
-            database=database,
-            sql=sql
+            resourceArn=cluster_arn, secretArn=secret_arn, database=database, sql=sql
         )
         return response
     except ClientError as e:
         print(f"❌ Error: {e.response['Error']['Message']}")
         return None
+
 
 def main():
     print("🔍 DATABASE VERIFICATION REPORT")
@@ -59,7 +58,7 @@ def main():
     print(f"📍 Region: {region}")
     print(f"📦 Database: {database}")
     print("=" * 70)
-    
+
     # 1. Show all tables
     response = execute_query(
         """
@@ -70,16 +69,16 @@ def main():
         AND table_type = 'BASE TABLE'
         ORDER BY table_name
         """,
-        "📊 ALL TABLES IN DATABASE"
+        "📊 ALL TABLES IN DATABASE",
     )
-    
-    if response and response['records']:
+
+    if response and response["records"]:
         print(f"✅ Found {len(response['records'])} tables:\n")
-        for record in response['records']:
-            table_name = record[0]['stringValue']
-            size = record[1]['stringValue']
+        for record in response["records"]:
+            table_name = record[0]["stringValue"]
+            size = record[1]["stringValue"]
             print(f"   • {table_name:<20} Size: {size}")
-    
+
     # 2. Count records in each table
     response = execute_query(
         """
@@ -95,17 +94,17 @@ def main():
         SELECT 'jobs', COUNT(*) FROM jobs
         ORDER BY table_name
         """,
-        "📈 RECORD COUNTS PER TABLE"
+        "📈 RECORD COUNTS PER TABLE",
     )
-    
-    if response and response['records']:
+
+    if response and response["records"]:
         print("\nTable record counts:\n")
-        for record in response['records']:
-            table_name = record[0]['stringValue']
-            count = record[1]['longValue']
-            status = "✅" if (table_name == 'instruments' and count > 0) else "📭"
+        for record in response["records"]:
+            table_name = record[0]["stringValue"]
+            count = record[1]["longValue"]
+            status = "✅" if (table_name == "instruments" and count > 0) else "📭"
             print(f"   {status} {table_name:<20} {count:,} records")
-    
+
     # 3. Show instruments with allocation data
     response = execute_query(
         """
@@ -115,19 +114,19 @@ def main():
         ORDER BY symbol 
         LIMIT 10
         """,
-        "🎯 SAMPLE INSTRUMENTS (First 10)"
+        "🎯 SAMPLE INSTRUMENTS (First 10)",
     )
-    
-    if response and response['records']:
+
+    if response and response["records"]:
         print("\nSymbol | Name | Type | Asset Class Allocation")
         print("-" * 70)
-        for record in response['records']:
-            symbol = record[0]['stringValue']
-            name = record[1]['stringValue'][:35]
-            inst_type = record[2]['stringValue']
-            asset_class = record[3]['stringValue']
+        for record in response["records"]:
+            symbol = record[0]["stringValue"]
+            name = record[1]["stringValue"][:35]
+            inst_type = record[2]["stringValue"]
+            asset_class = record[3]["stringValue"]
             print(f"{symbol:<6} | {name:<35} | {inst_type:<10} | {asset_class}")
-    
+
     # 4. Verify allocation sums
     response = execute_query(
         """
@@ -138,25 +137,39 @@ def main():
         FROM instruments
         WHERE symbol IN ('SPY', 'QQQ', 'BND', 'VEA', 'GLD')
         """,
-        "✅ ALLOCATION VALIDATION (Sample ETFs)"
+        "✅ ALLOCATION VALIDATION (Sample ETFs)",
     )
-    
-    if response and response['records']:
+
+    if response and response["records"]:
         print("\nVerifying allocations sum to 100%:\n")
         print("Symbol | Regions | Sectors | Assets | Status")
         print("-" * 50)
-        for record in response['records']:
-            symbol = record[0]['stringValue']
+        for record in response["records"]:
+            symbol = record[0]["stringValue"]
             # Handle numeric values from SUM()
-            regions = float(record[1].get('stringValue', '0')) if record[1] and 'stringValue' in record[1] else 0
-            sectors = float(record[2].get('stringValue', '0')) if record[2] and 'stringValue' in record[2] else 0
-            assets = float(record[3].get('stringValue', '0')) if record[3] and 'stringValue' in record[3] else 0
-            
+            regions = (
+                float(record[1].get("stringValue", "0"))
+                if record[1] and "stringValue" in record[1]
+                else 0
+            )
+            sectors = (
+                float(record[2].get("stringValue", "0"))
+                if record[2] and "stringValue" in record[2]
+                else 0
+            )
+            assets = (
+                float(record[3].get("stringValue", "0"))
+                if record[3] and "stringValue" in record[3]
+                else 0
+            )
+
             all_valid = regions == 100 and sectors == 100 and assets == 100
             status = "✅ Valid" if all_valid else "❌ Invalid"
-            
-            print(f"{symbol:<6} | {regions:>7}% | {sectors:>7}% | {assets:>6}% | {status}")
-    
+
+            print(
+                f"{symbol:<6} | {regions:>7}% | {sectors:>7}% | {assets:>6}% | {status}"
+            )
+
     # 5. Show asset class distribution
     response = execute_query(
         """
@@ -170,11 +183,11 @@ def main():
             COUNT(*) as total
         FROM instruments
         """,
-        "📊 ASSET CLASS DISTRIBUTION"
+        "📊 ASSET CLASS DISTRIBUTION",
     )
-    
-    if response and response['records']:
-        record = response['records'][0]
+
+    if response and response["records"]:
+        record = response["records"][0]
         print("\nInstrument breakdown by asset class:\n")
         print(f"   • Pure Equity ETFs:      {record[0]['longValue']:>3}")
         print(f"   • Pure Bond Funds:       {record[1]['longValue']:>3}")
@@ -183,7 +196,7 @@ def main():
         print(f"   • Mixed Allocation ETFs: {record[4]['longValue']:>3}")
         print(f"   " + "-" * 25)
         print(f"   • TOTAL INSTRUMENTS:     {record[5]['longValue']:>3}")
-    
+
     # 6. Check indexes exist
     response = execute_query(
         """
@@ -193,12 +206,12 @@ def main():
         AND indexname LIKE 'idx_%'
         ORDER BY tablename, indexname
         """,
-        "🔍 DATABASE INDEXES"
+        "🔍 DATABASE INDEXES",
     )
-    
-    if response and response['records']:
+
+    if response and response["records"]:
         print(f"\n✅ Found {len(response['records'])} custom indexes")
-    
+
     # 7. Check triggers exist
     response = execute_query(
         """
@@ -207,12 +220,14 @@ def main():
         WHERE trigger_schema = 'public'
         ORDER BY event_object_table
         """,
-        "⚡ DATABASE TRIGGERS"
+        "⚡ DATABASE TRIGGERS",
     )
-    
-    if response and response['records']:
-        print(f"\n✅ Found {len(response['records'])} update triggers for timestamp management")
-    
+
+    if response and response["records"]:
+        print(
+            f"\n✅ Found {len(response['records'])} update triggers for timestamp management"
+        )
+
     # Final summary
     print("\n" + "=" * 70)
     print("🎉 DATABASE VERIFICATION COMPLETE")
@@ -222,6 +237,7 @@ def main():
     print("✅ All allocation percentages sum to 100%")
     print("✅ Indexes and triggers are in place")
     print("✅ Database is ready for Part 6: Agent Orchestra!")
+
 
 if __name__ == "__main__":
     main()

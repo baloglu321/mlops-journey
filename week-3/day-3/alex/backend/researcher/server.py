@@ -124,7 +124,11 @@ async def research_auto():
         }
     except Exception as e:
         print(f"Error in automated research: {e}")
-        return {"status": "error", "timestamp": datetime.now(UTC).isoformat(), "error": str(e)}
+        return {
+            "status": "error",
+            "timestamp": datetime.now(UTC).isoformat(),
+            "error": str(e),
+        }
 
 
 @app.get("/health")
@@ -142,7 +146,9 @@ async def health():
     return {
         "service": "Alex Researcher",
         "status": "healthy",
-        "alex_api_configured": bool(os.getenv("ALEX_API_ENDPOINT") and os.getenv("ALEX_API_KEY")),
+        "alex_api_configured": bool(
+            os.getenv("ALEX_API_ENDPOINT") and os.getenv("ALEX_API_KEY")
+        ),
         "timestamp": datetime.now(UTC).isoformat(),
         "debug_container": container_indicators,
         "aws_region": os.environ.get("AWS_DEFAULT_REGION", "not set"),
@@ -173,7 +179,9 @@ async def test_bedrock():
             bedrock_client = boto3.client("bedrock", region_name="us-west-2")
             models = bedrock_client.list_foundation_models()
             openai_models = [
-                m["modelId"] for m in models["modelSummaries"] if "openai" in m["modelId"].lower()
+                m["modelId"]
+                for m in models["modelSummaries"]
+                if "openai" in m["modelId"].lower()
             ]
         except Exception as list_error:
             openai_models = f"Error listing: {str(list_error)}"
@@ -187,7 +195,9 @@ async def test_bedrock():
             model=model,
         )
 
-        result = await Runner.run(agent, input="Say hello in 5 words or less", max_turns=1)
+        result = await Runner.run(
+            agent, input="Say hello in 5 words or less", max_turns=1
+        )
 
         return {
             "status": "success",
@@ -208,7 +218,9 @@ async def test_bedrock():
             "type": type(e).__name__,
             "traceback": traceback.format_exc(),
             "debug": {
-                "boto3_session_region": session.region_name if "session" in locals() else "unknown",
+                "boto3_session_region": session.region_name
+                if "session" in locals()
+                else "unknown",
                 "env_vars": {
                     "AWS_REGION_NAME": os.environ.get("AWS_REGION_NAME"),
                     "AWS_REGION": os.environ.get("AWS_REGION"),

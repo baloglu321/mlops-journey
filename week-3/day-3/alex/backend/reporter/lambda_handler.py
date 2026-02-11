@@ -10,7 +10,12 @@ from typing import Dict, Any
 from datetime import datetime
 
 from agents import Agent, Runner, trace
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+)
 from litellm.exceptions import RateLimitError
 from judge import evaluate
 
@@ -57,7 +62,10 @@ async def run_reporter_agent(
     # Run agent with context
     with trace("Reporter Agent"):
         agent = Agent[ReporterContext](  # Specify the context type
-            name="Report Writer", instructions=REPORTER_INSTRUCTIONS, model=model, tools=tools
+            name="Report Writer",
+            instructions=REPORTER_INSTRUCTIONS,
+            model=model,
+            tools=tools,
         )
 
         result = await Runner.run(
@@ -74,9 +82,13 @@ async def run_reporter_agent(
                 evaluation = await evaluate(REPORTER_INSTRUCTIONS, task, response)
                 score = evaluation.score / 100
                 comment = evaluation.feedback
-                span.score(name="Judge", value=score, data_type="NUMERIC", comment=comment)
+                span.score(
+                    name="Judge", value=score, data_type="NUMERIC", comment=comment
+                )
                 observation = f"Score: {score} - Feedback: {comment}"
-                observability.create_event(name="Judge Event", status_message=observation)
+                observability.create_event(
+                    name="Judge Event", status_message=observation
+                )
                 if score < GUARD_AGAINST_SCORE:
                     logger.error(f"Reporter score is too low: {score}")
                     response = "I'm sorry, I'm not able to generate a report for you. Please try again later."
@@ -116,7 +128,9 @@ def lambda_handler(event, context):
     # Wrap entire handler with observability context
     with observe() as observability:
         try:
-            logger.info(f"Reporter Lambda invoked with event: {json.dumps(event)[:500]}")
+            logger.info(
+                f"Reporter Lambda invoked with event: {json.dumps(event)[:500]}"
+            )
 
             # Parse event
             if isinstance(event, str):
@@ -124,7 +138,10 @@ def lambda_handler(event, context):
 
             job_id = event.get("job_id")
             if not job_id:
-                return {"statusCode": 400, "body": json.dumps({"error": "job_id is required"})}
+                return {
+                    "statusCode": 400,
+                    "body": json.dumps({"error": "job_id is required"}),
+                }
 
             # Initialize database
             db = Database()
@@ -144,7 +161,11 @@ def lambda_handler(event, context):
                         user = db.users.find_by_clerk_id(user_id)
                         accounts = db.accounts.find_by_user(user_id)
 
-                        portfolio_data = {"user_id": user_id, "job_id": job_id, "accounts": []}
+                        portfolio_data = {
+                            "user_id": user_id,
+                            "job_id": job_id,
+                            "accounts": [],
+                        }
 
                         for account in accounts:
                             positions = db.positions.find_by_account(account["id"])
@@ -157,7 +178,9 @@ def lambda_handler(event, context):
                             }
 
                             for position in positions:
-                                instrument = db.instruments.find_by_symbol(position["symbol"])
+                                instrument = db.instruments.find_by_symbol(
+                                    position["symbol"]
+                                )
                                 if instrument:
                                     account_data["positions"].append(
                                         {
@@ -186,7 +209,9 @@ def lambda_handler(event, context):
                 try:
                     job = db.jobs.find_by_id(job_id)
                     if job and job.get("clerk_user_id"):
-                        status = f"Job ID: {job_id} Clerk User ID: {job['clerk_user_id']}"
+                        status = (
+                            f"Job ID: {job_id} Clerk User ID: {job['clerk_user_id']}"
+                        )
                         if observability:
                             observability.create_event(
                                 name="Reporter about to run", status_message=status
@@ -194,7 +219,9 @@ def lambda_handler(event, context):
                         user = db.users.find_by_clerk_id(job["clerk_user_id"])
                         if user:
                             user_data = {
-                                "years_until_retirement": user.get("years_until_retirement", 30),
+                                "years_until_retirement": user.get(
+                                    "years_until_retirement", 30
+                                ),
                                 "target_retirement_income": float(
                                     user.get("target_retirement_income", 80000)
                                 ),
@@ -206,7 +233,10 @@ def lambda_handler(event, context):
                             }
                 except Exception as e:
                     logger.warning(f"Could not load user data: {e}. Using defaults.")
-                    user_data = {"years_until_retirement": 30, "target_retirement_income": 80000}
+                    user_data = {
+                        "years_until_retirement": 30,
+                        "target_retirement_income": 80000,
+                    }
 
             # Run the agent
             result = asyncio.run(
@@ -219,7 +249,10 @@ def lambda_handler(event, context):
 
         except Exception as e:
             logger.error(f"Error in reporter: {e}", exc_info=True)
-            return {"statusCode": 500, "body": json.dumps({"success": False, "error": str(e)})}
+            return {
+                "statusCode": 500,
+                "body": json.dumps({"success": False, "error": str(e)}),
+            }
 
 
 # For local testing

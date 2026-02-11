@@ -107,7 +107,7 @@ async def health_check():
     return {
         "status": "healthy",
         "service": "cybersecurity-analyzer-backend",
-        "version": "1.0.0"
+        "version": "1.0.0",
     }
 
 
@@ -278,10 +278,14 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Olası frontend yollarını sırayla deneyeceğiz
 possible_frontend_paths = [
-    "/app/frontend",                               # 1. Docker Ortamı (Linux Mutlak Yol)
-    os.path.join(current_dir, "../frontend/out"),  # 2. Local Dev (Backend klasöründen çalıştırıyorsan)
-    os.path.join(current_dir, "frontend/out"),     # 3. Local Dev (Proje ana dizininden çalıştırıyorsan)
-    os.path.join(current_dir, "static"),           # 4. Eski usul static klasörü
+    "/app/frontend",  # 1. Docker Ortamı (Linux Mutlak Yol)
+    os.path.join(
+        current_dir, "../frontend/out"
+    ),  # 2. Local Dev (Backend klasöründen çalıştırıyorsan)
+    os.path.join(
+        current_dir, "frontend/out"
+    ),  # 3. Local Dev (Proje ana dizininden çalıştırıyorsan)
+    os.path.join(current_dir, "static"),  # 4. Eski usul static klasörü
 ]
 
 frontend_path = None
@@ -303,13 +307,17 @@ if frontend_path:
         app.mount("/_next", StaticFiles(directory=next_static_path), name="next-static")
 
     # 2. Kök Dizin (index.html, favicon, vb.)
-    app.mount("/", StaticFiles(directory=frontend_path, html=True), name="frontend-root")
+    app.mount(
+        "/", StaticFiles(directory=frontend_path, html=True), name="frontend-root"
+    )
 
     # 3. SPA (Single Page App) Yönlendirmesi
     # Sayfa yenilendiğinde 404 almamak için
     @app.exception_handler(404)
     async def custom_404_handler(request, exc):
-        if not request.url.path.startswith("/api") and not request.url.path.startswith("/v1"):
+        if not request.url.path.startswith("/api") and not request.url.path.startswith(
+            "/v1"
+        ):
             return FileResponse(os.path.join(frontend_path, "index.html"))
         return {"detail": "Not Found"}
 
@@ -321,6 +329,6 @@ else:
 
 if __name__ == "__main__":
     import uvicorn
+
     # Localde çalışırken hot-reload görmek istersen 'reload=True' ekleyebilirsin ama production'da kapalı olmalı
     uvicorn.run(app, host="0.0.0.0", port=8000)
-

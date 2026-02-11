@@ -19,7 +19,9 @@ database = os.environ.get("AURORA_DATABASE", "alex")
 region = os.environ.get("DEFAULT_AWS_REGION", "us-east-1")
 
 if not cluster_arn or not secret_arn:
-    raise ValueError("Missing AURORA_CLUSTER_ARN or AURORA_SECRET_ARN in environment variables")
+    raise ValueError(
+        "Missing AURORA_CLUSTER_ARN or AURORA_SECRET_ARN in environment variables"
+    )
 
 client = boto3.client("rds-data", region_name=region)
 

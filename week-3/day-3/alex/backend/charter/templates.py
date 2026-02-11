@@ -118,7 +118,7 @@ def create_charter_task(portfolio_analysis: str, portfolio_data: dict) -> str:
     """Generate the task prompt for the Charter agent."""
     # Don't include the full raw portfolio data - just the analysis
     # This reduces context size significantly
-    
+
     return f"""Analyze this investment portfolio and create 4-6 visualization charts.
 
 {portfolio_analysis}

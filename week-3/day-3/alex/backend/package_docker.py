@@ -20,7 +20,7 @@ def run_packaging(agent_name):
         return False
 
     print(f"\n📦 Packaging {agent_name.upper()} agent...")
-    
+
     # 1. Ortam İzolasyonu (Kritik!)
     env = os.environ.copy()
     env.pop("VIRTUAL_ENV", None)
@@ -30,14 +30,14 @@ def run_packaging(agent_name):
     try:
         # 2. Text=True yerine bytes alıp manuel decode ederek encoding hatasını önlüyoruz
         result = subprocess.run(
-            ["uv", "run", "package_docker.py"], 
-            cwd=str(agent_dir), 
+            ["uv", "run", "package_docker.py"],
+            cwd=str(agent_dir),
             capture_output=True,
-            env=env # Temiz ortamı verdik
+            env=env,  # Temiz ortamı verdik
         )
 
-        stdout = result.stdout.decode('utf-8', errors='replace')
-        stderr = result.stderr.decode('utf-8', errors='replace')
+        stdout = result.stdout.decode("utf-8", errors="replace")
+        stderr = result.stderr.decode("utf-8", errors="replace")
 
         if result.returncode == 0:
             zip_files = list(agent_dir.glob("*.zip"))
@@ -58,6 +58,7 @@ def run_packaging(agent_name):
     except Exception as e:
         print(f"  ❌ Exception: {e}")
         return False
+
 
 def main():
     """Package all Lambda functions."""

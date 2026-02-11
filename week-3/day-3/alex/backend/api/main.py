@@ -18,15 +18,21 @@ from pydantic import BaseModel, Field, ValidationError
 import boto3
 from mangum import Mangum
 from dotenv import load_dotenv
-from fastapi_clerk_auth import ClerkConfig, ClerkHTTPBearer, HTTPAuthorizationCredentials
+from fastapi_clerk_auth import (
+    ClerkConfig,
+    ClerkHTTPBearer,
+    HTTPAuthorizationCredentials,
+)
 
 from src import Database
 from src.schemas import (
     UserCreate,
     AccountCreate,
     PositionCreate,
-    JobCreate, JobUpdate,
-    JobType, JobStatus
+    JobCreate,
+    JobUpdate,
+    JobType,
+    JobStatus,
 )
 
 # Load environment variables
@@ -40,7 +46,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Alex Financial Advisor API",
     description="Backend API for AI-powered financial planning",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # CORS configuration
@@ -54,14 +60,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Custom exception handlers for better error messages
 @app.exception_handler(ValidationError)
 async def validation_exception_handler(request: Request, exc: ValidationError):
     """Handle Pydantic validation errors with user-friendly messages"""
     return JSONResponse(
         status_code=422,
-        content={"detail": "Invalid input data. Please check your request and try again."}
+        content={
+            "detail": "Invalid input data. Please check your request and try again."
+        },
     )
+
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
@@ -73,14 +83,12 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         404: "The requested resource was not found.",
         429: "Too many requests. Please slow down and try again later.",
         500: "An internal error occurred. Please try again later.",
-        503: "The service is temporarily unavailable. Please try again later."
+        503: "The service is temporarily unavailable. Please try again later.",
     }
 
     message = user_friendly_messages.get(exc.status_code, exc.detail)
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"detail": message}
-    )
+    return JSONResponse(status_code=exc.status_code, content={"detail": message})
+
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
@@ -88,21 +96,27 @@ async def general_exception_handler(request: Request, exc: Exception):
     logger.error(f"Unexpected error: {exc}", exc_info=True)
     return JSONResponse(
         status_code=500,
-        content={"detail": "An unexpected error occurred. Our team has been notified."}
+        content={"detail": "An unexpected error occurred. Our team has been notified."},
     )
+
 
 # Initialize services
 db = Database()
 
 # SQS client for job queueing
-sqs_client = boto3.client('sqs', region_name=os.getenv('DEFAULT_AWS_REGION', 'us-east-1'))
-SQS_QUEUE_URL = os.getenv('SQS_QUEUE_URL', '')
+sqs_client = boto3.client(
+    "sqs", region_name=os.getenv("DEFAULT_AWS_REGION", "us-east-1")
+)
+SQS_QUEUE_URL = os.getenv("SQS_QUEUE_URL", "")
 
 # Clerk authentication setup (exactly like saas reference)
 clerk_config = ClerkConfig(jwks_url=os.getenv("CLERK_JWKS_URL"))
 clerk_guard = ClerkHTTPBearer(clerk_config)
 
-async def get_current_user_id(creds: HTTPAuthorizationCredentials = Depends(clerk_guard)) -> str:
+
+async def get_current_user_id(
+    creds: HTTPAuthorizationCredentials = Depends(clerk_guard),
+) -> str:
     """Extract user ID from validated Clerk token"""
     # The clerk_guard dependency already validated the token
     # creds.decoded contains the JWT payload
@@ -110,48 +124,64 @@ async def get_current_user_id(creds: HTTPAuthorizationCredentials = Depends(cler
     logger.info(f"Authenticated user: {user_id}")
     return user_id
 
+
 # Request/Response models
 class UserResponse(BaseModel):
     user: Dict[str, Any]
     created: bool
 
+
 class UserUpdate(BaseModel):
     """Update user settings"""
+
     display_name: Optional[str] = None
     years_until_retirement: Optional[int] = None
     target_retirement_income: Optional[float] = None
     asset_class_targets: Optional[Dict[str, float]] = None
     region_targets: Optional[Dict[str, float]] = None
 
+
 class AccountUpdate(BaseModel):
     """Update account"""
+
     account_name: Optional[str] = None
     account_purpose: Optional[str] = None
     cash_balance: Optional[float] = None
 
+
 class PositionUpdate(BaseModel):
     """Update position"""
+
     quantity: Optional[float] = None
 
+
 class AnalyzeRequest(BaseModel):
-    analysis_type: str = Field(default="portfolio", description="Type of analysis to perform")
-    options: Dict[str, Any] = Field(default_factory=dict, description="Analysis options")
+    analysis_type: str = Field(
+        default="portfolio", description="Type of analysis to perform"
+    )
+    options: Dict[str, Any] = Field(
+        default_factory=dict, description="Analysis options"
+    )
+
 
 class AnalyzeResponse(BaseModel):
     job_id: str
     message: str
 
+
 # API Routes
+
 
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
+
 @app.get("/api/user", response_model=UserResponse)
 async def get_or_create_user(
     clerk_user_id: str = Depends(get_current_user_id),
-    creds: HTTPAuthorizationCredentials = Depends(clerk_guard)
+    creds: HTTPAuthorizationCredentials = Depends(clerk_guard),
 ):
     """Get user or create if first time"""
 
@@ -164,20 +194,26 @@ async def get_or_create_user(
 
         # Create new user with defaults from JWT token
         token_data = creds.decoded
-        display_name = token_data.get('name') or token_data.get('email', '').split('@')[0] or "New User"
+        display_name = (
+            token_data.get("name")
+            or token_data.get("email", "").split("@")[0]
+            or "New User"
+        )
 
         # Create user with ALL defaults in one operation
         user_data = {
-            'clerk_user_id': clerk_user_id,
-            'display_name': display_name,
-            'years_until_retirement': 20,
-            'target_retirement_income': 60000,
-            'asset_class_targets': {"equity": 70, "fixed_income": 30},
-            'region_targets': {"north_america": 50, "international": 50}
+            "clerk_user_id": clerk_user_id,
+            "display_name": display_name,
+            "years_until_retirement": 20,
+            "target_retirement_income": 60000,
+            "asset_class_targets": {"equity": 70, "fixed_income": 30},
+            "region_targets": {"north_america": 50, "international": 50},
         }
 
         # Insert directly with all data
-        created_clerk_id = db.users.db.insert('users', user_data, returning='clerk_user_id')
+        created_clerk_id = db.users.db.insert(
+            "users", user_data, returning="clerk_user_id"
+        )
 
         # Fetch the created user
         created_user = db.users.find_by_clerk_id(clerk_user_id)
@@ -189,8 +225,11 @@ async def get_or_create_user(
         logger.error(f"Error in get_or_create_user: {e}")
         raise HTTPException(status_code=500, detail="Failed to load user profile")
 
+
 @app.put("/api/user")
-async def update_user(user_update: UserUpdate, clerk_user_id: str = Depends(get_current_user_id)):
+async def update_user(
+    user_update: UserUpdate, clerk_user_id: str = Depends(get_current_user_id)
+):
     """Update user settings"""
 
     try:
@@ -205,10 +244,10 @@ async def update_user(user_update: UserUpdate, clerk_user_id: str = Depends(get_
 
         # Use the database client directly since users table has clerk_user_id as PK
         db.users.db.update(
-            'users',
+            "users",
             update_data,
             "clerk_user_id = :clerk_user_id",
-            {'clerk_user_id': clerk_user_id}
+            {"clerk_user_id": clerk_user_id},
         )
 
         # Return updated user
@@ -218,6 +257,7 @@ async def update_user(user_update: UserUpdate, clerk_user_id: str = Depends(get_
     except Exception as e:
         logger.error(f"Error updating user: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/api/accounts")
 async def list_accounts(clerk_user_id: str = Depends(get_current_user_id)):
@@ -232,8 +272,11 @@ async def list_accounts(clerk_user_id: str = Depends(get_current_user_id)):
         logger.error(f"Error listing accounts: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.post("/api/accounts")
-async def create_account(account: AccountCreate, clerk_user_id: str = Depends(get_current_user_id)):
+async def create_account(
+    account: AccountCreate, clerk_user_id: str = Depends(get_current_user_id)
+):
     """Create new account"""
 
     try:
@@ -247,7 +290,7 @@ async def create_account(account: AccountCreate, clerk_user_id: str = Depends(ge
             clerk_user_id=clerk_user_id,
             account_name=account.account_name,
             account_purpose=account.account_purpose,
-            cash_balance=getattr(account, 'cash_balance', Decimal('0'))
+            cash_balance=getattr(account, "cash_balance", Decimal("0")),
         )
 
         # Return created account
@@ -258,8 +301,13 @@ async def create_account(account: AccountCreate, clerk_user_id: str = Depends(ge
         logger.error(f"Error creating account: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.put("/api/accounts/{account_id}")
-async def update_account(account_id: str, account_update: AccountUpdate, clerk_user_id: str = Depends(get_current_user_id)):
+async def update_account(
+    account_id: str,
+    account_update: AccountUpdate,
+    clerk_user_id: str = Depends(get_current_user_id),
+):
     """Update account"""
 
     try:
@@ -269,7 +317,7 @@ async def update_account(account_id: str, account_update: AccountUpdate, clerk_u
             raise HTTPException(status_code=404, detail="Account not found")
 
         # Verify ownership - accounts table stores clerk_user_id directly
-        if account.get('clerk_user_id') != clerk_user_id:
+        if account.get("clerk_user_id") != clerk_user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
 
         # Update account
@@ -286,8 +334,11 @@ async def update_account(account_id: str, account_update: AccountUpdate, clerk_u
         logger.error(f"Error updating account: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.delete("/api/accounts/{account_id}")
-async def delete_account(account_id: str, clerk_user_id: str = Depends(get_current_user_id)):
+async def delete_account(
+    account_id: str, clerk_user_id: str = Depends(get_current_user_id)
+):
     """Delete an account and all its positions"""
 
     try:
@@ -297,13 +348,13 @@ async def delete_account(account_id: str, clerk_user_id: str = Depends(get_curre
             raise HTTPException(status_code=404, detail="Account not found")
 
         # Verify ownership - accounts table stores clerk_user_id directly
-        if account.get('clerk_user_id') != clerk_user_id:
+        if account.get("clerk_user_id") != clerk_user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
 
         # Delete all positions first (due to foreign key constraint)
         positions = db.positions.find_by_account(account_id)
         for position in positions:
-            db.positions.delete(position['id'])
+            db.positions.delete(position["id"])
 
         # Delete the account
         db.accounts.delete(account_id)
@@ -316,8 +367,11 @@ async def delete_account(account_id: str, clerk_user_id: str = Depends(get_curre
         logger.error(f"Error deleting account: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.get("/api/accounts/{account_id}/positions")
-async def list_positions(account_id: str, clerk_user_id: str = Depends(get_current_user_id)):
+async def list_positions(
+    account_id: str, clerk_user_id: str = Depends(get_current_user_id)
+):
     """Get positions for account"""
 
     try:
@@ -327,7 +381,7 @@ async def list_positions(account_id: str, clerk_user_id: str = Depends(get_curre
             raise HTTPException(status_code=404, detail="Account not found")
 
         # Verify ownership - accounts table stores clerk_user_id directly
-        if account.get('clerk_user_id') != clerk_user_id:
+        if account.get("clerk_user_id") != clerk_user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
 
         positions = db.positions.find_by_account(account_id)
@@ -336,11 +390,8 @@ async def list_positions(account_id: str, clerk_user_id: str = Depends(get_curre
         formatted_positions = []
         for pos in positions:
             # Get full instrument data
-            instrument = db.instruments.find_by_symbol(pos['symbol'])
-            formatted_positions.append({
-                **pos,
-                'instrument': instrument
-            })
+            instrument = db.instruments.find_by_symbol(pos["symbol"])
+            formatted_positions.append({**pos, "instrument": instrument})
 
         return {"positions": formatted_positions}
 
@@ -350,8 +401,11 @@ async def list_positions(account_id: str, clerk_user_id: str = Depends(get_curre
         logger.error(f"Error listing positions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.post("/api/positions")
-async def create_position(position: PositionCreate, clerk_user_id: str = Depends(get_current_user_id)):
+async def create_position(
+    position: PositionCreate, clerk_user_id: str = Depends(get_current_user_id)
+):
     """Create position"""
 
     try:
@@ -361,7 +415,7 @@ async def create_position(position: PositionCreate, clerk_user_id: str = Depends
             raise HTTPException(status_code=404, detail="Account not found")
 
         # Verify ownership - accounts table stores clerk_user_id directly
-        if account.get('clerk_user_id') != clerk_user_id:
+        if account.get("clerk_user_id") != clerk_user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
 
         # Check if instrument exists, if not create it
@@ -385,10 +439,14 @@ async def create_position(position: PositionCreate, clerk_user_id: str = Depends
                 symbol=symbol_upper,
                 name=f"{symbol_upper} - User Added",  # Basic name, can be updated later
                 instrument_type=instrument_type,
-                current_price=Decimal("0.00"),  # Price will be updated by background processes
+                current_price=Decimal(
+                    "0.00"
+                ),  # Price will be updated by background processes
                 allocation_regions={"north_america": 100.0},  # Default to 100% NA
                 allocation_sectors={"other": 100.0},  # Default to 100% other
-                allocation_asset_class={"equity": 100.0} if instrument_type == "stock" else {"fixed_income": 100.0}
+                allocation_asset_class={"equity": 100.0}
+                if instrument_type == "stock"
+                else {"fixed_income": 100.0},
             )
 
             db.instruments.create_instrument(new_instrument)
@@ -397,7 +455,7 @@ async def create_position(position: PositionCreate, clerk_user_id: str = Depends
         position_id = db.positions.add_position(
             account_id=position.account_id,
             symbol=position.symbol.upper(),
-            quantity=position.quantity
+            quantity=position.quantity,
         )
 
         # Return created position
@@ -410,8 +468,13 @@ async def create_position(position: PositionCreate, clerk_user_id: str = Depends
         logger.error(f"Error creating position: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.put("/api/positions/{position_id}")
-async def update_position(position_id: str, position_update: PositionUpdate, clerk_user_id: str = Depends(get_current_user_id)):
+async def update_position(
+    position_id: str,
+    position_update: PositionUpdate,
+    clerk_user_id: str = Depends(get_current_user_id),
+):
     """Update position"""
 
     try:
@@ -420,12 +483,12 @@ async def update_position(position_id: str, position_update: PositionUpdate, cle
         if not position:
             raise HTTPException(status_code=404, detail="Position not found")
 
-        account = db.accounts.find_by_id(position['account_id'])
+        account = db.accounts.find_by_id(position["account_id"])
         if not account:
             raise HTTPException(status_code=404, detail="Account not found")
 
         # Verify ownership - accounts table stores clerk_user_id directly
-        if account.get('clerk_user_id') != clerk_user_id:
+        if account.get("clerk_user_id") != clerk_user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
 
         # Update position
@@ -442,8 +505,11 @@ async def update_position(position_id: str, position_update: PositionUpdate, cle
         logger.error(f"Error updating position: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.delete("/api/positions/{position_id}")
-async def delete_position(position_id: str, clerk_user_id: str = Depends(get_current_user_id)):
+async def delete_position(
+    position_id: str, clerk_user_id: str = Depends(get_current_user_id)
+):
     """Delete position"""
 
     try:
@@ -452,12 +518,12 @@ async def delete_position(position_id: str, clerk_user_id: str = Depends(get_cur
         if not position:
             raise HTTPException(status_code=404, detail="Position not found")
 
-        account = db.accounts.find_by_id(position['account_id'])
+        account = db.accounts.find_by_id(position["account_id"])
         if not account:
             raise HTTPException(status_code=404, detail="Account not found")
 
         # Verify ownership - accounts table stores clerk_user_id directly
-        if account.get('clerk_user_id') != clerk_user_id:
+        if account.get("clerk_user_id") != clerk_user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
 
         db.positions.delete(position_id)
@@ -468,6 +534,7 @@ async def delete_position(position_id: str, clerk_user_id: str = Depends(get_cur
     except Exception as e:
         logger.error(f"Error deleting position: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/api/instruments")
 async def list_instruments(clerk_user_id: str = Depends(get_current_user_id)):
@@ -481,7 +548,9 @@ async def list_instruments(clerk_user_id: str = Depends(get_current_user_id)):
                 "symbol": inst["symbol"],
                 "name": inst["name"],
                 "instrument_type": inst["instrument_type"],
-                "current_price": float(inst["current_price"]) if inst.get("current_price") else None
+                "current_price": float(inst["current_price"])
+                if inst.get("current_price")
+                else None,
             }
             for inst in instruments
         ]
@@ -489,8 +558,11 @@ async def list_instruments(clerk_user_id: str = Depends(get_current_user_id)):
         logger.error(f"Error fetching instruments: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.post("/api/analyze", response_model=AnalyzeResponse)
-async def trigger_analysis(request: AnalyzeRequest, clerk_user_id: str = Depends(get_current_user_id)):
+async def trigger_analysis(
+    request: AnalyzeRequest, clerk_user_id: str = Depends(get_current_user_id)
+):
     """Trigger portfolio analysis"""
 
     try:
@@ -504,7 +576,7 @@ async def trigger_analysis(request: AnalyzeRequest, clerk_user_id: str = Depends
         job_id = db.jobs.create_job(
             clerk_user_id=clerk_user_id,
             job_type="portfolio_analysis",
-            request_payload=request.model_dump()
+            request_payload=request.model_dump(),
         )
 
         # Get the created job
@@ -513,15 +585,14 @@ async def trigger_analysis(request: AnalyzeRequest, clerk_user_id: str = Depends
         # Send to SQS
         if SQS_QUEUE_URL:
             message = {
-                'job_id': str(job_id),
-                'clerk_user_id': clerk_user_id,
-                'analysis_type': request.analysis_type,
-                'options': request.options
+                "job_id": str(job_id),
+                "clerk_user_id": clerk_user_id,
+                "analysis_type": request.analysis_type,
+                "options": request.options,
             }
 
             sqs_client.send_message(
-                QueueUrl=SQS_QUEUE_URL,
-                MessageBody=json.dumps(message)
+                QueueUrl=SQS_QUEUE_URL, MessageBody=json.dumps(message)
             )
             logger.info(f"Sent analysis job to SQS: {job_id}")
         else:
@@ -529,15 +600,18 @@ async def trigger_analysis(request: AnalyzeRequest, clerk_user_id: str = Depends
 
         return AnalyzeResponse(
             job_id=str(job_id),
-            message="Analysis started. Check job status for results."
+            message="Analysis started. Check job status for results.",
         )
 
     except Exception as e:
         logger.error(f"Error triggering analysis: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.get("/api/jobs/{job_id}")
-async def get_job_status(job_id: str, clerk_user_id: str = Depends(get_current_user_id)):
+async def get_job_status(
+    job_id: str, clerk_user_id: str = Depends(get_current_user_id)
+):
     """Get job status and results"""
 
     try:
@@ -547,7 +621,7 @@ async def get_job_status(job_id: str, clerk_user_id: str = Depends(get_current_u
             raise HTTPException(status_code=404, detail="Job not found")
 
         # Verify job belongs to user - jobs table stores clerk_user_id directly
-        if job.get('clerk_user_id') != clerk_user_id:
+        if job.get("clerk_user_id") != clerk_user_id:
             raise HTTPException(status_code=403, detail="Not authorized")
 
         return job
@@ -558,6 +632,7 @@ async def get_job_status(job_id: str, clerk_user_id: str = Depends(get_current_u
         logger.error(f"Error getting job status: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.get("/api/jobs")
 async def list_jobs(clerk_user_id: str = Depends(get_current_user_id)):
     """List user's analysis jobs"""
@@ -566,12 +641,13 @@ async def list_jobs(clerk_user_id: str = Depends(get_current_user_id)):
         # Get jobs for this user (with higher limit to avoid missing recent jobs)
         user_jobs = db.jobs.find_by_user(clerk_user_id, limit=100)
         # Sort by created_at descending (most recent first)
-        user_jobs.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+        user_jobs.sort(key=lambda x: x.get("created_at", ""), reverse=True)
         return {"jobs": user_jobs}
 
     except Exception as e:
         logger.error(f"Error listing jobs: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.delete("/api/reset-accounts")
 async def reset_accounts(clerk_user_id: str = Depends(get_current_user_id)):
@@ -591,19 +667,20 @@ async def reset_accounts(clerk_user_id: str = Depends(get_current_user_id)):
         for account in accounts:
             try:
                 # Positions are deleted automatically via CASCADE
-                db.accounts.delete(account['id'])
+                db.accounts.delete(account["id"])
                 deleted_count += 1
             except Exception as e:
                 logger.warning(f"Could not delete account {account['id']}: {e}")
 
         return {
             "message": f"Deleted {deleted_count} account(s)",
-            "accounts_deleted": deleted_count
+            "accounts_deleted": deleted_count,
         }
 
     except Exception as e:
         logger.error(f"Error resetting accounts: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/api/populate-test-data")
 async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
@@ -623,7 +700,7 @@ async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
                 "current_price": 195.89,
                 "allocation_regions": {"north_america": 100},
                 "allocation_sectors": {"technology": 100},
-                "allocation_asset_class": {"equity": 100}
+                "allocation_asset_class": {"equity": 100},
             },
             "AMZN": {
                 "name": "Amazon.com Inc.",
@@ -631,7 +708,7 @@ async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
                 "current_price": 178.35,
                 "allocation_regions": {"north_america": 100},
                 "allocation_sectors": {"consumer_discretionary": 100},
-                "allocation_asset_class": {"equity": 100}
+                "allocation_asset_class": {"equity": 100},
             },
             "NVDA": {
                 "name": "NVIDIA Corporation",
@@ -639,7 +716,7 @@ async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
                 "current_price": 522.74,
                 "allocation_regions": {"north_america": 100},
                 "allocation_sectors": {"technology": 100},
-                "allocation_asset_class": {"equity": 100}
+                "allocation_asset_class": {"equity": 100},
             },
             "MSFT": {
                 "name": "Microsoft Corporation",
@@ -647,7 +724,7 @@ async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
                 "current_price": 430.82,
                 "allocation_regions": {"north_america": 100},
                 "allocation_sectors": {"technology": 100},
-                "allocation_asset_class": {"equity": 100}
+                "allocation_asset_class": {"equity": 100},
             },
             "GOOGL": {
                 "name": "Alphabet Inc. Class A",
@@ -655,7 +732,7 @@ async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
                 "current_price": 173.69,
                 "allocation_regions": {"north_america": 100},
                 "allocation_sectors": {"technology": 100},
-                "allocation_asset_class": {"equity": 100}
+                "allocation_asset_class": {"equity": 100},
             },
         }
 
@@ -673,7 +750,7 @@ async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
                         current_price=Decimal(str(info["current_price"])),
                         allocation_regions=info["allocation_regions"],
                         allocation_sectors=info["allocation_sectors"],
-                        allocation_asset_class=info["allocation_asset_class"]
+                        allocation_asset_class=info["allocation_asset_class"],
                     )
                     db.instruments.create_instrument(instrument_data)
                     logger.info(f"Added missing instrument: {symbol}")
@@ -687,39 +764,39 @@ async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
                 "purpose": "Primary retirement savings account with employer match",
                 "cash": 5000.00,
                 "positions": [
-                    ("SPY", 150),   # S&P 500 ETF
-                    ("VTI", 100),   # Total Stock Market ETF
-                    ("BND", 200),   # Bond ETF
-                    ("QQQ", 75),    # Nasdaq ETF
-                    ("IWM", 50),    # Small Cap ETF
-                ]
+                    ("SPY", 150),  # S&P 500 ETF
+                    ("VTI", 100),  # Total Stock Market ETF
+                    ("BND", 200),  # Bond ETF
+                    ("QQQ", 75),  # Nasdaq ETF
+                    ("IWM", 50),  # Small Cap ETF
+                ],
             },
             {
                 "name": "Roth IRA",
                 "purpose": "Tax-free retirement growth account",
                 "cash": 2500.00,
                 "positions": [
-                    ("VTI", 80),    # Total Stock Market ETF
-                    ("VXUS", 60),   # International Stock ETF
-                    ("VNQ", 40),    # Real Estate ETF
-                    ("GLD", 25),    # Gold ETF
-                    ("TLT", 30),    # Long-term Treasury ETF
-                    ("VIG", 45),    # Dividend Growth ETF
-                ]
+                    ("VTI", 80),  # Total Stock Market ETF
+                    ("VXUS", 60),  # International Stock ETF
+                    ("VNQ", 40),  # Real Estate ETF
+                    ("GLD", 25),  # Gold ETF
+                    ("TLT", 30),  # Long-term Treasury ETF
+                    ("VIG", 45),  # Dividend Growth ETF
+                ],
             },
             {
                 "name": "Brokerage Account",
                 "purpose": "Taxable investment account for individual stocks",
                 "cash": 10000.00,
                 "positions": [
-                    ("TSLA", 15),   # Tesla
-                    ("AAPL", 50),   # Apple
-                    ("AMZN", 10),   # Amazon
-                    ("NVDA", 25),   # Nvidia
-                    ("MSFT", 30),   # Microsoft
+                    ("TSLA", 15),  # Tesla
+                    ("AAPL", 50),  # Apple
+                    ("AMZN", 10),  # Amazon
+                    ("NVDA", 25),  # Nvidia
+                    ("MSFT", 30),  # Microsoft
                     ("GOOGL", 20),  # Google
-                ]
-            }
+                ],
+            },
         ]
 
         created_accounts = []
@@ -729,7 +806,7 @@ async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
                 clerk_user_id=clerk_user_id,
                 account_name=account_data["name"],
                 account_purpose=account_data["purpose"],
-                cash_balance=Decimal(str(account_data["cash"]))
+                cash_balance=Decimal(str(account_data["cash"])),
             )
 
             # Add positions
@@ -738,7 +815,7 @@ async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
                     db.positions.add_position(
                         account_id=account_id,
                         symbol=symbol,
-                        quantity=Decimal(str(quantity))
+                        quantity=Decimal(str(quantity)),
                     )
                 except Exception as e:
                     logger.warning(f"Could not add position {symbol}: {e}")
@@ -750,22 +827,24 @@ async def populate_test_data(clerk_user_id: str = Depends(get_current_user_id)):
         for account_id in created_accounts:
             account = db.accounts.find_by_id(account_id)
             positions = db.positions.find_by_account(account_id)
-            account['positions'] = positions
+            account["positions"] = positions
             all_accounts.append(account)
 
         return {
             "message": "Test data populated successfully",
             "accounts_created": len(created_accounts),
-            "accounts": all_accounts
+            "accounts": all_accounts,
         }
 
     except Exception as e:
         logger.error(f"Error populating test data: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 # Lambda handler
 handler = Mangum(app)
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)

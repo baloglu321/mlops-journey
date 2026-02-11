@@ -20,7 +20,9 @@ def test_charter():
     # Create a real job in the database
     db = Database()
     job_create = JobCreate(
-        clerk_user_id="test_user_001", job_type="portfolio_analysis", request_payload={"test": True}
+        clerk_user_id="test_user_001",
+        job_type="portfolio_analysis",
+        request_payload={"test": True},
     )
     job_id = db.jobs.create(job_create.model_dump())
     print(f"Created test job: {job_id}")

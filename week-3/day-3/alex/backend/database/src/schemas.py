@@ -47,7 +47,9 @@ SectorType = Literal[
     "other",
 ]
 
-InstrumentType = Literal["etf", "mutual_fund", "stock", "bond", "bond_fund", "commodity", "reit"]
+InstrumentType = Literal[
+    "etf", "mutual_fund", "stock", "bond", "bond_fund", "commodity", "reit"
+]
 
 JobType = Literal[
     "portfolio_analysis",
@@ -134,8 +136,12 @@ class InstrumentCreate(BaseModel):
         min_length=1,
         max_length=20,
     )
-    name: str = Field(description="Full name of the instrument", min_length=1, max_length=255)
-    instrument_type: InstrumentType = Field(description="The type of financial instrument")
+    name: str = Field(
+        description="Full name of the instrument", min_length=1, max_length=255
+    )
+    instrument_type: InstrumentType = Field(
+        description="The type of financial instrument"
+    )
     current_price: Optional[Decimal] = Field(
         None,
         description="Current price of the instrument for portfolio calculations",
@@ -151,10 +157,13 @@ class InstrumentCreate(BaseModel):
         example={"technology": 40, "healthcare": 30, "financials": 30},
     )
     allocation_asset_class: Dict[AssetClassType, float] = Field(
-        description="Asset class allocation percentages. Must sum to 100.", example={"equity": 100}
+        description="Asset class allocation percentages. Must sum to 100.",
+        example={"equity": 100},
     )
 
-    @field_validator("allocation_regions", "allocation_sectors", "allocation_asset_class")
+    @field_validator(
+        "allocation_regions", "allocation_sectors", "allocation_asset_class"
+    )
     def validate_allocations(cls, v):
         """Ensure all allocations sum to 100"""
         if not v:
@@ -175,13 +184,20 @@ class InstrumentResponse(InstrumentCreate):
 class UserCreate(BaseModel):
     """Schema for creating a user - suitable for LLM tool input"""
 
-    clerk_user_id: str = Field(description="Unique identifier from Clerk authentication system")
-    display_name: Optional[str] = Field(None, description="User's display name", max_length=255)
+    clerk_user_id: str = Field(
+        description="Unique identifier from Clerk authentication system"
+    )
+    display_name: Optional[str] = Field(
+        None, description="User's display name", max_length=255
+    )
     years_until_retirement: Optional[int] = Field(
         None, description="Number of years until the user plans to retire", ge=0, le=100
     )
     target_retirement_income: Optional[Decimal] = Field(
-        None, description="Annual income goal in retirement (in dollars)", ge=0, decimal_places=2
+        None,
+        description="Annual income goal in retirement (in dollars)",
+        ge=0,
+        decimal_places=2,
     )
     asset_class_targets: Optional[Dict[AssetClassType, float]] = Field(
         default={"equity": 70, "fixed_income": 30},
@@ -197,9 +213,13 @@ class AccountCreate(BaseModel):
     """Schema for creating an account - suitable for LLM tool input"""
 
     account_name: str = Field(
-        description="Name of the account (e.g., '401k', 'Roth IRA')", min_length=1, max_length=255
+        description="Name of the account (e.g., '401k', 'Roth IRA')",
+        min_length=1,
+        max_length=255,
     )
-    account_purpose: Optional[str] = Field(None, description="Purpose or goal of this account")
+    account_purpose: Optional[str] = Field(
+        None, description="Purpose or goal of this account"
+    )
     cash_balance: Decimal = Field(
         default=Decimal("0"),
         description="Uninvested cash balance in the account",
@@ -219,9 +239,13 @@ class PositionCreate(BaseModel):
     """Schema for creating a position - suitable for LLM tool input"""
 
     account_id: str = Field(description="UUID of the account holding this position")
-    symbol: str = Field(description="Ticker symbol of the instrument", min_length=1, max_length=20)
+    symbol: str = Field(
+        description="Ticker symbol of the instrument", min_length=1, max_length=20
+    )
     quantity: Decimal = Field(
-        description="Number of shares (supports fractional shares)", gt=0, decimal_places=8
+        description="Number of shares (supports fractional shares)",
+        gt=0,
+        decimal_places=8,
     )
     as_of_date: Optional[date] = Field(
         default_factory=date.today, description="Date of this position snapshot"
@@ -233,21 +257,29 @@ class JobCreate(BaseModel):
 
     clerk_user_id: str = Field(description="User requesting this job")
     job_type: JobType = Field(description="Type of analysis or operation to perform")
-    request_payload: Optional[Dict] = Field(None, description="Input parameters for the job")
+    request_payload: Optional[Dict] = Field(
+        None, description="Input parameters for the job"
+    )
 
 
 class JobUpdate(BaseModel):
     """Schema for updating job status - suitable for LLM tool output"""
 
     status: JobStatus = Field(description="Current status of the job")
-    result_payload: Optional[Dict] = Field(None, description="Results of the completed job")
-    error_message: Optional[str] = Field(None, description="Error details if job failed")
+    result_payload: Optional[Dict] = Field(
+        None, description="Results of the completed job"
+    )
+    error_message: Optional[str] = Field(
+        None, description="Error details if job failed"
+    )
 
 
 class PortfolioAnalysis(BaseModel):
     """Schema for portfolio analysis results - LLM structured output"""
 
-    total_value: Decimal = Field(description="Total portfolio value in dollars", decimal_places=2)
+    total_value: Decimal = Field(
+        description="Total portfolio value in dollars", decimal_places=2
+    )
     asset_allocation: Dict[AssetClassType, float] = Field(
         description="Current asset class allocation percentages"
     )
@@ -281,4 +313,6 @@ class RebalanceRecommendation(BaseModel):
             {"symbol": "BND", "action": "buy", "quantity": 50},
         ],
     )
-    rationale: str = Field(description="Explanation of why these changes are recommended")
+    rationale: str = Field(
+        description="Explanation of why these changes are recommended"
+    )

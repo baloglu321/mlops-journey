@@ -7,7 +7,7 @@ from datetime import datetime
 def get_agent_instructions():
     """Get agent instructions with current date."""
     today = datetime.now().strftime("%B %d, %Y")
-    
+
     return f"""You are Alex, a concise investment researcher. Today is {today}.
 
 CRITICAL: Work quickly and efficiently. You have limited time.
@@ -37,6 +37,7 @@ SPEED IS CRITICAL:
 - No lengthy explanations
 - Work as quickly as possible
 """
+
 
 DEFAULT_RESEARCH_PROMPT = """Please research a current, interesting investment topic from today's financial news. 
 Pick something trending or significant happening in the markets right now.

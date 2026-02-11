@@ -29,6 +29,7 @@ MOCK_LAMBDAS = os.getenv("MOCK_LAMBDAS", "false").lower() == "true"
 @dataclass
 class PlannerContext:
     """Context for planner agent tools."""
+
     job_id: str
 
 
@@ -39,8 +40,14 @@ async def invoke_lambda_agent(
 
     # For local testing with mocked agents
     if MOCK_LAMBDAS:
-        logger.info(f"[MOCK] Would invoke {agent_name} with payload: {json.dumps(payload)[:200]}")
-        return {"success": True, "message": f"[Mock] {agent_name} completed", "mock": True}
+        logger.info(
+            f"[MOCK] Would invoke {agent_name} with payload: {json.dumps(payload)[:200]}"
+        )
+        return {
+            "success": True,
+            "message": f"[Mock] {agent_name} completed",
+            "mock": True,
+        }
 
     try:
         logger.info(f"Invoking {agent_name} Lambda: {function_name}")
@@ -100,7 +107,10 @@ def handle_missing_instruments(job_id: str, db) -> None:
                 )
                 if not has_allocations:
                     missing.append(
-                        {"symbol": position["symbol"], "name": instrument.get("name", "")}
+                        {
+                            "symbol": position["symbol"],
+                            "name": instrument.get("name", ""),
+                        }
                     )
             else:
                 missing.append({"symbol": position["symbol"], "name": ""})
@@ -148,17 +158,17 @@ def load_portfolio_summary(job_id: str, db) -> Dict[str, Any]:
             raise ValueError(f"User {user_id} not found")
 
         accounts = db.accounts.find_by_user(user_id)
-        
+
         # Calculate simple summary statistics
         total_value = 0.0
         total_positions = 0
         total_cash = 0.0
-        
+
         for account in accounts:
             total_cash += float(account.get("cash_balance", 0))
             positions = db.positions.find_by_account(account["id"])
             total_positions += len(positions)
-            
+
             # Add position values
             for position in positions:
                 instrument = db.instruments.find_by_symbol(position["symbol"])
@@ -166,16 +176,18 @@ def load_portfolio_summary(job_id: str, db) -> Dict[str, Any]:
                     price = float(instrument["current_price"])
                     quantity = float(position["quantity"])
                     total_value += price * quantity
-        
+
         total_value += total_cash
-        
+
         # Return only summary statistics
         return {
             "total_value": total_value,
             "num_accounts": len(accounts),
             "num_positions": total_positions,
             "years_until_retirement": user.get("years_until_retirement", 30),
-            "target_retirement_income": float(user.get("target_retirement_income", 80000))
+            "target_retirement_income": float(
+                user.get("target_retirement_income", 80000)
+            ),
         }
 
     except Exception as e:
@@ -193,7 +205,9 @@ async def invoke_reporter_internal(job_id: str) -> str:
     Returns:
         Confirmation message
     """
-    result = await invoke_lambda_agent("Reporter", REPORTER_FUNCTION, {"job_id": job_id})
+    result = await invoke_lambda_agent(
+        "Reporter", REPORTER_FUNCTION, {"job_id": job_id}
+    )
 
     if "error" in result:
         return f"Reporter agent failed: {result['error']}"
@@ -211,9 +225,7 @@ async def invoke_charter_internal(job_id: str) -> str:
     Returns:
         Confirmation message
     """
-    result = await invoke_lambda_agent(
-        "Charter", CHARTER_FUNCTION, {"job_id": job_id}
-    )
+    result = await invoke_lambda_agent("Charter", CHARTER_FUNCTION, {"job_id": job_id})
 
     if "error" in result:
         return f"Charter agent failed: {result['error']}"
@@ -231,7 +243,9 @@ async def invoke_retirement_internal(job_id: str) -> str:
     Returns:
         Confirmation message
     """
-    result = await invoke_lambda_agent("Retirement", RETIREMENT_FUNCTION, {"job_id": job_id})
+    result = await invoke_lambda_agent(
+        "Retirement", RETIREMENT_FUNCTION, {"job_id": job_id}
+    )
 
     if "error" in result:
         return f"Retirement agent failed: {result['error']}"
@@ -239,16 +253,17 @@ async def invoke_retirement_internal(job_id: str) -> str:
     return "Retirement agent completed successfully. Retirement projections have been calculated and saved."
 
 
-
 @function_tool
 async def invoke_reporter(wrapper: RunContextWrapper[PlannerContext]) -> str:
     """Invoke the Report Writer agent to generate portfolio analysis narrative."""
     return await invoke_reporter_internal(wrapper.context.job_id)
 
+
 @function_tool
 async def invoke_charter(wrapper: RunContextWrapper[PlannerContext]) -> str:
     """Invoke the Chart Maker agent to create portfolio visualizations."""
     return await invoke_charter_internal(wrapper.context.job_id)
+
 
 @function_tool
 async def invoke_retirement(wrapper: RunContextWrapper[PlannerContext]) -> str:
@@ -258,12 +273,14 @@ async def invoke_retirement(wrapper: RunContextWrapper[PlannerContext]) -> str:
 
 def create_agent(job_id: str, portfolio_summary: Dict[str, Any], db):
     """Create the orchestrator agent with tools."""
-    
+
     # Create context for tools
     context = PlannerContext(job_id=job_id)
 
     # Get model configuration
-    model_id = os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+    model_id = os.getenv(
+        "BEDROCK_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+    )
     # Set region for LiteLLM Bedrock calls
     bedrock_region = os.getenv("BEDROCK_REGION", "us-west-2")
     os.environ["AWS_REGION_NAME"] = bedrock_region

@@ -15,16 +15,11 @@ from pathlib import Path
 def run_command(cmd, cwd=None):
     """Run a command and show output in real-time to avoid deadlocks."""
     print(f"Running: {' '.join(cmd)}")
-    
+
     # capture_output=True yerine direkt terminale akıtıyoruz
     # Bu sayede Windows pipe kilitlenmesi yaşanmaz.
-    result = subprocess.run(
-        cmd, 
-        cwd=cwd, 
-        capture_output=False, 
-        text=False
-    )
-    
+    result = subprocess.run(cmd, cwd=cwd, capture_output=False, text=False)
+
     if result.returncode != 0:
         print(f"Error: Command failed with return code {result.returncode}")
         sys.exit(1)
@@ -53,8 +48,8 @@ def package_lambda():
             cwd=str(reporter_dir),
             capture_output=True,
             text=True,
-            encoding='utf-8',
-            errors='replace'
+            encoding="utf-8",
+            errors="replace",
         )
         requirements_result = requirements_proc.stdout
 
@@ -106,7 +101,7 @@ def package_lambda():
 
         # Create new zip
         print(f"Creating zip file: {zip_path}")
-        shutil.make_archive(str(Path(zip_path).with_suffix('')), 'zip', package_dir)
+        shutil.make_archive(str(Path(zip_path).with_suffix("")), "zip", package_dir)
 
         # Get file size
         size_mb = zip_path.stat().st_size / (1024 * 1024)
@@ -133,7 +128,9 @@ def deploy_lambda(zip_path):
         print(f"Successfully updated Lambda function: {function_name}")
         print(f"Function ARN: {response['FunctionArn']}")
     except lambda_client.exceptions.ResourceNotFoundException:
-        print(f"Lambda function {function_name} not found. Please deploy via Terraform first.")
+        print(
+            f"Lambda function {function_name} not found. Please deploy via Terraform first."
+        )
         sys.exit(1)
     except Exception as e:
         print(f"Error deploying Lambda: {e}")
@@ -141,8 +138,12 @@ def deploy_lambda(zip_path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Package Reporter Lambda for deployment")
-    parser.add_argument("--deploy", action="store_true", help="Deploy to AWS after packaging")
+    parser = argparse.ArgumentParser(
+        description="Package Reporter Lambda for deployment"
+    )
+    parser.add_argument(
+        "--deploy", action="store_true", help="Deploy to AWS after packaging"
+    )
     args = parser.parse_args()
 
     # Check if Docker is available

@@ -16,11 +16,12 @@ load_dotenv(override=True)
 
 from src import Database
 
+
 class TaggerTest:
     """Test class that packages, deploys, and tests the tagger Lambda"""
 
     def __init__(self):
-        self.lambda_client = boto3.client('lambda', region_name='us-east-1')
+        self.lambda_client = boto3.client("lambda", region_name="us-east-1")
         self.db = Database()
 
     def package_tagger(self):
@@ -31,10 +32,10 @@ class TaggerTest:
         try:
             # Run package_docker.py
             result = subprocess.run(
-                ['uv', 'run', 'package_docker.py'],
+                ["uv", "run", "package_docker.py"],
                 cwd=Path(__file__).parent,
                 capture_output=True,
-                text=True
+                text=True,
             )
 
             if result.returncode != 0:
@@ -42,7 +43,7 @@ class TaggerTest:
                 return False
 
             # Check if zip file was created
-            zip_path = Path(__file__).parent / 'tagger_lambda.zip'
+            zip_path = Path(__file__).parent / "tagger_lambda.zip"
             if zip_path.exists():
                 size_mb = zip_path.stat().st_size / (1024 * 1024)
                 print(f"✅ Package created: {zip_path} ({size_mb:.1f} MB)")
@@ -62,17 +63,17 @@ class TaggerTest:
 
         try:
             # Package is too large for direct upload, must use S3
-            s3_client = boto3.client('s3', region_name='us-east-1')
+            s3_client = boto3.client("s3", region_name="us-east-1")
 
             # Use the existing Lambda packages bucket
             bucket_name = f"alex-lambda-packages-{boto3.client('sts').get_caller_identity()['Account']}"
-            key = 'tagger/tagger_lambda.zip'
+            key = "tagger/tagger_lambda.zip"
 
             print(f"Uploading to S3 bucket: {bucket_name}")
-            zip_path = Path(__file__).parent / 'tagger_lambda.zip'
+            zip_path = Path(__file__).parent / "tagger_lambda.zip"
 
             # Upload to S3
-            with open(zip_path, 'rb') as f:
+            with open(zip_path, "rb") as f:
                 s3_client.upload_fileobj(f, bucket_name, key)
 
             print(f"✅ Uploaded to S3: s3://{bucket_name}/{key}")
@@ -80,15 +81,13 @@ class TaggerTest:
             # Update Lambda function code from S3
             print("Updating Lambda function from S3...")
             response = self.lambda_client.update_function_code(
-                FunctionName='alex-tagger',
-                S3Bucket=bucket_name,
-                S3Key=key
+                FunctionName="alex-tagger", S3Bucket=bucket_name, S3Key=key
             )
 
             # Wait for Lambda to be updated
             print("Waiting for Lambda to be ready...")
-            waiter = self.lambda_client.get_waiter('function_updated')
-            waiter.wait(FunctionName='alex-tagger')
+            waiter = self.lambda_client.get_waiter("function_updated")
+            waiter.wait(FunctionName="alex-tagger")
 
             print(f"✅ Lambda deployed successfully")
             print(f"   Last modified: {response['LastModified']}")
@@ -107,9 +106,17 @@ class TaggerTest:
         # Test instruments - mix of ETFs and stocks
         test_instruments = [
             {"symbol": "ARKK", "name": "ARK Innovation ETF", "instrument_type": "etf"},
-            {"symbol": "SOFI", "name": "SoFi Technologies Inc", "instrument_type": "stock"},
+            {
+                "symbol": "SOFI",
+                "name": "SoFi Technologies Inc",
+                "instrument_type": "stock",
+            },
             {"symbol": "TSLA", "name": "Tesla Inc", "instrument_type": "stock"},
-            {"symbol": "VTI", "name": "Vanguard Total Stock Market ETF", "instrument_type": "etf"}
+            {
+                "symbol": "VTI",
+                "name": "Vanguard Total Stock Market ETF",
+                "instrument_type": "etf",
+            },
         ]
 
         print(f"Testing with {len(test_instruments)} instruments:")
@@ -122,35 +129,35 @@ class TaggerTest:
             start_time = time.time()
 
             response = self.lambda_client.invoke(
-                FunctionName='alex-tagger',
-                InvocationType='RequestResponse',
-                Payload=json.dumps({'instruments': test_instruments})
+                FunctionName="alex-tagger",
+                InvocationType="RequestResponse",
+                Payload=json.dumps({"instruments": test_instruments}),
             )
 
             elapsed = time.time() - start_time
 
             # Parse response
-            result = json.loads(response['Payload'].read())
+            result = json.loads(response["Payload"].read())
 
-            if response['StatusCode'] == 200:
+            if response["StatusCode"] == 200:
                 print(f"✅ Lambda executed successfully in {elapsed:.1f} seconds")
 
                 # Parse the body if it's a string
-                if isinstance(result.get('body'), str):
-                    body = json.loads(result['body'])
+                if isinstance(result.get("body"), str):
+                    body = json.loads(result["body"])
                 else:
-                    body = result.get('body', result)
+                    body = result.get("body", result)
 
                 print(f"\n📊 Results:")
                 print(f"  Tagged: {body.get('tagged', 0)} instruments")
                 print(f"  Updated: {body.get('updated', [])}")
-                if body.get('errors'):
+                if body.get("errors"):
                     print(f"  Errors: {body.get('errors')}")
 
                 # Show classifications
-                if body.get('classifications'):
+                if body.get("classifications"):
                     print(f"\n📈 Classifications:")
-                    for cls in body['classifications']:
+                    for cls in body["classifications"]:
                         print(f"\n  {cls['symbol']} ({cls['type']}):")
                         print(f"    Asset Class: {cls.get('asset_class', {})}")
                         print(f"    Regions: {cls.get('regions', {})}")
@@ -159,8 +166,8 @@ class TaggerTest:
                 # Verify in database
                 print(f"\n🔍 Verifying in database:")
                 for inst in test_instruments:
-                    db_inst = self.db.instruments.find_by_symbol(inst['symbol'])
-                    if db_inst and db_inst.get('allocation_asset_class'):
+                    db_inst = self.db.instruments.find_by_symbol(inst["symbol"])
+                    if db_inst and db_inst.get("allocation_asset_class"):
                         print(f"  ✅ {inst['symbol']}: Has allocations in database")
                     else:
                         print(f"  ⚠️  {inst['symbol']}: No allocations in database")
@@ -172,6 +179,7 @@ class TaggerTest:
         except Exception as e:
             print(f"❌ Error testing Lambda: {e}")
             import traceback
+
             traceback.print_exc()
 
     def run_all(self):
@@ -207,10 +215,12 @@ class TaggerTest:
 
         return True
 
+
 def main():
     """Main entry point"""
     tester = TaggerTest()
     tester.run_all()
+
 
 if __name__ == "__main__":
     main()

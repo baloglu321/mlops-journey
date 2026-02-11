@@ -112,7 +112,7 @@ flowchart LR
 **Live Deployment**:
 ![AWS Status](./week-1/day-5/saas/screenshot/72a6270a-4e5a-4573-bb0f-87d1419839fc.png)
 
-### Week 2: Advanced Usage
+### Week 2: Advanced Usage (✅ Complete)
 
 #### [Day 1: AI Digital Twin](./week-2/day-1/)
 **Goal**: Create a persistent personality clone.
@@ -155,7 +155,7 @@ flowchart LR
 
 ![Live Digital Twin on AWS](./week-2/day-5/screenshots/screenshot-3.png)
 
-### Week 3: Production AI Systems (🚧 In Progress)
+### Week 3: Production AI Systems (✅ Complete)
 
 #### [Day 1-2: AI-Powered Cybersecurity Code Analyzer](./week-3/day-1/cyber/)
 **Goal**: Build an intelligent security analysis tool with AI agents and static analysis.

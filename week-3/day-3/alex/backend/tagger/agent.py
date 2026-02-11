@@ -11,7 +11,12 @@ from pydantic import BaseModel, Field, field_validator, ConfigDict
 from agents import Agent, Runner, trace
 from agents.extensions.models.litellm_model import LitellmModel
 from dotenv import load_dotenv
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+)
 from litellm.exceptions import RateLimitError
 
 from src.schemas import InstrumentCreate
@@ -24,7 +29,9 @@ load_dotenv(override=True)
 logger = logging.getLogger(__name__)
 
 # Get configuration
-BEDROCK_MODEL_ID = os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+BEDROCK_MODEL_ID = os.getenv(
+    "BEDROCK_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+)
 BEDROCK_REGION = os.getenv("BEDROCK_REGION", "us-west-2")
 
 
@@ -36,11 +43,19 @@ class AllocationBreakdown(BaseModel):
     # We'll use a simplified approach with specific fields
     # Asset classes
     equity: float = Field(default=0.0, ge=0, le=100, description="Equity percentage")
-    fixed_income: float = Field(default=0.0, ge=0, le=100, description="Fixed income percentage")
-    real_estate: float = Field(default=0.0, ge=0, le=100, description="Real estate percentage")
-    commodities: float = Field(default=0.0, ge=0, le=100, description="Commodities percentage")
+    fixed_income: float = Field(
+        default=0.0, ge=0, le=100, description="Fixed income percentage"
+    )
+    real_estate: float = Field(
+        default=0.0, ge=0, le=100, description="Real estate percentage"
+    )
+    commodities: float = Field(
+        default=0.0, ge=0, le=100, description="Commodities percentage"
+    )
     cash: float = Field(default=0.0, ge=0, le=100, description="Cash percentage")
-    alternatives: float = Field(default=0.0, ge=0, le=100, description="Alternatives percentage")
+    alternatives: float = Field(
+        default=0.0, ge=0, le=100, description="Alternatives percentage"
+    )
 
 
 class RegionAllocation(BaseModel):
@@ -77,16 +92,22 @@ class SectorAllocation(BaseModel):
     materials: float = Field(default=0.0, ge=0, le=100)
     energy: float = Field(default=0.0, ge=0, le=100)
     utilities: float = Field(default=0.0, ge=0, le=100)
-    real_estate: float = Field(default=0.0, ge=0, le=100, description="Real estate sector")
+    real_estate: float = Field(
+        default=0.0, ge=0, le=100, description="Real estate sector"
+    )
     communication: float = Field(default=0.0, ge=0, le=100)
     treasury: float = Field(default=0.0, ge=0, le=100, description="Treasury bonds")
     corporate: float = Field(default=0.0, ge=0, le=100, description="Corporate bonds")
-    mortgage: float = Field(default=0.0, ge=0, le=100, description="Mortgage-backed securities")
+    mortgage: float = Field(
+        default=0.0, ge=0, le=100, description="Mortgage-backed securities"
+    )
     government_related: float = Field(
         default=0.0, ge=0, le=100, description="Government-related bonds"
     )
     commodities: float = Field(default=0.0, ge=0, le=100, description="Commodities")
-    diversified: float = Field(default=0.0, ge=0, le=100, description="Diversified sectors")
+    diversified: float = Field(
+        default=0.0, ge=0, le=100, description="Diversified sectors"
+    )
     other: float = Field(default=0.0, ge=0, le=100, description="Other sectors")
 
 
@@ -97,17 +118,28 @@ class InstrumentClassification(BaseModel):
 
     symbol: str = Field(description="Ticker symbol of the instrument")
     name: str = Field(description="Name of the instrument")
-    instrument_type: str = Field(description="Type: etf, stock, mutual_fund, bond_fund, etc.")
+    instrument_type: str = Field(
+        description="Type: etf, stock, mutual_fund, bond_fund, etc."
+    )
     current_price: float = Field(description="Current price per share in USD", gt=0)
 
     # Separate allocation objects
-    allocation_asset_class: AllocationBreakdown = Field(description="Asset class breakdown")
+    allocation_asset_class: AllocationBreakdown = Field(
+        description="Asset class breakdown"
+    )
     allocation_regions: RegionAllocation = Field(description="Regional breakdown")
     allocation_sectors: SectorAllocation = Field(description="Sector breakdown")
 
     @field_validator("allocation_asset_class")
     def validate_asset_class_sum(cls, v: AllocationBreakdown):
-        total = v.equity + v.fixed_income + v.real_estate + v.commodities + v.cash + v.alternatives
+        total = (
+            v.equity
+            + v.fixed_income
+            + v.real_estate
+            + v.commodities
+            + v.cash
+            + v.alternatives
+        )
         if abs(total - 100.0) > 3:  # Allow small floating point errors
             raise ValueError(f"Asset class allocations must sum to 100.0, got {total}")
         return v
@@ -252,7 +284,9 @@ async def tag_instruments(instruments: List[dict]) -> List[InstrumentClassificat
     return [r for r in results if r is not None]
 
 
-def classification_to_db_format(classification: InstrumentClassification) -> InstrumentCreate:
+def classification_to_db_format(
+    classification: InstrumentClassification,
+) -> InstrumentCreate:
     """
     Convert classification to database format.
 

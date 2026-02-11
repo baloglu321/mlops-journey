@@ -27,7 +27,9 @@ def get_all_share_prices_polygon_eod() -> dict[str, float]:
     probe = client.get_previous_close_agg("SPY")[0]
     last_close = datetime.fromtimestamp(probe.timestamp / 1000, tz=timezone.utc).date()
 
-    results = client.get_grouped_daily_aggs(last_close, adjusted=True, include_otc=False)
+    results = client.get_grouped_daily_aggs(
+        last_close, adjusted=True, include_otc=False
+    )
     return {result.ticker: result.close for result in results}
 
 
@@ -61,5 +63,7 @@ def get_share_price(symbol) -> float:
         try:
             return get_share_price_polygon(symbol)
         except Exception as e:
-            print(f"Was not able to use the polygon API due to {e}; using a random number")
+            print(
+                f"Was not able to use the polygon API due to {e}; using a random number"
+            )
     return float(random.randint(1, 100))

@@ -174,7 +174,9 @@ class DataAPIClient:
             return self._extract_value(response["records"][0][0])
         return None
 
-    def update(self, table: str, data: Dict, where: str, where_params: Dict = None) -> int:
+    def update(
+        self, table: str, data: Dict, where: str, where_params: Dict = None
+    ) -> int:
         """
         Update records in a table
 
@@ -237,20 +239,26 @@ class DataAPIClient:
     def begin_transaction(self) -> str:
         """Begin a database transaction"""
         response = self.client.begin_transaction(
-            resourceArn=self.cluster_arn, secretArn=self.secret_arn, database=self.database
+            resourceArn=self.cluster_arn,
+            secretArn=self.secret_arn,
+            database=self.database,
         )
         return response["transactionId"]
 
     def commit_transaction(self, transaction_id: str):
         """Commit a database transaction"""
         self.client.commit_transaction(
-            resourceArn=self.cluster_arn, secretArn=self.secret_arn, transactionId=transaction_id
+            resourceArn=self.cluster_arn,
+            secretArn=self.secret_arn,
+            transactionId=transaction_id,
         )
 
     def rollback_transaction(self, transaction_id: str):
         """Rollback a database transaction"""
         self.client.rollback_transaction(
-            resourceArn=self.cluster_arn, secretArn=self.secret_arn, transactionId=transaction_id
+            resourceArn=self.cluster_arn,
+            secretArn=self.secret_arn,
+            transactionId=transaction_id,
         )
 
     def _build_parameters(self, data: Dict) -> List[Dict]:

@@ -35,7 +35,11 @@ def analyze_portfolio(portfolio_data: Dict[str, Any]) -> str:
             cash = float(cash_balance)
 
         if account_name not in account_totals:
-            account_totals[account_name] = {"value": 0, "type": account_type, "positions": []}
+            account_totals[account_name] = {
+                "value": 0,
+                "type": account_type,
+                "positions": [],
+            }
 
         account_totals[account_name]["value"] += cash
         total_value += cash
@@ -72,19 +76,21 @@ def analyze_portfolio(portfolio_data: Dict[str, Any]) -> str:
         result.append(f"  {name} ({data['type']}): ${data['value']:,.2f} ({pct:.1f}%)")
 
     result.append("\nTop Holdings by Value:")
-    sorted_positions = sorted(position_values.items(), key=lambda x: x[1], reverse=True)[:10]
+    sorted_positions = sorted(
+        position_values.items(), key=lambda x: x[1], reverse=True
+    )[:10]
     for symbol, value in sorted_positions:
         pct = (value / total_value * 100) if total_value > 0 else 0
         result.append(f"  {symbol}: ${value:,.2f} ({pct:.1f}%)")
 
     # Calculate aggregated allocations for the agent
     result.append("\nCalculated Allocations:")
-    
+
     # Asset class aggregation
     asset_classes = {}
     regions = {}
     sectors = {}
-    
+
     for account in portfolio_data.get("accounts", []):
         for position in account.get("positions", []):
             symbol = position.get("symbol")
@@ -98,22 +104,26 @@ def analyze_portfolio(portfolio_data: Dict[str, Any]) -> str:
             else:
                 price = float(current_price)
             value = quantity * price
-            
+
             # Aggregate asset classes
-            for asset_class, pct in instrument.get("allocation_asset_class", {}).items():
+            for asset_class, pct in instrument.get(
+                "allocation_asset_class", {}
+            ).items():
                 asset_value = value * (pct / 100)
-                asset_classes[asset_class] = asset_classes.get(asset_class, 0) + asset_value
-            
+                asset_classes[asset_class] = (
+                    asset_classes.get(asset_class, 0) + asset_value
+                )
+
             # Aggregate regions
             for region, pct in instrument.get("allocation_regions", {}).items():
                 region_value = value * (pct / 100)
                 regions[region] = regions.get(region, 0) + region_value
-            
+
             # Aggregate sectors
             for sector, pct in instrument.get("allocation_sectors", {}).items():
                 sector_value = value * (pct / 100)
                 sectors[sector] = sectors.get(sector, 0) + sector_value
-    
+
     # Add cash to asset classes
     total_cash = sum(
         float(acc.get("cash_balance")) if acc.get("cash_balance") is not None else 0
@@ -121,15 +131,17 @@ def analyze_portfolio(portfolio_data: Dict[str, Any]) -> str:
     )
     if total_cash > 0:
         asset_classes["cash"] = asset_classes.get("cash", 0) + total_cash
-    
+
     result.append("\nAsset Classes:")
-    for asset_class, value in sorted(asset_classes.items(), key=lambda x: x[1], reverse=True):
+    for asset_class, value in sorted(
+        asset_classes.items(), key=lambda x: x[1], reverse=True
+    ):
         result.append(f"  {asset_class}: ${value:,.2f}")
-    
+
     result.append("\nGeographic Regions:")
     for region, value in sorted(regions.items(), key=lambda x: x[1], reverse=True):
         result.append(f"  {region}: ${value:,.2f}")
-    
+
     result.append("\nSectors:")
     for sector, value in sorted(sectors.items(), key=lambda x: x[1], reverse=True)[:10]:
         result.append(f"  {sector}: ${value:,.2f}")
@@ -139,26 +151,32 @@ def analyze_portfolio(portfolio_data: Dict[str, Any]) -> str:
 
 def create_agent(job_id: str, portfolio_data: Dict[str, Any], db=None):
     """Create the charter agent without tools - will output JSON directly."""
-    
+
     # Get model configuration
-    model_id = os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+    model_id = os.getenv(
+        "BEDROCK_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+    )
     # Set region for LiteLLM Bedrock calls
     bedrock_region = os.getenv("BEDROCK_REGION", "us-west-2")
     os.environ["AWS_REGION_NAME"] = bedrock_region
-    
-    logger.info(f"Charter: Creating agent with model_id={model_id}, region={bedrock_region}")
+
+    logger.info(
+        f"Charter: Creating agent with model_id={model_id}, region={bedrock_region}"
+    )
     logger.info(f"Charter: Job ID: {job_id}")
-    
+
     model = LitellmModel(model=f"bedrock/{model_id}")
-    
+
     # Analyze the portfolio upfront
     portfolio_analysis = analyze_portfolio(portfolio_data)
-    logger.info(f"Charter: Portfolio analysis generated, length: {len(portfolio_analysis)}")
-    
+    logger.info(
+        f"Charter: Portfolio analysis generated, length: {len(portfolio_analysis)}"
+    )
+
     # Create the task using template
     task = create_charter_task(portfolio_analysis, portfolio_data)
-    
+
     logger.info(f"Charter: Task created, length: {len(task)} characters")
-    
+
     # Return model and task (no tools or context needed)
     return model, task

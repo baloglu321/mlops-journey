@@ -42,7 +42,9 @@ def observe():
         return
 
     if not has_openai:
-        logger.warning("⚠️  Observability: OPENAI_API_KEY not set, traces may not export")
+        logger.warning(
+            "⚠️  Observability: OPENAI_API_KEY not set, traces may not export"
+        )
 
     # Local variable for the client (no global needed)
     langfuse_client = None
@@ -76,7 +78,9 @@ def observe():
                 f"✅ Observability: LangFuse authentication check passed (result: {auth_result})"
             )
         except Exception as auth_error:
-            logger.warning(f"⚠️  Observability: Auth check failed but continuing: {auth_error}")
+            logger.warning(
+                f"⚠️  Observability: Auth check failed but continuing: {auth_error}"
+            )
 
         logger.info("🎯 Observability: Setup complete - traces will be sent to LangFuse")
 
@@ -102,7 +106,9 @@ def observe():
                 # This is a workaround for Lambda's immediate termination
                 import time
 
-                logger.info("🔍 Observability: Waiting 15 seconds for flush to complete...")
+                logger.info(
+                    "🔍 Observability: Waiting 15 seconds for flush to complete..."
+                )
                 time.sleep(15)
 
                 logger.info("✅ Observability: Traces flushed successfully")

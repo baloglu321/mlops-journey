@@ -47,7 +47,9 @@ def calculate_portfolio_metrics(portfolio_data: Dict[str, Any]) -> Dict[str, Any
             # Calculate value if we have price
             instrument = position.get("instrument", {})
             if instrument.get("current_price"):
-                value = float(position.get("quantity", 0)) * float(instrument["current_price"])
+                value = float(position.get("quantity", 0)) * float(
+                    instrument["current_price"]
+                )
                 metrics["total_value"] += value
 
     metrics["total_value"] += metrics["cash_balance"]
@@ -56,7 +58,9 @@ def calculate_portfolio_metrics(portfolio_data: Dict[str, Any]) -> Dict[str, Any
     return metrics
 
 
-def format_portfolio_for_analysis(portfolio_data: Dict[str, Any], user_data: Dict[str, Any]) -> str:
+def format_portfolio_for_analysis(
+    portfolio_data: Dict[str, Any], user_data: Dict[str, Any]
+) -> str:
     """Format portfolio data for agent analysis."""
     metrics = calculate_portfolio_metrics(portfolio_data)
 
@@ -66,7 +70,9 @@ def format_portfolio_for_analysis(portfolio_data: Dict[str, Any], user_data: Dic
         f"- {metrics['num_positions']} total positions",
         f"- {metrics['unique_symbols']} unique holdings",
         f"- ${metrics['cash_balance']:,.2f} in cash",
-        f"- ${metrics['total_value']:,.2f} total value" if metrics["total_value"] > 0 else "",
+        f"- ${metrics['total_value']:,.2f} total value"
+        if metrics["total_value"] > 0
+        else "",
         "",
         "Account Details:",
     ]
@@ -88,7 +94,10 @@ def format_portfolio_for_analysis(portfolio_data: Dict[str, Any], user_data: Dic
                 allocations.append(f"Asset: {instrument['asset_class']}")
             if instrument.get("regions"):
                 regions = ", ".join(
-                    [f"{r['name']} {r['percentage']}%" for r in instrument["regions"][:2]]
+                    [
+                        f"{r['name']} {r['percentage']}%"
+                        for r in instrument["regions"][:2]
+                    ]
                 )
                 allocations.append(f"Regions: {regions}")
 
@@ -137,7 +146,9 @@ async def get_market_insights(
         sagemaker_region = os.getenv("DEFAULT_AWS_REGION", "us-east-1")
         sagemaker = boto3.client("sagemaker-runtime", region_name=sagemaker_region)
         endpoint_name = os.getenv("SAGEMAKER_ENDPOINT", "alex-embedding-endpoint")
-        query = f"market analysis {' '.join(symbols[:5])}" if symbols else "market outlook"
+        query = (
+            f"market analysis {' '.join(symbols[:5])}" if symbols else "market outlook"
+        )
 
         response = sagemaker.invoke_endpoint(
             EndpointName=endpoint_name,
@@ -182,11 +193,15 @@ async def get_market_insights(
         return "Market insights unavailable - proceeding with standard analysis."
 
 
-def create_agent(job_id: str, portfolio_data: Dict[str, Any], user_data: Dict[str, Any], db=None):
+def create_agent(
+    job_id: str, portfolio_data: Dict[str, Any], user_data: Dict[str, Any], db=None
+):
     """Create the reporter agent with tools and context."""
 
     # Get model configuration
-    model_id = os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+    model_id = os.getenv(
+        "BEDROCK_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+    )
     # Set region for LiteLLM Bedrock calls
     bedrock_region = os.getenv("BEDROCK_REGION", "us-west-2")
     logger.info(f"DEBUG: BEDROCK_REGION from env = {bedrock_region}")

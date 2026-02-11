@@ -24,17 +24,19 @@ from pathlib import Path
 def run_command(cmd, cwd=None, check=True, capture_output=False, env=None):
     """Run a command and optionally capture output."""
     import platform
-    
+
     # Komut listesini yazdırırken güzel görünsün
-    cmd_str = ' '.join(cmd) if isinstance(cmd, list) else cmd
+    cmd_str = " ".join(cmd) if isinstance(cmd, list) else cmd
     print(f"Running: {cmd_str}")
 
-    # Windows üzerinde liste halindeki komutların (npm gibi) çalışması için 
+    # Windows üzerinde liste halindeki komutların (npm gibi) çalışması için
     # shell=True zorunluluğu var.
     use_shell = isinstance(cmd, str) or platform.system() == "Windows"
 
     if capture_output:
-        result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, shell=use_shell, env=env)
+        result = subprocess.run(
+            cmd, cwd=cwd, capture_output=True, text=True, shell=use_shell, env=env
+        )
         if check and result.returncode != 0:
             print(f"Error: {result.stderr}")
             sys.exit(1)
@@ -55,15 +57,15 @@ def check_prerequisites():
         "docker": "Docker is required for Lambda packaging",
         "terraform": "Terraform is required for infrastructure deployment",
         "npm": "npm is required for building the frontend",
-        "aws": "AWS CLI is required for S3 sync and CloudFront invalidation"
+        "aws": "AWS CLI is required for S3 sync and CloudFront invalidation",
     }
 
     is_windows = platform.system() == "Windows"
 
     for tool, message in tools.items():
         try:
-            # Komutu liste yerine string olarak gönderirsek 
-            # run_command içindeki isinstance(cmd, str) True döner 
+            # Komutu liste yerine string olarak gönderirsek
+            # run_command içindeki isinstance(cmd, str) True döner
             # ve shell=True aktif olur.
             run_command(f"{tool} --version", capture_output=True)
             print(f"  ✅ {tool} is installed")
@@ -207,9 +209,7 @@ def deploy_terraform():
     # Get outputs
     print("\n  Getting outputs...")
     outputs = run_command(
-        ["terraform", "output", "-json"],
-        cwd=terraform_dir,
-        capture_output=True
+        ["terraform", "output", "-json"], cwd=terraform_dir, capture_output=True
     )
 
     return json.loads(outputs)
@@ -227,63 +227,91 @@ def upload_frontend(bucket_name, cloudfront_id):
 
     # First, clear the bucket
     print("  Clearing S3 bucket...")
-    run_command([
-        "aws", "s3", "rm",
-        f"s3://{bucket_name}/",
-        "--recursive"
-    ])
+    run_command(["aws", "s3", "rm", f"s3://{bucket_name}/", "--recursive"])
 
     # Upload HTML files with correct content type and no-cache
     print("  Uploading HTML files...")
-    run_command([
-        "aws", "s3", "cp",
-        str(frontend_dir) + "/",
-        f"s3://{bucket_name}/",
-        "--recursive",
-        "--exclude", "*",
-        "--include", "*.html",
-        "--content-type", "text/html",
-        "--cache-control", "max-age=0,no-cache,no-store,must-revalidate"
-    ])
+    run_command(
+        [
+            "aws",
+            "s3",
+            "cp",
+            str(frontend_dir) + "/",
+            f"s3://{bucket_name}/",
+            "--recursive",
+            "--exclude",
+            "*",
+            "--include",
+            "*.html",
+            "--content-type",
+            "text/html",
+            "--cache-control",
+            "max-age=0,no-cache,no-store,must-revalidate",
+        ]
+    )
 
     # Upload CSS files
     print("  Uploading CSS files...")
-    run_command([
-        "aws", "s3", "cp",
-        str(frontend_dir) + "/",
-        f"s3://{bucket_name}/",
-        "--recursive",
-        "--exclude", "*",
-        "--include", "*.css",
-        "--content-type", "text/css",
-        "--cache-control", "max-age=31536000,public"
-    ])
+    run_command(
+        [
+            "aws",
+            "s3",
+            "cp",
+            str(frontend_dir) + "/",
+            f"s3://{bucket_name}/",
+            "--recursive",
+            "--exclude",
+            "*",
+            "--include",
+            "*.css",
+            "--content-type",
+            "text/css",
+            "--cache-control",
+            "max-age=31536000,public",
+        ]
+    )
 
     # Upload JS files
     print("  Uploading JavaScript files...")
-    run_command([
-        "aws", "s3", "cp",
-        str(frontend_dir) + "/",
-        f"s3://{bucket_name}/",
-        "--recursive",
-        "--exclude", "*",
-        "--include", "*.js",
-        "--content-type", "application/javascript",
-        "--cache-control", "max-age=31536000,public"
-    ])
+    run_command(
+        [
+            "aws",
+            "s3",
+            "cp",
+            str(frontend_dir) + "/",
+            f"s3://{bucket_name}/",
+            "--recursive",
+            "--exclude",
+            "*",
+            "--include",
+            "*.js",
+            "--content-type",
+            "application/javascript",
+            "--cache-control",
+            "max-age=31536000,public",
+        ]
+    )
 
     # Upload JSON files
     print("  Uploading JSON files...")
-    run_command([
-        "aws", "s3", "cp",
-        str(frontend_dir) + "/",
-        f"s3://{bucket_name}/",
-        "--recursive",
-        "--exclude", "*",
-        "--include", "*.json",
-        "--content-type", "application/json",
-        "--cache-control", "max-age=31536000,public"
-    ])
+    run_command(
+        [
+            "aws",
+            "s3",
+            "cp",
+            str(frontend_dir) + "/",
+            f"s3://{bucket_name}/",
+            "--recursive",
+            "--exclude",
+            "*",
+            "--include",
+            "*.json",
+            "--content-type",
+            "application/json",
+            "--cache-control",
+            "max-age=31536000,public",
+        ]
+    )
 
     # Upload images
     for ext, content_type in [
@@ -292,37 +320,57 @@ def upload_frontend(bucket_name, cloudfront_id):
         ("*.jpeg", "image/jpeg"),
         ("*.gif", "image/gif"),
         ("*.svg", "image/svg+xml"),
-        ("*.ico", "image/x-icon")
+        ("*.ico", "image/x-icon"),
     ]:
-        run_command([
-            "aws", "s3", "cp",
-            str(frontend_dir) + "/",
-            f"s3://{bucket_name}/",
-            "--recursive",
-            "--exclude", "*",
-            "--include", ext,
-            "--content-type", content_type,
-            "--cache-control", "max-age=31536000,public"
-        ])
+        run_command(
+            [
+                "aws",
+                "s3",
+                "cp",
+                str(frontend_dir) + "/",
+                f"s3://{bucket_name}/",
+                "--recursive",
+                "--exclude",
+                "*",
+                "--include",
+                ext,
+                "--content-type",
+                content_type,
+                "--cache-control",
+                "max-age=31536000,public",
+            ]
+        )
 
     # Upload any remaining files with generic content type
     print("  Uploading remaining files...")
-    run_command([
-        "aws", "s3", "sync",
-        str(frontend_dir) + "/",
-        f"s3://{bucket_name}/",
-        "--cache-control", "max-age=31536000,public"
-    ])
+    run_command(
+        [
+            "aws",
+            "s3",
+            "sync",
+            str(frontend_dir) + "/",
+            f"s3://{bucket_name}/",
+            "--cache-control",
+            "max-age=31536000,public",
+        ]
+    )
 
     print(f"  ✅ Frontend uploaded successfully")
 
     # Invalidate CloudFront cache
     print(f"\n🔄 Invalidating CloudFront cache...")
-    result = run_command([
-        "aws", "cloudfront", "create-invalidation",
-        "--distribution-id", cloudfront_id,
-        "--paths", "/*"
-    ], capture_output=True)
+    result = run_command(
+        [
+            "aws",
+            "cloudfront",
+            "create-invalidation",
+            "--distribution-id",
+            cloudfront_id,
+            "--paths",
+            "/*",
+        ],
+        capture_output=True,
+    )
 
     print(f"  ✅ CloudFront invalidation created")
 
@@ -365,11 +413,18 @@ def main():
     # Extract CloudFront distribution ID
     cloudfront_url = outputs["cloudfront_url"]["value"]
     # Extract distribution ID from CloudFront URL
-    dist_id_output = run_command([
-        "aws", "cloudfront", "list-distributions",
-        "--query", f"DistributionList.Items[?DomainName=='{cloudfront_url.replace('https://', '')}'].Id",
-        "--output", "text"
-    ], capture_output=True)
+    dist_id_output = run_command(
+        [
+            "aws",
+            "cloudfront",
+            "list-distributions",
+            "--query",
+            f"DistributionList.Items[?DomainName=='{cloudfront_url.replace('https://', '')}'].Id",
+            "--output",
+            "text",
+        ],
+        capture_output=True,
+    )
 
     if not dist_id_output:
         print("  ⚠️  Could not find CloudFront distribution ID")
@@ -384,12 +439,16 @@ def main():
         upload_frontend(bucket_name, cloudfront_id)
     else:
         print("\n📤 Uploading frontend to S3...")
-        run_command([
-            "aws", "s3", "sync",
-            str(Path(__file__).parent.parent / "frontend" / "out") + "/",
-            f"s3://{bucket_name}/",
-            "--delete"
-        ])
+        run_command(
+            [
+                "aws",
+                "s3",
+                "sync",
+                str(Path(__file__).parent.parent / "frontend" / "out") + "/",
+                f"s3://{bucket_name}/",
+                "--delete",
+            ]
+        )
 
     # Display deployment info (no longer modifies .env.local)
     display_deployment_info(outputs)

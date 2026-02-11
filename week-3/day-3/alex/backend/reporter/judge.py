@@ -18,7 +18,9 @@ class Evaluation(BaseModel):
 
 async def evaluate(original_instructions, original_task, original_output) -> Evaluation:
     # Get model configuration
-    model_id = os.getenv("BEDROCK_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0")
+    model_id = os.getenv(
+        "BEDROCK_MODEL_ID", "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+    )
     # Set region for LiteLLM Bedrock calls
     bedrock_region = os.getenv("BEDROCK_REGION", "us-west-2")
     logger.info(f"DEBUG: BEDROCK_REGION from env = {bedrock_region}")
@@ -52,7 +54,10 @@ Evaluate this output and respond with your comments and score.
     try:
         logger.info("Judging financial report")
         agent = Agent(
-            name="Judge Agent", instructions=instructions, model=model, output_type=Evaluation
+            name="Judge Agent",
+            instructions=instructions,
+            model=model,
+            output_type=Evaluation,
         )
         result = await Runner.run(agent, input=task, max_turns=5)
         return result.final_output_as(Evaluation)

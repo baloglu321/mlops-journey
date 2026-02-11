@@ -18,7 +18,9 @@ def run_command(cmd, cwd=None, check=True, capture_output=False):
     print(f"Running: {' '.join(cmd) if isinstance(cmd, list) else cmd}")
 
     if capture_output:
-        result = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, shell=isinstance(cmd, str))
+        result = subprocess.run(
+            cmd, cwd=cwd, capture_output=True, text=True, shell=isinstance(cmd, str)
+        )
         if check and result.returncode != 0:
             print(f"Error: {result.stderr}")
             return None
@@ -42,7 +44,7 @@ def confirm_destruction():
     print("")
 
     response = input("Are you sure you want to continue? Type 'yes' to confirm: ")
-    return response.lower() == 'yes'
+    return response.lower() == "yes"
 
 
 def get_bucket_name():
@@ -57,7 +59,7 @@ def get_bucket_name():
     bucket_output = run_command(
         ["terraform", "output", "-raw", "s3_bucket_name"],
         cwd=terraform_dir,
-        capture_output=True
+        capture_output=True,
     )
 
     return bucket_output if bucket_output else None
@@ -73,9 +75,7 @@ def empty_s3_bucket(bucket_name):
 
     # Check if bucket exists
     exists = run_command(
-        ["aws", "s3", "ls", f"s3://{bucket_name}"],
-        capture_output=True,
-        check=False
+        ["aws", "s3", "ls", f"s3://{bucket_name}"], capture_output=True, check=False
     )
 
     if not exists:
@@ -84,19 +84,24 @@ def empty_s3_bucket(bucket_name):
 
     # Delete all objects
     print(f"  Deleting all objects from {bucket_name}...")
-    run_command([
-        "aws", "s3", "rm",
-        f"s3://{bucket_name}/",
-        "--recursive"
-    ])
+    run_command(["aws", "s3", "rm", f"s3://{bucket_name}/", "--recursive"])
 
     # Delete all versions (if versioning is enabled)
     print(f"  Deleting all object versions...")
-    run_command([
-        "aws", "s3api", "delete-objects",
-        "--bucket", bucket_name,
-        "--delete", "$(aws s3api list-object-versions --bucket " + bucket_name + " --output json --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}')"
-    ], check=False)
+    run_command(
+        [
+            "aws",
+            "s3api",
+            "delete-objects",
+            "--bucket",
+            bucket_name,
+            "--delete",
+            "$(aws s3api list-object-versions --bucket "
+            + bucket_name
+            + " --output json --query='{Objects: Versions[].{Key:Key,VersionId:VersionId}}')",
+        ],
+        check=False,
+    )
 
     print(f"  ✅ Bucket {bucket_name} emptied")
 
@@ -148,6 +153,7 @@ def clean_local_artifacts():
                 print(f"  Deleted: {artifact}")
             else:
                 import shutil
+
                 shutil.rmtree(artifact)
                 print(f"  Deleted directory: {artifact}")
 

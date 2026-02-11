@@ -14,6 +14,7 @@ from pathlib import Path
 # Track subprocesses for cleanup
 processes = []
 
+
 def cleanup(signum=None, frame=None):
     """Clean up all subprocess on exit"""
     print("\n🛑 Shutting down services...")
@@ -25,9 +26,11 @@ def cleanup(signum=None, frame=None):
             proc.kill()
     sys.exit(0)
 
+
 # Register cleanup handlers
 signal.signal(signal.SIGINT, cleanup)
 signal.signal(signal.SIGTERM, cleanup)
+
 
 def check_requirements():
     """Check if required tools are installed"""
@@ -44,7 +47,9 @@ def check_requirements():
     # Check npm
     try:
         # shell=True eklendiğinde Windows npm.cmd'yi otomatik bulur
-        result = subprocess.run(["npm", "--version"], capture_output=True, text=True, shell=True)
+        result = subprocess.run(
+            ["npm", "--version"], capture_output=True, text=True, shell=True
+        )
         if result.returncode == 0:
             npm_version = result.stdout.strip()
             checks.append(f"✅ npm: {npm_version}")
@@ -69,6 +74,7 @@ def check_requirements():
     if any("❌" in check for check in checks):
         print("\n⚠️  Please install missing dependencies and try again.")
         sys.exit(1)
+
 
 def check_env_files():
     """Check if environment files exist"""
@@ -95,6 +101,7 @@ def check_env_files():
 
     print("✅ Environment files found")
 
+
 def start_backend():
     """Start the FastAPI backend"""
     backend_dir = Path(__file__).parent.parent / "backend" / "api"
@@ -113,7 +120,7 @@ def start_backend():
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
-        bufsize=1
+        bufsize=1,
     )
     processes.append(proc)
 
@@ -122,6 +129,7 @@ def start_backend():
     for _ in range(30):  # 30 second timeout
         try:
             import httpx
+
             response = httpx.get("http://localhost:8000/health")
             if response.status_code == 200:
                 print("  ✅ Backend running at http://localhost:8000")
@@ -132,6 +140,7 @@ def start_backend():
 
     print("  ❌ Backend failed to start")
     cleanup()
+
 
 def start_frontend():
     """Start the NextJS frontend"""
@@ -146,7 +155,7 @@ def start_frontend():
         subprocess.run(["npm", "install"], cwd=frontend_dir, check=True, shell=True)
 
     # Start the frontend
-    # stdout=subprocess.PIPE yerine stdout=None yaparak logları doğrudan terminale verebilir 
+    # stdout=subprocess.PIPE yerine stdout=None yaparak logları doğrudan terminale verebilir
     # veya aşağıdaki gibi boruyu manuel boşaltabiliriz.
     proc = subprocess.Popen(
         ["npm", "run", "dev"],
@@ -155,7 +164,7 @@ def start_frontend():
         stderr=subprocess.STDOUT,
         shell=True,
         text=True,
-        bufsize=1
+        bufsize=1,
     )
     processes.append(proc)
 
@@ -164,18 +173,19 @@ def start_frontend():
     import httpx
     import os
 
-    # Windows'ta borunun dolup kilitlenmesini önlemek için 
-    # stdout'u bir dosyaya veya çöpe yönlendirmek daha sağlıklıdır 
+    # Windows'ta borunun dolup kilitlenmesini önlemek için
+    # stdout'u bir dosyaya veya çöpe yönlendirmek daha sağlıklıdır
     # ama bu döngüde manuel okuyacağız.
-    if os.name == 'nt':
+    if os.name == "nt":
         import msvcrt
+
         # Boruyu non-blocking yapamayacağımız için httpx kontrolüne odaklanıyoruz
 
     for i in range(45):  # 45 saniye daha güvenli (NextJS 15 biraz yavaş açılabilir)
         # HTTP Kontrolü
         try:
             with httpx.Client() as client:
-                # timeout=0.1 gibi çok düşük değerler yerine 
+                # timeout=0.1 gibi çok düşük değerler yerine
                 # sadece bağlantıyı kontrol edip beklemeyi döngüye bırakıyoruz
                 response = client.get("http://localhost:3000", timeout=2.0)
                 print("   ✅ Frontend running at http://localhost:3000")
@@ -184,7 +194,7 @@ def start_frontend():
             # Sunucu ya henüz yok (Connect) ya da çok meşgul (ReadTimeout)
             # Bu hataları yutarak döngünün devam etmesini sağlıyoruz
             pass
-        
+
         # Süreci kontrol et: Erken kapandıysa hata ver
         if proc.poll() is not None:
             print("   ❌ Frontend process exited unexpectedly")
@@ -192,24 +202,25 @@ def start_frontend():
 
         if i % 5 == 0:
             print(f"   ... still waiting ({i}s)")
-            
+
         time.sleep(1)
 
     print("   ❌ Frontend failed to start or timed out")
     cleanup()
     sys.exit(1)
 
+
 def monitor_processes():
     """Monitor running processes and show their output"""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("🎯 Alex Financial Advisor - Local Development")
-    print("="*60)
+    print("=" * 60)
     print("\n📍 Services:")
     print("  Frontend: http://localhost:3000")
     print("  Backend:  http://localhost:8000")
     print("  API Docs: http://localhost:8000/docs")
     print("\n📝 Logs will appear below. Press Ctrl+C to stop.\n")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
 
     # Monitor processes
     while True:
@@ -229,10 +240,11 @@ def monitor_processes():
 
         time.sleep(0.1)
 
+
 def main():
     """Main entry point"""
     print("\n🔧 Alex Financial Advisor - Local Development Setup")
-    print("="*50)
+    print("=" * 50)
 
     # Check prerequisites
     check_requirements()
@@ -254,6 +266,7 @@ def main():
         monitor_processes()
     except KeyboardInterrupt:
         cleanup()
+
 
 if __name__ == "__main__":
     main()

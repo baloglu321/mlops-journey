@@ -5,12 +5,12 @@ db = Database()
 
 # Get the most recent completed job
 jobs = db.jobs.find_all()
-sorted_jobs = sorted(jobs, key=lambda x: x['created_at'], reverse=True)
+sorted_jobs = sorted(jobs, key=lambda x: x["created_at"], reverse=True)
 
 # Find first completed job
 completed_job = None
 for job in sorted_jobs:
-    if job['status'] == 'completed':
+    if job["status"] == "completed":
         completed_job = job
         break
 
@@ -22,7 +22,7 @@ if completed_job:
 
     # Check all fields
     for key, value in completed_job.items():
-        if key == 'results':
+        if key == "results":
             if value:
                 print(f"\n{key}: Present")
                 try:
@@ -34,14 +34,16 @@ if completed_job:
                         elif isinstance(results[r_key], list):
                             print(f"    {r_key}: {len(results[r_key])} items")
                         elif isinstance(results[r_key], dict):
-                            print(f"    {r_key}: dict with keys {list(results[r_key].keys())}")
+                            print(
+                                f"    {r_key}: dict with keys {list(results[r_key].keys())}"
+                            )
                 except Exception as e:
                     print(f"  Error parsing results: {e}")
                     print(f"  Raw value type: {type(value)}")
                     print(f"  Raw value (first 500 chars): {str(value)[:500]}")
             else:
                 print(f"\n{key}: None/Empty")
-        elif key not in ['id', 'status', 'created_at', 'updated_at']:
+        elif key not in ["id", "status", "created_at", "updated_at"]:
             if value:
                 value_str = str(value)
                 if len(value_str) > 100:

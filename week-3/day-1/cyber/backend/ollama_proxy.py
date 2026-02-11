@@ -20,6 +20,7 @@ OLLAMA_BASE_URL = os.getenv("OLLAMA_API_URL", "http://localhost:11434/v1")
 
 timeout = httpx.Timeout(60.0, connect=30.0)
 
+
 @app.get("/v1/models")
 async def list_models():
     """Translate OpenAI models endpoint to Ollama /api/tags."""

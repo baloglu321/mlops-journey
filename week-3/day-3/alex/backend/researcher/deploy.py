@@ -79,7 +79,11 @@ def main():
 
     login_cmd = ["docker", "login", "--username", "AWS", "--password-stdin", ecr_url]
     login_process = subprocess.Popen(
-        login_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+        login_cmd,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
     )
     stdout, stderr = login_process.communicate(input=password)
 
@@ -113,7 +117,9 @@ def main():
 
     # Tag for ECR with both unique tag and latest
     print("\nTagging image for ECR...")
-    run_command(["docker", "tag", f"{ecr_repository}:{image_tag}", f"{ecr_url}:{image_tag}"])
+    run_command(
+        ["docker", "tag", f"{ecr_repository}:{image_tag}", f"{ecr_url}:{image_tag}"]
+    )
     run_command(["docker", "tag", f"{ecr_repository}:{image_tag}", f"{ecr_url}:latest"])
 
     # Push to ECR
@@ -188,8 +194,12 @@ def main():
                                     "ImageConfiguration": {
                                         "Port": "8000",
                                         "RuntimeEnvironmentVariables": {
-                                            "OPENAI_API_KEY": os.environ.get("OPENAI_API_KEY", ""),
-                                            "ALEX_API_KEY": os.environ.get("ALEX_API_KEY", ""),
+                                            "OPENAI_API_KEY": os.environ.get(
+                                                "OPENAI_API_KEY", ""
+                                            ),
+                                            "ALEX_API_KEY": os.environ.get(
+                                                "ALEX_API_KEY", ""
+                                            ),
                                             "ALEX_API_ENDPOINT": os.environ.get(
                                                 "ALEX_API_ENDPOINT", ""
                                             ),
@@ -197,7 +207,9 @@ def main():
                                     },
                                     "ImageRepositoryType": "ECR",
                                 },
-                                "AuthenticationConfiguration": {"AccessRoleArn": service_details},
+                                "AuthenticationConfiguration": {
+                                    "AccessRoleArn": service_details
+                                },
                                 "AutoDeploymentsEnabled": False,
                             }
                         ),
@@ -207,7 +219,9 @@ def main():
                 print("✅ Service updated with new image!")
 
                 # Wait for deployment to complete
-                print("\nWaiting for deployment to complete (this may take 5-10 minutes)...")
+                print(
+                    "\nWaiting for deployment to complete (this may take 5-10 minutes)..."
+                )
                 import time
 
                 max_attempts = 120  # 10 minutes with 5-second intervals
@@ -294,7 +308,9 @@ def main():
                             if attempts > 0 and attempts % 6 == 0:
                                 elapsed_minutes = (attempts * 5) / 60
                                 print(
-                                    f" ({elapsed_minutes:.1f} minutes elapsed)", end="", flush=True
+                                    f" ({elapsed_minutes:.1f} minutes elapsed)",
+                                    end="",
+                                    flush=True,
                                 )
                             time.sleep(5)
                             attempts += 1
